@@ -44,6 +44,7 @@
 | **Nền tảng ứng dụng** | *Chưa chốt* | Web App (React / Next.js) hoặc Mobile App (Flutter / React Native). |
 | **Backend & CSDL** | *Chưa chốt* | Python (FastAPI) hoặc Node.js (Express) + PostgreSQL/MySQL (rất mạnh cho báo cáo HTTT). |
 | **IoT Gateway** | *Theo chuẩn môn học* | Python Script (`pyserial` giao tiếp UART với Yolo:bit / Microbit, `paho-mqtt` giao tiếp Adafruit IO). |
+| **Đồng bộ Overleaf** | **ĐÃ HOÀN TẤT** | Script đồng bộ 2 chiều `sync_overleaf.py` kết hợp shortcut `pull.ps1` và `push.ps1` (Project ID: `6ad019546c75705d7d71e48f`). Tự động sao lưu và lọc sạch file rác. |
 
 ---
 
