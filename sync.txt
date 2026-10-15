@@ -1,0 +1,5 @@
+cd d:\DADN\report
+python sync_overleaf.py pull
+
+cd d:\DADN\report
+python sync_overleaf.py push

@@ -1,0 +1,219 @@
+\documentclass[a4paper,12pt]{article}
+
+% ==============================================================================
+% GÓI HỖ TRỢ TIẾNG VIỆT VÀ ĐỊNH DẠNG TRANG
+% ==============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage{vntex}
+\usepackage{a4wide}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in, headheight=40pt}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{enumitem}
+% ==============================================================================
+% TOÁN HỌC, BẢNG BIỂU VÀ HÌNH ẢNH
+% ==============================================================================
+\usepackage{amsmath,amssymb,amsfonts,bm}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+% Tăng khoảng cách dòng trong bảng để không bị dính nét kẻ khi dùng lưới ô
+\renewcommand{\arraystretch}{1.25}
+
+% ==============================================================================
+% ĐỊNH DẠNG CODE PYTHON & THUẬT TOÁN (IOT GATEWAY)
+% ==============================================================================
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single,
+    columns=fullflexible,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    language=Python
+}
+
+% ==============================================================================
+% TỪ ĐIỂN TỪ VIẾT TẮT & KÝ HIỆU (GLOSSARIES - CHUYÊN NGÀNH IOT & HỆ THỐNG)
+% ==============================================================================
+\usepackage[
+    sort=none,
+    abbreviations,
+    symbols,
+    stylemods,style=list,
+    nogroupskip, nonumberlist, nomain
+]{glossaries-extra}
+
+\setabbreviationstyle{long-short}
+\newabbreviation{iot}{IoT}{Internet of Things}
+\newabbreviation{mqtt}{MQTT}{Message Queuing Telemetry Transport}
+\newabbreviation{rbac}{RBAC}{Role-Based Access Control}
+\newabbreviation{srs}{SRS}{Software Requirements Specification}
+\newabbreviation{uc}{UC}{Use Case}
+\newabbreviation{fr}{FR}{Functional Requirement}
+\newabbreviation{nfr}{NFR}{Non-Functional Requirement}
+\newabbreviation{api}{API}{Application Programming Interface}
+\newabbreviation{ui}{UI}{User Interface}
+\newabbreviation{httt}{HTTT}{Hệ thống thông tin}
+
+% ==============================================================================
+% TÀI LIỆU THAM KHẢO & LIÊN KẾT
+% ==============================================================================
+\usepackage[colorlinks]{hyperref}
+\hypersetup{urlcolor=blue, linkcolor=black, citecolor=black}
+\usepackage{biblatex}
+\addbibresource{citations.bib}
+
+% ==============================================================================
+% CẤU HÌNH TIÊU ĐỀ ĐẦU TRANG & CHÂN TRANG (HEADER / FOOTER)
+% ==============================================================================
+\captionsetup[table]{name=Bảng}
+\captionsetup[figure]{name=Hình}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{
+    \begin{tabular}{rl}
+        \begin{picture}(25,15)(0,0)
+            \put(0,-6){\includegraphics[width=8mm, height=8mm]{hcmut.png}}
+        \end{picture}&
+        \begin{tabular}{l}
+            \textbf{\ttfamily Trường Đại học Bách Khoa TP. Hồ Chí Minh}\\
+            \textbf{\ttfamily Khoa Khoa học và Kỹ thuật Máy tính}
+        \end{tabular}   
+    \end{tabular}
+}
+\fancyhead[R]{}
+\fancyfoot{}
+\fancyfoot[L]{\scriptsize \ttfamily Đồ án: Quản lý Thiết bị Nông trại Thông minh}
+\fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+
+% ==============================================================================
+% BẮT ĐẦU TÀI LIỆU
+% ==============================================================================
+\begin{document}
+
+% ---------------- TRANG BÌA ----------------
+\begin{titlepage}
+\begin{center}
+    ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH \\
+    TRƯỜNG ĐẠI HỌC BÁCH KHOA \\
+    KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=3cm]{hcmut.png}
+\end{figure}
+
+\vspace{0.6cm}
+
+\begin{center}
+    \begin{tabular}{c}
+        \textbf{\Large BÁO CÁO ĐỒ ÁN ĐA NGÀNH}\\
+        ~\\
+        \hline
+        \\
+        \textbf{\Huge XÂY DỰNG ỨNG DỤNG}\\
+        \vspace{0.2cm}
+        \textbf{\Huge QUẢN LÝ THIẾT BỊ NÔNG TRẠI}\\
+        \vspace{0.3cm}
+        \textbf{\large (SMART FARM DEVICE MANAGEMENT SYSTEM)}\\
+        \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{table}[h]
+\centering
+    \begin{tabular}{rl}
+        \hspace{1.5cm}\textbf{Giảng viên hướng dẫn}: & Trần Thị Quế Nguyệt \\[8pt]
+        \textbf{Sinh viên thực hiện}: & Lý Trung Hòa -- 2311097\\
+                                       & Nguyễn Miên Phú -- 2312658\\
+                                       & Trương Thái Nguyên -- 2312391\\
+                                       & Ngô Phương Quang -- 2352967\\[6pt]
+        \textbf{Nhóm}: & 4
+    \end{tabular}
+\end{table}
+
+\vfill
+
+\begin{center}
+    {\footnotesize TP. Hồ Chí Minh, Năm 2026}
+\end{center}
+\end{titlepage}
+
+% ---------------- MỤC LỤC & DANH MỤC ----------------
+\pagenumbering{roman}
+
+\tableofcontents
+\pagebreak
+
+\printunsrtglossary[type={abbreviations}, title={Danh sách các từ viết tắt}]
+\pagebreak
+
+\listoffigures
+\addcontentsline{toc}{section}{Danh mục Hình ảnh}
+\pagebreak
+
+\listoftables
+\addcontentsline{toc}{section}{Danh mục Bảng biểu}
+\pagebreak
+
+% ---------------- NỘI DUNG CHÍNH ----------------
+\pagenumbering{arabic}
+
+% ==============================================================================
+% MỤC 1: GIỚI THIỆU ĐỀ TÀI (INTRODUCTION)
+% ==============================================================================
+\input{section/Introduction.tex}
+\pagebreak
+
+% ==============================================================================
+% MỤC 2: THIẾT BỊ (DEVICES)
+% ==============================================================================
+\input{section/Device.tex}
+\pagebreak
+
+% ==============================================================================
+% MỤC 3: YÊU CẦU HỆ THỐNG
+% ==============================================================================
+\section{Yêu cầu hệ thống}
+\input{section/UserRequirement.tex}
+\input{section/UseCase.tex}
+
+% ---------------- TÀI LIỆU THAM KHẢO ----------------
+% \pagebreak
+% \nocite{*}
+% \printbibliography[
+%     heading=bibintoc,
+%     title={Tài liệu Tham khảo}
+% ]
+
+\end{document}

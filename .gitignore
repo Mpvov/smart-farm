@@ -1,0 +1,33 @@
+# Overleaf Sync & Config
+.overleaf_config.json
+.backup_report_*.zip
+_temp_overleaf.zip
+report_ready_to_upload.zip
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lot
+*.lof
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

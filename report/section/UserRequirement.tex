@@ -1,0 +1,97 @@
+\subsection{Yêu cầu người dùng}
+
+Yêu cầu người dùng thể hiện các kỳ vọng, nhu cầu nghiệp vụ và mục tiêu vận hành của người dùng cuối đối với hệ thống, được mô tả dưới góc nhìn phi kỹ thuật nhằm làm cơ sở định hình các chức năng chi tiết của hệ thống.
+
+\subsubsection{Phân tích đối tượng người dùng và nhu cầu nghiệp vụ}
+
+Hệ thống Nông trại Thông minh hướng đến hai nhóm đối tượng người dùng chính trong chuỗi quy trình vận hành nông nghiệp:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Chủ trang trại hoặc Quản trị viên:}
+    \begin{itemize}
+        \item \textit{Vai trò:} Là người chịu trách nhiệm cao nhất về hiệu quả kinh tế và tính ổn định hạ tầng kỹ thuật của toàn bộ nông trại.
+        \item \textit{Nhu cầu cốt lõi:} 
+        \begin{itemize}
+            \item Cần một bức tranh tổng thể về hiện trạng hoạt động của tất cả các khu đất canh tác mà không cần phải đi khảo sát trực tiếp từng khu vực.
+            \item Kiểm soát tài nguyên vận hành (lượng nước tưới tiêu thụ, thời lượng chạy của máy bơm và thiết bị điện).
+            \item Phân quyền tài khoản cho nhân viên cấp dưới để tránh sự can thiệp sai lệch quy trình kỹ thuật.
+            \item Khai thác các báo cáo tổng hợp chu kỳ mùa vụ để so sánh năng suất giữa các khu đất và tối ưu hóa chi phí sản xuất.
+            \item Kiểm tra nhật ký hoạt động (Audit Log) để truy cứu trách nhiệm khi xảy ra sự cố kỹ thuật hoặc hư hỏng cây trồng.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Người vận hành hoặc Nhân viên kỹ thuật:}
+    \begin{itemize}
+        \item \textit{Vai trò:} Là người trực tiếp theo dõi sức khỏe cây trồng và điều phối các hoạt động chăm sóc tại các mảnh vườn.
+        \item \textit{Nhu cầu cốt lõi:}
+        \begin{itemize}
+            \item Theo dõi các thông số môi trường vi khí hậu (đặc biệt là độ ẩm đất và nhiệt độ) tại thời điểm thực tế để quyết định can thiệp.
+            \item Cài đặt lịch tưới nước tự động và dải ngưỡng an toàn phù hợp với từng giai đoạn sinh trưởng của từng giống cây.
+            \item Nhận thông báo cảnh báo tức thì khi xuất hiện điều kiện bất thường (đất quá khô, thời tiết quá nóng) để xử lý kịp thời.
+            \item Khả năng can thiệp bật/tắt máy bơm, quạt gió từ xa ngay trên ứng dụng mà không cần phải di chuyển đến vị trí tủ điện cơ khí.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Khảo sát khó khăn nghiệp vụ và giải pháp hệ thống}
+
+Bảng~\ref{tab:pain_points} tổng hợp các vấn đề nhức nhối trong canh tác truyền thống và giải pháp tương ứng mà hệ thống Smart Farm mang lại:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|X|}
+\hline
+\textbf{Vấn đề canh tác} & \textbf{Thực trạng truyền thống} & \textbf{Giải pháp của Hệ thống Smart Farm} \\ \hline
+Kiểm soát độ ẩm đất & Nông dân ước lượng độ ẩm bằng mắt hoặc tay; dễ tưới thừa gây thối rễ hoặc tưới thiếu làm héo cây. & Cảm biến độ ẩm đất đo chính xác liên tục; tự động kích hoạt tưới khi chạm ngưỡng tối thiểu và tự ngắt khi đạt độ ẩm tối ưu. \\ \hline
+Phản ứng với thời tiết cực đoan & Chỉ phát hiện khi cây trồng đã có biểu hiện héo lá, sốc nhiệt hoặc úng nước; thiệt hại đã xảy ra. & Giám sát nhiệt độ/độ ẩm không khí 24/7; tự động bật quạt làm mát hoặc gửi cảnh báo đỏ tức thì đến ứng dụng người dùng. \\ \hline
+Chi phí nhân công và thời gian & Phải bố trí nhân lực đi tuần tra và đóng ngắt máy bơm thủ công tại từng van tưới cho từng khu đất. & Điều khiển tập trung từ xa qua ứng dụng; thiết lập lịch trình tự động theo chu kỳ ngày trong tuần và khung giờ trong ngày. \\ \hline
+Đánh giá hiệu quả và hoạch định vụ mùa & Không lưu trữ số liệu lịch sử; việc đúc kết kinh nghiệm sau mỗi vụ mùa phụ thuộc vào trí nhớ cảm tính. & Cung cấp phân hệ Báo cáo \& Phân tích (\gls{httt}): trực quan hóa tương quan môi trường, thời lượng chạy thiết bị và xuất file (CSV/Excel/PDF). \\ \hline
+Minh bạch và trách nhiệm vận hành & Không rõ ai đã bật/tắt thiết bị, ai thay đổi ngưỡng tưới dẫn đến sự cố ngập úng hoặc cháy máy bơm. & Cơ chế Audit Log độc lập tự động lưu vết mọi thao tác can thiệp hệ thống, hỗ trợ tra cứu lịch sử rõ ràng, minh bạch. \\ \hline
+\end{tabularx}
+\caption{Đối chiếu vấn đề canh tác truyền thống và giải pháp Smart Farm}
+\label{tab:pain_points}
+\end{table}
+
+\subsubsection{Danh mục yêu cầu người dùng}
+
+Dựa trên quá trình khảo sát nghiệp vụ và cấu trúc chuẩn của môn học, các yêu cầu của người dùng đối với hệ thống được chuẩn hóa thành 8 yêu cầu cốt lõi (User Requirements), phân tách rõ ràng theo hai khía cạnh:
+
+\paragraph{Khía cạnh IoT và môi trường thực địa:}
+\begin{itemize}
+    \item \textbf{UR-01 (Thu thập dữ liệu vi khí hậu liên tục):} Hệ thống phải liên tục thu thập và cập nhật các chỉ số môi trường (độ ẩm đất, nhiệt độ không khí, độ ẩm không khí, cường độ ánh sáng) từ các khu đất về trung tâm theo chu kỳ đều đặn (không quá 10 giây/lần).
+    \item \textbf{UR-02 (Tự động hóa theo ngưỡng an toàn từng loại cây):} Hệ thống phải cho phép người dùng định nghĩa dải ngưỡng môi trường an toàn (Min/Max) cho từng loại cây trồng và tự động kích hoạt thiết bị tương ứng (bơm nước, quạt thông gió) khi thông số vượt ngưỡng.
+    \item \textbf{UR-03 (Tự động hóa theo lịch trình thời gian):} Hệ thống phải hỗ trợ người dùng lên lịch trình bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian xác định trong ngày nhằm tối ưu hóa chu kỳ tưới tiêu.
+    \item \textbf{UR-04 (Cảnh báo tức thời đa phương thức):} Khi phát hiện điều kiện môi trường vi phạm ngưỡng nguy hiểm, hệ thống phải kích hoạt còi báo động tại chỗ (Buzzer) và đồng thời gửi cảnh báo nổi bật trên giao diện người dùng.
+\end{itemize}
+
+\paragraph{Khía cạnh ứng dụng quản lý và HTTT:}
+\begin{itemize}
+    \item \textbf{UR-05 (Giám sát trực quan toàn diện từ xa):} Người dùng có thể theo dõi hiện trạng hoạt động của toàn bộ nông trại qua giao diện Dashboard tập trung, bao gồm trạng thái kết nối của các thiết bị (Online/Offline) và biểu đồ chuỗi thời gian của từng cảm biến.
+    \item \textbf{UR-06 (Điều khiển can thiệp thủ công từ xa):} Người vận hành có thể gửi lệnh bật/tắt tức thì tới máy bơm, quạt hoặc đèn từ giao diện ứng dụng với phản hồi nhanh chóng (dưới 2 giây).
+    \item \textbf{UR-07 (Báo cáo phân tích đa chiều \& Xuất dữ liệu vụ mùa):} Hệ thống cung cấp công cụ khai thác số liệu chuyên sâu của \gls{httt}, cho phép người dùng lọc động theo khu đất, loại cây, khoảng thời gian để đánh giá tương quan môi trường và tải tệp báo cáo tổng hợp (CSV/Excel/PDF).
+    \item \textbf{UR-08 (Nhật ký kiểm toán vận hành độc lập):} Hệ thống phải ghi nhận tự động toàn bộ lịch sử can thiệp của người dùng và các sự kiện chuyển trạng thái thiết bị vào cơ sở dữ liệu nội bộ phục vụ tra cứu thanh tra.
+\end{itemize}
+
+\subsubsection{Ma trận ánh xạ yêu cầu người dùng sang yêu cầu hệ thống}
+
+Nhằm đảm bảo tính nhất quán và khả năng truy vết yêu cầu (Traceability) từ mục tiêu nghiệp vụ của người dùng sang các chức năng kỹ thuật chi tiết của phần mềm, Bảng~\ref{tab:ur_fr_mapping} thể hiện mối liên kết chặt chẽ giữa 8 Yêu cầu người dùng (\textbf{UR}) với 11 Yêu cầu chức năng (\textbf{FR}) và 12 Use Case (\textbf{UC}) của hệ thống:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|l|p{4.2cm}|l|l|}
+\hline
+\textbf{Mã UR} & \textbf{Tên Yêu cầu người dùng} & \textbf{Ánh xạ sang FR} & \textbf{Ánh xạ sang UC} \\ \hline
+UR-01 & Thu thập dữ liệu vi khí hậu liên tục & FR-03, FR-06 & UC-04, UC-07 \\ \hline
+UR-02 & Tự động hóa theo ngưỡng an toàn từng loại cây & FR-02, FR-09 & UC-03, UC-10 \\ \hline
+UR-03 & Tự động hóa theo lịch trình thời gian & FR-02, FR-08 & UC-03, UC-09 \\ \hline
+UR-04 & Cảnh báo tức thời đa phương thức & FR-09, FR-10 & UC-10, UC-11 \\ \hline
+UR-05 & Giám sát trực quan toàn diện từ xa & FR-05, FR-06 & UC-06, UC-07 \\ \hline
+UR-06 & Điều khiển can thiệp thủ công từ xa & FR-07 & UC-08 \\ \hline
+UR-07 & Báo cáo phân tích đa chiều \& Xuất dữ liệu & FR-11 & UC-12 \\ \hline
+UR-08 & Nhật ký kiểm toán vận hành độc lập & FR-01, FR-04 & UC-01, UC-02, UC-05 \\ \hline
+\end{tabularx}
+\caption{Ma trận ánh xạ vết giữa Yêu cầu người dùng (UR), Yêu cầu chức năng (FR) và Use Case (UC)}
+\label{tab:ur_fr_mapping}
+\end{table}

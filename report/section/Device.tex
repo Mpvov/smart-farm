@@ -1,0 +1,51 @@
+\section{Thiết bị}
+
+Nhằm đáp ứng yêu cầu kỹ thuật của môn học (tối thiểu 02 thiết bị đầu vào và 02 thiết bị đầu ra), hệ thống lựa chọn và tích hợp danh mục phần cứng tiêu chuẩn được phân cấp rõ ràng theo các nhóm chức năng sau:
+
+\subsection{Thiết bị đầu vào}
+
+\subsubsection{Cảm biến độ ẩm đất}
+\begin{itemize}
+    \item \textit{Đặc tính kỹ thuật:} Hoạt động dựa trên nguyên lý đo điện dung hoặc điện trở của môi trường đất nhằm xác định tỷ lệ hàm lượng nước tự do trong đất. Tín hiệu đầu ra tương tự (Analog) được chuẩn hóa về dải đo từ 0\% (đất khô hoàn toàn) đến 100\% (đất bão hòa nước).
+    \item \textit{Vị trí lắp đặt và ứng dụng:} Cảm biến được cắm ngập tại tầng rễ hấp thụ của cây trồng. Dữ liệu độ ẩm đất là thông số quyết định trực tiếp đến hành vi kích hoạt chu trình tưới tiêu tự động cho từng mảnh vườn.
+\end{itemize}
+
+\subsubsection{Cảm biến nhiệt độ và độ ẩm không khí}
+\begin{itemize}
+    \item \textit{Đặc tính kỹ thuật:} Module cảm biến (DHT11/DHT20) tích hợp cảm biến điện dung đo độ ẩm không khí và cảm biến nhiệt điện trở (NTC) đo nhiệt độ môi trường xung quanh. Dải đo nhiệt độ từ 0 -- $50^\circ\text{C}$ (sai số $\pm 2^\circ\text{C}$) và độ ẩm tương đối từ 20\% -- 90\% RH (sai số $\pm 5\%$).
+    \item \textit{Vị trí lắp đặt và ứng dụng:} Được lắp đặt trong lồng bảo vệ thông thoáng tại trung tâm khu vườn, làm căn cứ kích hoạt quạt thông gió hạ nhiệt hoặc đóng rèm cảnh báo nắng nóng cực đoan.
+\end{itemize}
+
+\subsubsection{Cảm biến cường độ ánh sáng}
+\begin{itemize}
+    \item \textit{Đặc tính kỹ thuật:} Module sử dụng quang điện trở (LDR) với độ nhạy cao trong phổ ánh sáng khả kiến, giá trị điện trở giảm mạnh khi cường độ chiếu sáng (Lux) tăng lên.
+    \item \textit{Vị trí lắp đặt và ứng dụng:} Được bố trí phía trên tán lá cây, hỗ trợ hệ thống nhận diện thời điểm chuyển giao ngày/đêm và tự động bật đèn quang hợp nhân tạo vào những ngày âm u thiếu sáng.
+\end{itemize}
+
+\subsection{Thiết bị đầu ra}
+
+\subsubsection{Mạch Rơ-le điều khiển máy bơm nước}
+\begin{itemize}
+    \item \textit{Đặc tính kỹ thuật:} Module Relay 5V cách ly quang (Optocoupler), chịu tải dòng điện xoay chiều AC 250V/10A hoặc dòng điện một chiều DC 30V/10A, đảm bảo an toàn tuyệt đối cho vi điều khiển khi đóng ngắt máy bơm nước mini 12V.
+    \item \textit{Mục đích sử dụng:} Thực thi lệnh cấp nước tưới tự động cho khu đất khi độ ẩm đất xuống thấp dưới ngưỡng cho phép hoặc theo lịch trình tưới đã hẹn trước.
+\end{itemize}
+
+\subsubsection{Mạch Rơ-le điều khiển quạt thông gió và đèn quang hợp}
+\begin{itemize}
+    \item \textit{Đặc tính kỹ thuật:} Module Relay điều khiển công tắc điện cho động cơ quạt làm mát lưu thông không khí hoặc dải đèn LED chuyên dụng phát quang phổ xanh/đỏ cho cây quang hợp.
+    \item \textit{Mục đích sử dụng:} Điều hòa vi khí hậu khi nhiệt độ môi trường tăng quá cao hoặc bổ sung nguồn sáng kích thích quá trình phát triển của cây trồng.
+\end{itemize}
+
+\subsubsection{Còi báo động tại chỗ}
+\begin{itemize}
+    \item \textit{Đặc tính kỹ thuật:} Module còi chip tích hợp sẵn mạch dao động nội (Active Buzzer), chỉ cần cấp mức tín hiệu logic cao (HIGH) từ chân vi điều khiển là phát âm thanh cảnh báo tần số $2.5\text{kHz}$ với âm lượng $> 85\text{dB}$.
+    \item \textit{Mục đích sử dụng:} Cảnh báo tức thời tại hiện trường nông trại khi phát hiện các điều kiện sự cố nguy cấp (như nhiệt độ quá cao gây nguy cơ cháy hoặc sự cố hỏng nguồn nước).
+\end{itemize}
+
+\subsection{Mạch điều khiển trung tâm và Cổng kết nối}
+
+\subsubsection{Mạch vi điều khiển}
+Mạch vi điều khiển (Yolo:bit / Micro:bit) đóng vai trò nút xử lý ngoại vi (Edge Node) tại khu đất, thực hiện đọc tín hiệu liên tục từ các cảm biến, xử lý chuyển đổi ADC và truyền thông dữ liệu hai chiều với máy tính Gateway thông qua giao thức nối tiếp (UART/Serial). Đồng thời, mạch nhận lệnh từ Gateway để xuất mức logic kích hoạt các chân GPIO đóng ngắt rơ-le.
+
+\subsubsection{Cổng kết nối IoT Gateway}
+Chương trình Gateway được hiện thực bằng ngôn ngữ Python, chạy trên máy tính điều hành trung tâm (PC hoặc Raspberry Pi). Gateway đóng vai trò cầu nối thông tin hai chiều: nhận dữ liệu cảm biến qua cổng nối tiếp và đóng gói gửi lên server Adafruit IO bằng giao thức MQTT; ngược lại, Gateway lắng nghe các kênh Feed điều khiển từ server và chuyển tiếp lệnh xuống mạch vi điều khiển trong vòng dưới 2 giây.
