@@ -2,29 +2,29 @@
 
 \subsection{Bối cảnh và Tính cấp thiết của đề tài}
 
-Nông nghiệp là ngành kinh tế đóng vai trò then chốt tại Việt Nam. Tuy nhiên, các phương pháp canh tác nông nghiệp truyền thống hiện nay đang đối mặt với nhiều rào cản và thách thức lớn:
+Nông nghiệp là ngành kinh tế đóng vai trò then chốt tại Việt Nam. Xu hướng chuyển dịch từ canh tác ngoài trời sang mô hình \textbf{nông trại nhà màng / nhà lưới công nghệ cao (Greenhouse/Net-house)} đang phát triển mạnh mẽ nhằm kiểm soát sâu bệnh và giảm thiểu tác động ngoại cảnh. Tuy nhiên, mô hình nhà màng cũng đặt ra những thách thức kỹ thuật đặc thù:
 \begin{itemize}
-    \item \textbf{Phụ thuộc nặng nề vào điều kiện thời tiết tự nhiên:} Các biến đổi khí hậu cực đoan, hạn hán, sương muối hoặc nắng nóng bất thường khiến cây trồng dễ bị sốc nhiệt và suy giảm năng suất nghiêm trọng.
-    \item \textbf{Canh tác dựa trên kinh nghiệm cảm tính:} Việc tưới tiêu và chiếu sáng thủ công thường không dựa trên số liệu định lượng về độ ẩm đất hay nhiệt độ thực tế của tầng rễ, dẫn đến tình trạng lãng phí tài nguyên nước, tiêu hao năng lượng điện hoặc gây úng ngập rễ sinh nấm bệnh.
-    \item \textbf{Chi phí nhân công cao và quản lý phân tán:} Đối với các nông trại quy mô vừa và lớn bao gồm nhiều khu đất (Zone/Plot) trồng các loại cây trồng khác nhau, việc phân công nhân lực đi kiểm tra và bật/tắt thiết bị thủ công đòi hỏi chi phí vận hành lớn nhưng dễ phát sinh sai sót và phản ứng chậm trễ trước các sự cố môi trường.
-    \item \textbf{Thiếu dữ liệu lịch sử phục vụ ra quyết định (Khoảng trống HTTT):} Mô hình canh tác truyền thống hoàn toàn thiếu vắng cơ chế ghi nhận nhật ký vi khí hậu chuỗi thời gian, khiến người quản lý nông trại không thể phân tích tương quan giữa các đợt tưới, vi khí hậu và năng suất mùa vụ để tối ưu hóa quy trình canh tác cho các vụ mùa kế tiếp.
+    \item \textbf{Hiệu ứng giữ nhiệt và biến động vi khí hậu trong không gian kín:} Không gian nhà màng hấp thụ bức xạ mặt trời rất nhanh nhưng thoát nhiệt chậm. Vào các khung giờ nắng gắt hoặc mùa khô, nhiệt độ bên trong có thể vượt ngưỡng $40 - 45^\circ\text{C}$ kèm theo hiện tượng ngột khí, làm cây trồng bị sốc nhiệt, cháy lá và thui hoa nếu không có hệ thống quạt thông gió đối lưu không khí hoặc rèm che nắng kịp thời.
+    \item \textbf{Canh tác dựa trên kinh nghiệm cảm tính:} Việc tưới tiêu và điều tiết vi khí hậu thủ công thường không dựa trên số liệu định lượng về độ ẩm đất hay nhiệt độ thực tế, dẫn đến tình trạng lãng phí tài nguyên nước, tiêu hao năng lượng điện hoặc gây úng ngập rễ sinh nấm bệnh trong môi trường kín.
+    \item \textbf{Chi phí nhân công cao và quản lý phân tán:} Đối với các nông trại quy mô gồm nhiều nhà màng/khu đất (Zone/Plot) canh tác các giống cây khác nhau (như dưa lưới, dâu tây, hoa màu), việc phân công nhân lực đi kiểm tra từng khu vực và đóng/mở quạt, bơm thủ công đòi hỏi chi phí vận hành lớn nhưng phản ứng chậm trễ trước các biến động thời tiết cực đoan.
+    \item \textbf{Thiếu dữ liệu lịch sử phục vụ ra quyết định:} Mô hình canh tác truyền thống hoàn toàn thiếu vắng cơ chế ghi nhận nhật ký vi khí hậu chuỗi thời gian, khiến người quản lý nông trại không thể phân tích tương quan giữa các đợt tưới, vi khí hậu và năng suất mùa vụ để tối ưu hóa quy trình canh tác cho các vụ mùa kế tiếp.
 \end{itemize}
 
-Trước thực trạng đó, việc ứng dụng công nghệ Internet vạn vật (\gls{iot}) kết hợp với \gls{httt} quản lý tập trung – mô hình \textbf{Nông trại thông minh (Smart Farm)} – trở thành một xu thế tất yếu nhằm chuyển đổi số ngành nông nghiệp, nâng cao hiệu quả kinh tế và hướng đến canh tác bền vững.
+Trước thực trạng đó, việc ứng dụng công nghệ Internet vạn vật (\gls{iot}) kết hợp với \gls{httt} quản lý tập trung, mô hình \textbf{Nông trại thông minh (Smart Farm)} cho hệ thống nhà màng công nghệ cao, trở thành một xu thế tất yếu nhằm tối ưu hóa vi khí hậu, nâng cao hiệu quả kinh tế và hướng đến canh tác bền vững.
 
 \subsection{Mục tiêu và Phạm vi của dự án}
 
 \subsubsection{Mục tiêu tổng quát}
 Mục tiêu cốt lõi của đề tài là xây dựng một hệ thống hoàn chỉnh từ tầng phần cứng cảm biến, tầng truyền thông mạng, cổng kết nối \gls{iot} Gateway đến tầng ứng dụng quản lý trung tâm, hỗ trợ người nông dân và chủ trang trại quản lý, giám sát và vận hành thiết bị nông trại một cách tự động, chính xác và hiệu quả.
 
-\subsubsection{Mục tiêu cụ thể theo chuẩn 5 Module môn học}
+\subsubsection{Mục tiêu cụ thể theo Module}
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Module 1 (Thu thập dữ liệu đầu vào):} Tự động đo đạc liên tục các thông số môi trường vi khí hậu quan trọng (độ ẩm đất, nhiệt độ, độ ẩm không khí, cường độ ánh sáng) tại các khu đất canh tác.
     \item \textbf{Module 2 (Kiểm tra dữ liệu \& Phát hiện vượt ngưỡng):} Xử lý dữ liệu thu thập theo thời gian thực, đối chiếu với dải ngưỡng an toàn tương ứng của từng loại cây trồng và phát hiện kịp thời các điều kiện môi trường bất thường.
     \item \textbf{Module 3 (Điều khiển thiết bị đầu ra):} Hỗ trợ song song hai cơ chế: điều khiển tự động (dựa trên quy tắc ngưỡng và lịch trình thời gian) và điều khiển thủ công từ xa đối với các cơ cấu chấp hành (máy bơm tưới, van điện từ, đèn quang hợp, quạt thông gió).
     \item \textbf{Module 4 (Nhật ký hoạt động ứng dụng - Audit Log):} Ghi nhận độc lập mọi biến động hệ thống và hành vi can thiệp của người dùng vào cơ sở dữ liệu nội bộ (không sử dụng log mặc định của IoT Server) nhằm phục vụ thanh tra, kiểm toán vận hành.
-    \item \textbf{Module 5 (Data Dashboard \& Phân tích HTTT):} Xây dựng giao diện Dashboard trực quan hóa trạng thái toàn hệ thống theo thời gian thực và cung cấp công cụ báo cáo phân tích đa chiều, hỗ trợ trích xuất dữ liệu mùa vụ.
+    \item \textbf{Module 5 (Data Dashboard \& Phân tích):} Xây dựng giao diện Dashboard trực quan hóa trạng thái toàn hệ thống theo thời gian thực và cung cấp công cụ báo cáo phân tích đa chiều, hỗ trợ trích xuất dữ liệu mùa vụ.
 \end{enumerate}
 
 \subsubsection{Phạm vi hệ thống}
-Hệ thống được thiết kế theo cấu trúc phân cấp linh hoạt: Một nông trại được chia thành nhiều \textbf{Khu đất / Mảnh vườn (Zone/Plot)}. Mỗi khu đất được gán với một \textbf{Loại cây trồng (Crop Type)} cụ thể (ví dụ: khu trồng dưa lưới, khu trồng dâu tây, khu trồng rau thủy canh). Mỗi loại cây trồng sẽ sở hữu bộ cấu hình riêng biệt về dải ngưỡng sinh trưởng an toàn, lịch tưới tiêu và danh mục thiết bị phụ trách.
+Hệ thống được thiết kế theo cấu trúc phân cấp linh hoạt: Một nông trại được chia thành nhiều \textbf{Khu đất / Mảnh vườn hoặc Nhà màng (Zone/Plot)}. Mỗi khu đất được gán với một \textbf{Loại cây trồng (Crop Type)} cụ thể (ví dụ: khu trồng dưa lưới trong nhà màng, khu trồng dâu tây, khu trồng rau thủy canh). Mỗi loại cây trồng sẽ sở hữu bộ cấu hình riêng biệt về dải ngưỡng sinh trưởng an toàn (nhiệt độ, độ ẩm không khí, độ ẩm đất), lịch tưới tiêu và danh mục thiết bị phụ trách (bơm nước, quạt thông gió, đèn LED quang hợp).
