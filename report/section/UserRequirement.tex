@@ -44,7 +44,7 @@ Bảng~\ref{tab:pain_points} tổng hợp các vấn đề nhức nhối trong c
 \hline
 \textbf{Vấn đề canh tác} & \textbf{Thực trạng truyền thống} & \textbf{Giải pháp của Hệ thống Smart Farm} \\ \hline
 Kiểm soát độ ẩm đất & Nông dân ước lượng độ ẩm bằng mắt hoặc tay; dễ tưới thừa gây thối rễ hoặc tưới thiếu làm héo cây. & Cảm biến độ ẩm đất đo chính xác liên tục; tự động kích hoạt tưới khi chạm ngưỡng tối thiểu và tự ngắt khi đạt độ ẩm tối ưu. \\ \hline
-Phản ứng với thời tiết cực đoan & Chỉ phát hiện khi cây trồng đã có biểu hiện héo lá, sốc nhiệt hoặc úng nước; thiệt hại đã xảy ra. & Giám sát nhiệt độ/độ ẩm không khí 24/7; tự động bật quạt làm mát hoặc gửi cảnh báo đỏ tức thì đến ứng dụng người dùng. \\ \hline
+Phản ứng với thời tiết cực đoan & Chỉ phát hiện khi cây trồng đã có biểu hiện héo lá, sốc nhiệt hoặc kiệt nước; thiệt hại mùa vụ đã xảy ra. & Giám sát nhiệt độ/độ ẩm không khí 24/7; tự động kích hoạt phun sương hạ nhiệt tầng tán hoặc gửi cảnh báo đỏ tức thì đến ứng dụng người dùng. \\ \hline
 Chi phí nhân công và thời gian & Phải bố trí nhân lực đi tuần tra và đóng ngắt máy bơm thủ công tại từng van tưới cho từng khu đất. & Điều khiển tập trung từ xa qua ứng dụng; thiết lập lịch trình tự động theo chu kỳ ngày trong tuần và khung giờ trong ngày. \\ \hline
 Đánh giá hiệu quả và hoạch định vụ mùa & Không lưu trữ số liệu lịch sử; việc đúc kết kinh nghiệm sau mỗi vụ mùa phụ thuộc vào trí nhớ cảm tính. & Cung cấp phân hệ Báo cáo \& Phân tích (\gls{httt}): trực quan hóa tương quan môi trường, thời lượng chạy thiết bị và xuất file (CSV/Excel/PDF). \\ \hline
 Minh bạch và trách nhiệm vận hành & Không rõ ai đã bật/tắt thiết bị, ai thay đổi ngưỡng tưới dẫn đến sự cố ngập úng hoặc cháy máy bơm. & Cơ chế Audit Log độc lập tự động lưu vết mọi thao tác can thiệp hệ thống, hỗ trợ tra cứu lịch sử rõ ràng, minh bạch. \\ \hline
@@ -60,15 +60,15 @@ Dựa trên quá trình khảo sát nghiệp vụ và cấu trúc chuẩn của 
 \paragraph{Khía cạnh IoT và môi trường thực địa:}
 \begin{itemize}
     \item \textbf{UR-01 (Thu thập dữ liệu vi khí hậu liên tục):} Hệ thống phải liên tục thu thập và cập nhật các chỉ số môi trường (độ ẩm đất, nhiệt độ không khí, độ ẩm không khí, cường độ ánh sáng) từ các khu đất về trung tâm theo chu kỳ đều đặn (không quá 10 giây/lần).
-    \item \textbf{UR-02 (Tự động hóa theo ngưỡng an toàn từng loại cây):} Hệ thống phải cho phép người dùng định nghĩa dải ngưỡng môi trường an toàn (Min/Max) cho từng loại cây trồng và tự động kích hoạt thiết bị tương ứng (bơm nước, quạt thông gió) khi thông số vượt ngưỡng.
-    \item \textbf{UR-03 (Tự động hóa theo lịch trình thời gian):} Hệ thống phải hỗ trợ người dùng lên lịch trình bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian xác định trong ngày nhằm tối ưu hóa chu kỳ tưới tiêu.
-    \item \textbf{UR-04 (Cảnh báo tức thời đa phương thức):} Khi phát hiện điều kiện môi trường vi phạm ngưỡng nguy hiểm, hệ thống phải kích hoạt còi báo động tại chỗ (Buzzer) và đồng thời gửi cảnh báo nổi bật trên giao diện người dùng.
+    \item \textbf{UR-02 (Tự động hóa theo ngưỡng an toàn từng loại cây):} Hệ thống phải cho phép người dùng định nghĩa dải ngưỡng môi trường an toàn (Min/Max) cho từng loại cây trồng và tự động kích hoạt thiết bị tương ứng (bơm nước tưới gốc, hệ thống phun sương làm mát) khi thông số vượt ngưỡng.
+    \item \textbf{UR-03 (Tự động hóa theo lịch trình thời gian):} Hệ thống phải hỗ trợ người dùng lên lịch trình bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian xác định trong ngày nhằm tối ưu hóa chu kỳ tưới tiêu hoặc chong đèn quang kỳ.
+    \item \textbf{UR-04 (Cảnh báo tức thời đa phương thức):} Khi phát hiện điều kiện môi trường vi phạm ngưỡng nguy hiểm hoặc sự cố thiết bị, hệ thống phải kích hoạt còi báo động tại chỗ (Buzzer) và đồng thời gửi cảnh báo nổi bật trên giao diện người dùng.
 \end{itemize}
 
 \paragraph{Khía cạnh ứng dụng quản lý và HTTT:}
 \begin{itemize}
     \item \textbf{UR-05 (Giám sát trực quan toàn diện từ xa):} Người dùng có thể theo dõi hiện trạng hoạt động của toàn bộ nông trại qua giao diện Dashboard tập trung, bao gồm trạng thái kết nối của các thiết bị (Online/Offline) và biểu đồ chuỗi thời gian của từng cảm biến.
-    \item \textbf{UR-06 (Điều khiển can thiệp thủ công từ xa):} Người vận hành có thể gửi lệnh bật/tắt tức thì tới máy bơm, quạt hoặc đèn từ giao diện ứng dụng với phản hồi nhanh chóng (dưới 2 giây).
+    \item \textbf{UR-06 (Điều khiển can thiệp thủ công từ xa):} Người vận hành có thể gửi lệnh bật/tắt tức thì tới máy bơm tưới, hệ thống phun sương hoặc dàn đèn từ giao diện ứng dụng với phản hồi nhanh chóng (dưới 2 giây).
     \item \textbf{UR-07 (Báo cáo phân tích đa chiều \& Xuất dữ liệu vụ mùa):} Hệ thống cung cấp công cụ khai thác số liệu chuyên sâu của \gls{httt}, cho phép người dùng lọc động theo khu đất, loại cây, khoảng thời gian để đánh giá tương quan môi trường và tải tệp báo cáo tổng hợp (CSV/Excel/PDF).
     \item \textbf{UR-08 (Nhật ký kiểm toán vận hành độc lập):} Hệ thống phải ghi nhận tự động toàn bộ lịch sử can thiệp của người dùng và các sự kiện chuyển trạng thái thiết bị vào cơ sở dữ liệu nội bộ phục vụ tra cứu thanh tra.
 \end{itemize}

@@ -40,7 +40,7 @@
 | :--- | :--- | :--- |
 | **Đề tài** | **ĐÃ CHỐT** | Smart Farm (Nông trại thông minh). |
 | **Thiết bị Input** | *Chưa chốt* | Đề xuất tối ưu (bám sát tài liệu môn học): <br>1. Cảm biến độ ẩm đất (Soil moisture)<br>2. Cảm biến nhiệt độ & độ ẩm không khí (DHT11/DHT20)<br>*(Dự phòng: Cảm biến ánh sáng LDR)* |
-| **Thiết bị Output** | *Chưa chốt* | Đề xuất tối ưu: <br>1. Relay điều khiển máy bơm nước (Pump)<br>2. Relay quạt thông gió hoặc Đèn quang hợp (Fan/LED)<br>*(Dự phòng: Còi buzzer cảnh báo vượt ngưỡng)* |
+| **Thiết bị Output** | *Chưa chốt* | Đề xuất tối ưu (phù hợp bối cảnh nông trại ngoài trời tại VN): <br>1. Relay điều khiển máy bơm nước tưới gốc (Pump)<br>2. Relay hệ thống phun sương hạ nhiệt tầng tán hoặc Dàn đèn chong quang kỳ (Misting/Light)<br>*(Dự phòng: Còi buzzer cảnh báo vượt ngưỡng / cạn nguồn nước)* |
 | **Nền tảng ứng dụng** | *Chưa chốt* | Web App (React / Next.js) hoặc Mobile App (Flutter / React Native). |
 | **Backend & CSDL** | *Chưa chốt* | Python (FastAPI) hoặc Node.js (Express) + PostgreSQL/MySQL (rất mạnh cho báo cáo HTTT). |
 | **IoT Gateway** | *Theo chuẩn môn học* | Python Script (`pyserial` giao tiếp UART với Yolo:bit / Microbit, `paho-mqtt` giao tiếp Adafruit IO). |

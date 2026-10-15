@@ -14,7 +14,7 @@ FR-03 & Quản lý danh mục thiết bị & Quản lý thông tin thiết bị 
 FR-04 & Nhật ký ứng dụng (Audit Log) & Ghi nhận độc lập mọi hành động của người dùng (bật/tắt thiết bị, sửa lịch trình, đổi ngưỡng cảnh báo) vào cơ sở dữ liệu nội bộ; hỗ trợ tra cứu thanh tra. \\ \hline
 FR-05 & Giám sát tổng quan (Dashboard) & Hiển thị dữ liệu tổng hợp toàn hệ thống theo thời gian thực (trạng thái kết nối Online/Offline của thiết bị, số lượng khu đất, cảnh báo đang kích hoạt). \\ \hline
 FR-06 & Giám sát chi tiết \& Biểu đồ & Hiển thị biểu đồ chuỗi thời gian (time-series chart) thu thập từ các thiết bị cảm biến (nhiệt độ, độ ẩm không khí, độ ẩm đất, cường độ ánh sáng). \\ \hline
-FR-07 & Điều khiển thiết bị thủ công & Cho phép người vận hành gửi lệnh Bật/Tắt tức thì tới các thiết bị chấp hành (máy bơm tưới, van điện từ, đèn quang hợp, quạt thông gió). \\ \hline
+FR-07 & Điều khiển thiết bị thủ công & Cho phép người vận hành gửi lệnh Bật/Tắt tức thì tới các thiết bị chấp hành (máy bơm tưới, van điện từ, hệ thống phun sương làm mát, dàn đèn quang kỳ). \\ \hline
 FR-08 & Quản lý lịch trình tự động & Cấu hình lịch bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian trong ngày; áp dụng theo từng khu đất hoặc loại cây trồng. \\ \hline
 FR-09 & Thiết lập ngưỡng \& Hành động & Cấu hình ngưỡng an toàn (Min/Max) cho từng thông số cảm biến theo loại cây; thiết lập hành động tự động kích hoạt thiết bị chấp hành đi kèm. \\ \hline
 FR-10 & Tiếp nhận \& Xử lý cảnh báo & Tự động phát hiện cảm biến vượt ngưỡng, hiển thị cảnh báo đỏ thời gian thực trên giao diện và ghi nhận trạng thái xác nhận xử lý của nhân viên. \\ \hline
@@ -152,7 +152,7 @@ Dưới đây là các bảng đặc tả chi tiết cho các Use Case nghiệp 
 \textbf{Mã Use Case} & \textbf{UC-08} \\ \hline
 \textbf{Tên Use Case} & \textbf{Điều khiển thiết bị chấp hành thủ công} \\ \hline
 \textbf{Tác nhân chính} & Người vận hành (Operator) \\ \hline
-\textbf{Mô tả ngắn} & Người vận hành gửi lệnh Bật/Tắt tức thì tới các thiết bị cơ cấu chấp hành (bơm, van tưới, đèn, quạt) từ giao diện Web/App. \\ \hline
+\textbf{Mô tả ngắn} & Người vận hành gửi lệnh Bật/Tắt tức thì tới các thiết bị cơ cấu chấp hành (máy bơm tưới, van điện từ, hệ thống phun sương làm mát, dàn đèn) từ giao diện Web/App. \\ \hline
 \textbf{Tiền điều kiện} & Người dùng đã đăng nhập; thiết bị chấp hành đang ở trạng thái Online và sẵn sàng nhận lệnh. \\ \hline
 \textbf{Hậu điều kiện} & Trạng thái hoạt động của thiết bị thay đổi ngoài thực tế; hệ thống tự động lưu một bản ghi tác động vào bảng Audit Log. \\ \hline
 \textbf{Luồng sự kiện chính} & 

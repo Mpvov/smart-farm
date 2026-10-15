@@ -13,33 +13,33 @@ Nhằm đáp ứng yêu cầu kỹ thuật của môn học (tối thiểu 02 th
 \subsubsection{Cảm biến nhiệt độ và độ ẩm không khí}
 \begin{itemize}
     \item \textit{Đặc tính kỹ thuật:} Module cảm biến (DHT11/DHT20) tích hợp cảm biến điện dung đo độ ẩm không khí và cảm biến nhiệt điện trở (NTC) đo nhiệt độ môi trường xung quanh. Dải đo nhiệt độ từ 0 -- $50^\circ\text{C}$ (sai số $\pm 2^\circ\text{C}$) và độ ẩm tương đối từ 20\% -- 90\% RH (sai số $\pm 5\%$).
-    \item \textit{Vị trí lắp đặt và ứng dụng:} Được bố trí trong lồng bảo vệ thông thoáng tại trung tâm khu vườn/nhà màng, làm căn cứ kích hoạt quạt thông gió hạ nhiệt vi khí hậu hoặc phát cảnh báo hạ rèm che nắng khi nhiệt độ trong nhà màng tăng cao.
+    \item \textit{Vị trí lắp đặt và ứng dụng:} Được bố trí trong trạm quan trắc nhỏ có lồng che bảo vệ (tránh ánh nắng chiếu trực tiếp và mưa tạt) đặt giữa các lô vườn, làm căn cứ kích hoạt hệ thống phun sương hạ nhiệt tầng tán hoặc phát cảnh báo khi thời tiết nắng gắt cực đoan khiến cây bị sốc nhiệt và mất nước nhanh.
 \end{itemize}
 
 \subsubsection{Cảm biến cường độ ánh sáng}
 \begin{itemize}
     \item \textit{Đặc tính kỹ thuật:} Module sử dụng quang điện trở (LDR) với độ nhạy cao trong phổ ánh sáng khả kiến, giá trị điện trở giảm mạnh khi cường độ chiếu sáng (Lux) tăng lên.
-    \item \textit{Vị trí lắp đặt và ứng dụng:} Được bố trí phía trên tán lá cây, hỗ trợ hệ thống nhận diện thời điểm chuyển giao ngày/đêm và tự động bật đèn quang hợp nhân tạo vào những ngày âm u thiếu sáng.
+    \item \textit{Vị trí lắp đặt và ứng dụng:} Được bố trí phía trên tán cây, hỗ trợ hệ thống nhận diện thời điểm hoàng hôn buông xuống hoặc điều kiện thiếu sáng để tự động kích hoạt dàn đèn chong quang kỳ (ví dụ: mô hình chong đèn kích thích ra hoa nghịch vụ cho cây thanh long hoặc hoa cúc).
 \end{itemize}
 
 \subsection{Thiết bị đầu ra}
 
 \subsubsection{Mạch Rơ-le điều khiển máy bơm nước}
 \begin{itemize}
-    \item \textit{Đặc tính kỹ thuật:} Module Relay 5V cách ly quang (Optocoupler), chịu tải dòng điện xoay chiều AC 250V/10A hoặc dòng điện một chiều DC 30V/10A, đảm bảo an toàn tuyệt đối cho vi điều khiển khi đóng ngắt máy bơm nước mini 12V.
-    \item \textit{Mục đích sử dụng:} Thực thi lệnh cấp nước tưới tự động cho khu đất khi độ ẩm đất xuống thấp dưới ngưỡng cho phép hoặc theo lịch trình tưới đã hẹn trước.
+    \item \textit{Đặc tính kỹ thuật:} Module Relay 5V cách ly quang (Optocoupler), chịu tải dòng điện xoay chiều AC 250V/10A hoặc dòng điện một chiều DC 30V/10A, đảm bảo an toàn tuyệt đối cho vi điều khiển khi đóng ngắt động cơ máy bơm tưới nước.
+    \item \textit{Mục đích sử dụng:} Thực thi lệnh cấp nước tưới tự động cho từng lô đất khi độ ẩm đất xuống thấp dưới ngưỡng cho phép hoặc theo lịch trình tưới định kỳ đã lập trước.
 \end{itemize}
 
-\subsubsection{Mạch Rơ-le điều khiển quạt thông gió và đèn quang hợp}
+\subsubsection{Mạch Rơ-le điều khiển hệ thống làm mát và đèn quang kỳ}
 \begin{itemize}
-    \item \textit{Đặc tính kỹ thuật:} Module Relay điều khiển công tắc điện cho động cơ quạt làm mát lưu thông không khí hoặc dải đèn LED chuyên dụng phát quang phổ xanh/đỏ cho cây quang hợp.
-    \item \textit{Mục đích sử dụng:} Điều hòa và đối lưu vi khí hậu trong nhà màng khi nhiệt độ môi trường tăng cao, hoặc bổ sung nguồn sáng kích thích quá trình phát triển của cây trồng vào mùa mưa/âm u.
+    \item \textit{Đặc tính kỹ thuật:} Module Relay điều khiển công tắc điện cho động cơ máy bơm phun sương làm mát hoặc dàn đèn LED/đèn compact công suất cao phục vụ chong đèn xử lý ra hoa.
+    \item \textit{Mục đích sử dụng:} Kích hoạt béc phun sương làm mát tầng lá khi nhiệt độ không khí ngoài trời tăng quá cao, hoặc bật dàn đèn chong vào ban đêm theo đúng khung giờ kích thích sinh trưởng cây trồng.
 \end{itemize}
 
 \subsubsection{Còi báo động tại chỗ}
 \begin{itemize}
     \item \textit{Đặc tính kỹ thuật:} Module còi chip tích hợp sẵn mạch dao động nội (Active Buzzer), chỉ cần cấp mức tín hiệu logic cao (HIGH) từ chân vi điều khiển là phát âm thanh cảnh báo tần số $2.5\text{kHz}$ với âm lượng $> 85\text{dB}$.
-    \item \textit{Mục đích sử dụng:} Cảnh báo tức thời tại hiện trường nông trại khi phát hiện các điều kiện sự cố nguy cấp (như nhiệt độ quá cao gây nguy cơ cháy hoặc sự cố hỏng nguồn nước).
+    \item \textit{Mục đích sử dụng:} Cảnh báo tức thời tại hiện trường nông trại khi phát hiện các điều kiện sự cố nguy cấp (như cảnh báo máy bơm chạy không tải do cạn nguồn nước ngầm, sự cố vỡ đường ống hoặc thời tiết vượt ngưỡng nguy hiểm).
 \end{itemize}
 
 \subsection{Mạch điều khiển trung tâm và Cổng kết nối}
