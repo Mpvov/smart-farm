@@ -25,7 +25,7 @@
 * **Định dạng báo cáo chính thức:** **LaTeX** (đã khởi tạo trong thư mục `report/` theo mẫu chuẩn Khoa CSE - ĐH Bách Khoa).
 * **Hiện trạng phần Use Case (Bạn A đã hoàn thành trong `report/section/UseCase.tex`):**
   * 11 Yêu cầu chức năng: `FR-01` $\rightarrow$ `FR-11`.
-  * 4 Yêu cầu phi chức năng: `NFR-01` $\rightarrow$ `NFR-04`.
+  * 6 Yêu cầu phi chức năng (đo lường định lượng 100%): `NFR-01` $\rightarrow$ `NFR-06` (gồm Độ trễ, Toàn vẹn Audit Log, Chịu lỗi mất mạng, Bảo mật RBAC, Hiệu năng báo cáo HTTT, Tính khả dụng WCAG).
   * 2 Tác nhân: Quản trị viên (Admin) và Người vận hành (Operator).
   * 12 Use Case: Phân hệ Quản trị (UC-01 $\rightarrow$ UC-05), Phân hệ Giám sát & Điều khiển (UC-06 $\rightarrow$ UC-08), Phân hệ Tự động hóa & Cảnh báo (UC-09 $\rightarrow$ UC-11), Phân hệ Báo cáo & Phân tích HTTT (UC-12).
   * Sơ đồ `report/images/usecase_diagram.png` và Ma trận phân nhiệm (Traceability Matrix).
