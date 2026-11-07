@@ -221,6 +221,13 @@ if ($LASTEXITCODE -ne 0) {
   $fail += "contracts/test_contracts.py: test contract FAIL -> sua contract/samples/code cho khop"
 }
 
+if (Test-Path (Join-Path $root 'backend/test_backend.py')) {
+  python -m backend.test_backend
+  if ($LASTEXITCODE -ne 0) {
+    $fail += "backend/test_backend.py: backend test FAIL -> sua backend code cho pass"
+  }
+}
+
 if ($fail.Count -gt 0) {
   $fail | Select-Object -Unique | ForEach-Object { Write-Host "FAIL $_" -ForegroundColor Red }
   exit 1

@@ -47,11 +47,3 @@ report_ready_to_upload.zip
 Thumbs.db
 .vscode/
 .idea/
-
-# Claude Code
-.claude/skills
-.claude/rules
-.claude/settings.local.json
-
-# Git Worktrees
-.worktrees/
