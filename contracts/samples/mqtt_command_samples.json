@@ -1,0 +1,6 @@
+[
+  {"feed": "smartfarm-pump", "value": "1"},
+  {"feed": "smartfarm-pump", "value": "0"},
+  {"feed": "smartfarm-led", "value": "1"},
+  {"feed": "smartfarm-led", "value": "0"}
+]

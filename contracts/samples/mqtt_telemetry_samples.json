@@ -1,0 +1,5 @@
+[
+  {"feed": "smartfarm-temp", "value": 28.5},
+  {"feed": "smartfarm-humi", "value": 65.0},
+  {"feed": "smartfarm-soil", "value": 42.0}
+]
