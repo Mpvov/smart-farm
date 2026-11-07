@@ -26,10 +26,12 @@
 - [ ] **IoT Gateway:** Viết script Python UART ↔ Adafruit IO trong `gateway/`, test contract pass 100%. (Phụ trách: N, Q)
 - [ ] **Nghiệm thu tích hợp:** Test parser và test contract chạy tự động qua `scripts/check.ps1`. (Phụ trách: Cả nhóm)
 
-### Việc của P
-- [x] **Tài liệu Use Case:** Hoàn thiện đặc tả chi tiết 13 Use Case trong `docs/USE_CASES.md` khớp bối cảnh Farm $\rightarrow$ Zone $\rightarrow$ Crop và RBAC 2 roles. (Phụ trách: P)
-- [ ] **Wireframe Mockup UI:** Dựng wireframe mockup cho từng màn hình `SCR-01` đến `SCR-10` trong `frontend/mockups/` (Responsive Web). (Phụ trách: P)
-- [ ] **Phát triển Backend:** Thiết kế ERD, API schema theo `contracts/api.md`, hiện thực bảng Audit Log và phân quyền RBAC. (Phụ trách: P)
+### Việc của P (Personal Plan — Ưu tiên Live UI/UX & Prototype chạy thật để lấy Feedback)
+- [x] **Tài liệu Use Case:** Hoàn thiện đặc tả chi tiết 13 Use Case (`UC-01` → `UC-13`) trong `docs/USE_CASES.md` khớp bối cảnh Farm → Zone → Crop và RBAC 2 roles. (Phụ trách: P)
+- [ ] **Bước 1 — Chốt API Contract tối thiểu (`contracts/api.md`):** Định nghĩa các endpoint phục vụ 10 màn hình (`SCR-01` → `SCR-10`) để Frontend và Backend giao tiếp độc lập. (Phụ trách: P)
+- [ ] **Bước 2 — Backend FastAPI + SQLite + Realtime Simulator:** Hiện thực Backend bằng **Python FastAPI** + CSDL **SQLite**; tích hợp bộ sinh dữ liệu vi khí hậu realtime (Background Worker / Streaming) giả lập thiết bị. Kiến trúc tạm thời, sẵn sàng chỉnh sửa khi tích hợp phần cứng thật của N và Q. (Phụ trách: P)
+- [ ] **Bước 3 — Chốt Tech Stack Frontend & Xây dựng UI/UX Dashboard (`frontend/`):** Thống nhất tech stack (React/Next.js/Vite Tailwind), hiện thực hóa 10 màn hình Responsive Web (`SCR-01` → `SCR-10`) đúng chuẩn UI/UX mong muốn, kết nối Backend để vận hành và lấy feedback. (Phụ trách: P)
+- [ ] **Bước 4 — CI/CD & Web Deployment thật:** Thiết lập pipeline CI/CD tự động (chạy `scripts/check.ps1`, test, build và auto-deploy) lên môi trường Web thật để các thành viên khác thoải mái đóng góp code mà không lo vỡ hệ thống. (Phụ trách: P)
 
 ---
 
