@@ -16,7 +16,7 @@ Hệ thống phải đọc gói tin từ cổng Serial của mạch vi điều k
 Phục vụ: UC-06
 
 **FR-GW-03 · Tiếp nhận lệnh điều khiển thiết bị**
-Hệ thống phải nhận lệnh điều khiển từ các feed MQTT trên Adafruit IO và chuyển tiếp qua Serial xuống mạch vi điều khiển để đóng/ngắt Relay máy bơm, quạt, đèn LED RGB và Servo.
+Hệ thống phải nhận lệnh điều khiển từ các feed MQTT trên Adafruit IO và chuyển tiếp qua Serial xuống mạch vi điều khiển để đóng/ngắt Relay máy bơm, van, quạt và đèn LED RGB.
 Phục vụ: UC-08
 
 **FR-GW-04 · Phản hồi trạng thái và ngắt an toàn tại biên**
@@ -26,35 +26,31 @@ Phục vụ: UC-07
 ## Backend
 
 **FR-BE-01 · Cấu hình ngưỡng cảnh báo đa cấp**
-Hệ thống phải cho phép thiết lập và lưu trữ cấu hình ngưỡng an toàn tối thiểu, tối đa và mức nguy hiểm cho từng thông số cảm biến.
+Hệ thống phải cho phép thiết lập và lưu trữ cấu hình ngưỡng an toàn tối thiểu, tối đa và mức nguy hiểm cho từng thông số cảm biến theo từng Khu vực canh tác (Zone), hỗ trợ đồng bộ thời gian thực khi áp dụng.
 Phục vụ: UC-10
-Chờ: Q2
 
 **FR-BE-02 · So khớp ngưỡng tự động thời gian thực**
 Hệ thống phải tự động đối chiếu số đo cảm biến mới nhận với bộ ngưỡng an toàn đang kích hoạt để đánh dấu vi phạm và sinh cảnh báo thời gian thực.
 Phục vụ: UC-11
 
 **FR-BE-03 · Phát hiện bất thường khi vận hành thiết bị**
-Hệ thống phải phát hiện sự cố chấp hành khi thiết bị đang chạy nhưng chỉ số cảm biến tương ứng không thay đổi hoặc nguồn cấp gặp sự cố.
+Hệ thống phải phát hiện sự cố chấp hành khi thiết bị đang chạy nhưng chỉ số cảm biến tương ứng không thay đổi hoặc nguồn cấp gặp sự cố trên tập thiết bị động của từng khu vực.
 Phục vụ: UC-11
-Chờ: Q3
 
 **FR-BE-04 · Quản lý lịch trình vận hành định kỳ**
-Hệ thống phải lưu trữ và thực thi các lịch trình bật/tắt thiết bị tự động theo khung giờ trong ngày và các ngày trong tuần kèm thời lượng chạy.
+Hệ thống phải lưu trữ và thực thi các lịch trình bật/tắt thiết bị tự động theo khung giờ trong ngày và các ngày trong tuần kèm thời lượng chạy cho từng Zone, đồng bộ tức thời khi bấm Apply.
 Phục vụ: UC-09
-Chờ: Q2
 
 **FR-BE-05 · Tự động điều hòa môi trường theo ngưỡng**
-Hệ thống phải tự động ra quyết định kích hoạt hoặc ngắt thiết bị chấp hành dựa trên số đo cảm biến vi khí hậu có áp dụng khoảng trễ chống dao động.
+Hệ thống phải tự động ra quyết định kích hoạt hoặc ngắt thiết bị chấp hành dựa trên số đo cảm biến vi khí hậu có áp dụng khoảng trễ chống dao động theo cấu hình kích hoạt của từng Zone.
 Phục vụ: UC-09, UC-10
-Chờ: Q2
 
 **FR-BE-06 · Lưu trữ nhật ký hoạt động độc lập**
 Hệ thống phải lưu trữ toàn bộ sự kiện vận hành và can thiệp vào bảng dữ liệu nhật ký độc lập trong cơ sở dữ liệu nội bộ.
 Phục vụ: UC-05
 
 **FR-BE-07 · Ghi nhận đầy đủ ngữ cảnh sự kiện kiểm toán**
-Hệ thống phải ghi nhận chi tiết mỗi bản ghi nhật ký gồm mã sự kiện, thời gian, khu vực, thiết bị, loại sự kiện, tác nhân kích hoạt và giá trị thay đổi.
+Hệ thống phải ghi nhận chi tiết mỗi bản ghi nhật ký gồm mã sự kiện, thời gian, Nông trại (Farm), Khu vực (Zone), thiết bị, loại sự kiện, tác nhân kích hoạt và giá trị thay đổi.
 Phục vụ: UC-05
 
 **FR-BE-08 · Trích xuất dữ liệu báo cáo ra tệp tin**
@@ -62,77 +58,68 @@ Hệ thống phải hỗ trợ xuất dữ liệu thống kê chuỗi thời gia
 Phục vụ: UC-12
 
 **FR-BE-09 · Quản lý tài khoản và phân quyền người dùng**
-Hệ thống phải hỗ trợ xác thực người dùng, quản lý hồ sơ cá nhân và kiểm soát quyền truy cập theo vai trò giữa Quản trị viên và Người vận hành.
+Hệ thống phải hỗ trợ xác thực người dùng, quản lý hồ sơ cá nhân và kiểm soát quyền truy cập theo 2 vai trò chuẩn hóa: Quản trị viên / Chủ nông trại (Admin) và Người vận hành (Operator).
 Phục vụ: UC-01, UC-02, UC-03
-Chờ: Q1
 
-**FR-BE-10 · Quản lý khu đất và phân bổ cây trồng**
-Hệ thống phải hỗ trợ tạo, cập nhật, xóa thông tin khu đất/mảnh vườn và gán loại cây trồng tương ứng cho từng khu vực canh tác.
+**FR-BE-10 · Quản lý Nông trại, Khu vực canh tác và phân bổ cây trồng**
+Hệ thống phải hỗ trợ tạo, cập nhật, xóa thông tin Nông trại (Farm), các Khu vực canh tác trực thuộc (Zone) và gán chuyên canh 1 loại cây trồng tương ứng cho mỗi Zone.
 Phục vụ: UC-04
-Chờ: Q1, Q2
 
 **FR-BE-11 · Quản lý danh mục thiết bị nông trại**
-Hệ thống phải quản lý danh sách thiết bị bao gồm định danh phần cứng, khu đất trực thuộc và phân loại cảm biến hoặc cơ cấu chấp hành.
+Hệ thống phải quản lý danh sách thiết bị động (1..N thiết bị/Zone) bao gồm định danh phần cứng, khu vực trực thuộc và phân loại cảm biến (Input) hoặc cơ cấu chấp hành (Output).
 Phục vụ: UC-13
-Chờ: Q3
 
 ## Frontend
 
 **FR-FE-01 · Giám sát thông số cảm biến thời gian thực**
-Hệ thống phải hiển thị các chỉ số vi khí hậu đo đạc tức thời của từng cảm biến kèm mốc thời gian cập nhật gần nhất.
+Hệ thống phải hiển thị trên giao diện Responsive Web các chỉ số vi khí hậu đo đạc tức thời của từng cảm biến theo Farm và Zone kèm mốc thời gian cập nhật gần nhất.
 Phục vụ: UC-06
-Chờ: Q4
 
 **FR-FE-02 · Hiển thị trạng thái phân khu và thiết bị**
-Hệ thống phải hiển thị trạng thái hoạt động hiện tại của máy bơm, quạt gió, đèn quang kỳ, mái che theo từng khu vực canh tác.
+Hệ thống phải hiển thị trạng thái hoạt động hiện tại (Online/Offline, Bật/Tắt) của danh sách thiết bị động (máy bơm, van điện từ, đèn...) theo từng Farm và Zone trên Responsive Web.
 Phục vụ: UC-07
-Chờ: Q3, Q4
 
 **FR-FE-03 · Chỉ báo trạng thái theo màu sắc ngữ nghĩa**
 Hệ thống phải đổi màu trực quan các thẻ đo đạc (xanh lá: bình thường, vàng: cảnh báo sớm, đỏ: vượt ngưỡng nguy hiểm) dựa trên ngưỡng an toàn.
 Phục vụ: UC-06
 
 **FR-FE-04 · Giao diện can thiệp điều khiển thủ công**
-Hệ thống phải cung cấp các nút công tắc bật/tắt tức thì và thanh trượt điều chỉnh vị trí thiết bị chấp hành cho người vận hành.
+Hệ thống phải cung cấp các nút công tắc bật/tắt tức thì và thanh trượt điều chỉnh cho người vận hành trên giao diện Responsive Web (hỗ trợ Desktop và Mobile).
 Phục vụ: UC-08
-Chờ: Q4
 
 **FR-FE-05 · Giao diện tra cứu và lọc nhật ký hoạt động**
-Hệ thống phải cung cấp màn hình tìm kiếm, lọc lịch sử nhật ký theo khoảng thời gian, loại sự kiện, nhân viên thực hiện hoặc thiết bị.
+Hệ thống phải cung cấp màn hình Responsive Web hỗ trợ tìm kiếm, lọc lịch sử nhật ký theo khoảng thời gian, loại sự kiện, Farm/Zone, nhân viên thực hiện hoặc thiết bị.
 Phục vụ: UC-05
-Chờ: Q4
 
 **FR-FE-06 · Trực quan hóa dữ liệu phân tích đa chiều**
-Hệ thống phải hiển thị các biểu đồ đường chuỗi thời gian đa trục, biểu đồ cột thời lượng vận hành và thẻ KPI tỷ lệ duy trì điều kiện tối ưu.
+Hệ thống phải hiển thị các biểu đồ đường chuỗi thời gian đa trục, biểu đồ thời lượng vận hành và thẻ chỉ số chất lượng môi trường trên giao diện Responsive Web.
 Phục vụ: UC-12
-Chờ: Q4
 
 **FR-FE-07 · Tùy biến bộ lọc báo cáo động**
-Hệ thống phải cho phép người dùng tùy chọn linh hoạt khoảng ngày giờ, phân khu và độ mịn thời gian để tự động tính toán lại các chỉ số thống kê.
+Hệ thống phải cho phép người dùng tùy chọn linh hoạt khoảng ngày giờ, Farm, Zone, loại cây trồng để tự động tính toán lại các chỉ số thống kê trên Responsive Web.
 Phục vụ: UC-12
-Chờ: Q4
 
 ---
 
 ## Phi chức năng
 
 **NFR-01 · Độ trễ phản hồi**
-Hệ thống phải đảm bảo thời gian đáp ứng lệnh điều khiển thủ công không quá 2.0 giây và chu kỳ cập nhật dữ liệu cảm biến mới lên giao diện không quá 3.0 giây trong điều kiện mạng ổn định (đề xuất, chưa chốt).
+Hệ thống phải đảm bảo thời gian đáp ứng lệnh điều khiển thủ công không quá 2.0 giây và chu kỳ cập nhật dữ liệu cảm biến mới lên giao diện không quá 3.0 giây trong điều kiện mạng ổn định.
 
 **NFR-02 · Tính toàn vẹn dữ liệu**
-Hệ thống phải lưu trữ dữ liệu nhật ký hoạt động và số đo cảm biến theo cơ chế chỉ ghi (Append-only) với tỷ lệ thất thoát 0%, chặn tuyệt đối các thao tác sửa hoặc xóa bản ghi qua API (đề xuất, chưa chốt).
+Hệ thống phải lưu trữ dữ liệu nhật ký hoạt động và số đo cảm biến theo cơ chế chỉ ghi (Append-only) với tỷ lệ thất thoát 0%, chặn tuyệt đối các thao tác sửa hoặc xóa bản ghi qua API.
 
 **NFR-03 · Khả năng chịu lỗi và phục hồi**
-Hệ thống phải duy trì bộ đệm cục bộ tại Gateway lưu trữ tối thiểu 1.000 bản ghi cảm biến khi mất kết nối mạng và tự động đồng bộ bù khi kết nối khôi phục với tỷ lệ mất mát nhỏ hơn 0.1% (đề xuất, chưa chốt).
+Hệ thống phải duy trì bộ đệm cục bộ tại Gateway lưu trữ tối thiểu 1.000 bản ghi cảm biến khi mất kết nối mạng và tự động đồng bộ bù khi kết nối khôi phục với tỷ lệ mất mát nhỏ hơn 0.1%.
 
 **NFR-04 · Bảo mật và kiểm soát truy cập**
-Hệ thống phải lưu trữ mật khẩu người dùng dưới dạng mã băm một chiều an toàn, phiên làm việc có thời hạn tối đa 24 giờ và thực thi phân quyền vai trò nghiêm ngặt giữa Quản trị viên và Người vận hành (đề xuất, chưa chốt).
+Hệ thống phải lưu trữ mật khẩu người dùng dưới dạng mã băm một chiều an toàn, phiên làm việc có thời hạn tối đa 24 giờ và thực thi phân quyền vai trò nghiêm ngặt giữa Quản trị viên (Admin) và Người vận hành (Operator).
 
 **NFR-05 · Hiệu năng truy vấn và báo cáo**
-Hệ thống phải xử lý tổng hợp dữ liệu chuỗi thời gian dưới 2.0 giây cho 10.000 bản ghi và hoàn tất xuất file báo cáo tổng hợp dưới 3.0 giây (đề xuất, chưa chốt).
+Hệ thống phải xử lý tổng hợp dữ liệu chuỗi thời gian dưới 2.0 giây cho 10.000 bản ghi và hoàn tất xuất file báo cáo tổng hợp dưới 3.0 giây.
 
 **NFR-06 · Tính khả dụng và tương thích giao diện**
-Hệ thống phải hỗ trợ giao diện tương thích responsive từ độ phân giải 360px trở lên, độ tương phản màu sắc đạt chuẩn tối thiểu 4.5:1 và vùng chạm cảm ứng nút bấm chính tối thiểu 48x48dp (đề xuất, chưa chốt).
+Hệ thống phải hỗ trợ giao diện Responsive Web tương thích từ độ phân giải 360px trở lên (Mobile) đến 1920px (Desktop), độ tương phản màu sắc đạt chuẩn tối thiểu 4.5:1 và vùng chạm cảm ứng nút bấm chính tối thiểu 48x48dp.
 
 ---
 

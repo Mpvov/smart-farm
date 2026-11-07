@@ -7,12 +7,26 @@
 ## 1. THÔNG TIN CỐT LÕI & PHẠM VI ĐÃ CHỐT
 
 * **Tên đề tài:** Smart Farm Device Management System (Ứng dụng quản lý thiết bị cho nông trại thông minh).
-* **Nhóm 4:** H (Use Case), P (UR, UI, Backend), N & Q (IoT Server & Gateway).
-* **Bước hiện tại:** Đã xong **UR → UC** (8 UR, 11 FR, 6 NFR, 12 UC) và bối cảnh bài toán nông trại đa khu đất/mảnh vườn (Zone / Plot).
-* **Các quyết định CHƯA CHỐT (cần hỏi trước khi làm):**
-  * Sản phẩm phục vụ **1 chủ nông trại** (nhiều khu vườn) hay **nhiều chủ nông trại** (multi-tenant)?
-  * Tech stack Frontend (Web hay Mobile), Backend framework, Hệ quản trị CSDL.
-  * Chi tiết thiết bị Input/Output thực tế.
+* **Định hướng ứng dụng:** Nền tảng quản lý nông trại thương mại (Commercial Platform), mô hình canh tác nông trại ngoài trời (Open-field Farm).
+* **Phân cấp quản trị & Tenancy:** Đa chủ thể (Multi-tenant)
+  * Mỗi Tài khoản chủ trang trại (Owner) sở hữu nhiều Nông trại (Farm).
+  * Mỗi Nông trại được chia thành nhiều Khu vực canh tác (Zone).
+  * Mỗi Khu vực (Zone) chuyên canh một loại cây trồng cụ thể (1 Crop Type per Zone).
+* **Cơ chế quản lý thiết bị:**
+  * Cấu hình thiết bị động (Dynamic 1..N Devices per Zone): Người dùng tự do thêm, bớt, gán cảm biến (Input) và thiết bị chấp hành (Output) theo nhu cầu thực tế của từng Zone trên giao diện.
+* **Cơ chế điều khiển & Cấu hình hành vi (Behavior Config):**
+  * Thiết lập trực tiếp trên Dashboard theo từng Zone/Thiết bị (ngưỡng cảnh báo, luật tự động hóa vi khí hậu, lịch trình tưới tiêu/chiếu sáng).
+  * Đồng bộ thời gian thực (Realtime Sync): Khi người dùng nhấn Apply trên Dashboard, cấu hình hành vi mới được đẩy tức thì xuống thiết bị/bộ xử lý chấp hành.
+* **Nền tảng giao diện người dùng:**
+  * Responsive Web App: Tối ưu hóa trải nghiệm điều hành tập trung trên Desktop/Tablet, tự động co giãn hỗ trợ đầy đủ thao tác giám sát và điều khiển trên thiết bị di động (Mobile).
+* **Mô hình triển khai phần cứng & Khả năng mở rộng:**
+  * **Tầng vật lý (Physical PoC):** Sử dụng bộ kit YoloFarm (DHT20, độ ẩm đất, ánh sáng, relay bơm, quạt, LED, servo...) kết nối Gateway qua UART/MQTT cho 1 Zone thực nghiệm, hoàn thành yêu cầu kết nối phần cứng của đề tài.
+  * **Tầng giả lập (Simulator Engine):** Tích hợp bộ giả lập thiết bị để sinh dữ liệu vi khí hậu và phản hồi lệnh cho các Zone quy mô lớn, chứng minh năng lực phục vụ đa nông trại thương mại mà không bị giới hạn bởi số cổng phần cứng vật lý.
+
+* **Các quyết định kỹ thuật CHƯA CHỐT (chờ phê duyệt theo quy trình):**
+  * Tech stack Backend (ngôn ngữ, framework).
+  * Hệ quản trị CSDL & Schema chi tiết (PostgreSQL, MySQL, SQLite...).
+  * Tech stack Frontend framework (React, Vue, Next.js...).
 
 ---
 
@@ -32,7 +46,7 @@ Barem chấm điểm chuyên ngành HTTT yêu cầu:
 
 ---
 
-## Nguồn
+## 3. TÀI LIỆU NGUỒN (SOURCES)
 
 Các tài liệu gốc bên ngoài được lưu tại `docs/sources/`:
 
@@ -49,9 +63,9 @@ Các tài liệu gốc bên ngoài được lưu tại `docs/sources/`:
 
 ---
 
-## Thiết bị
+## 4. DANH MỤC THIẾT BỊ BỘ KIT VẬT LÝ
 
-Chép từ `docs/sources/danh-sach-thiet-bi.jpg`:
+Chép từ `docs/sources/danh-sach-thiet-bi.jpg` (dùng cho Zone thực nghiệm PoC):
 
 | STT | Tên thiết bị / linh kiện | Phân loại | Ghi chú |
 | :---: | :--- | :--- | :--- |

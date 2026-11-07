@@ -6,10 +6,13 @@
 
 | Hạng mục | Trạng thái | Phụ trách | Ghi chú |
 | :--- | :---: | :---: | :--- |
-| **Bối cảnh bài toán, UR → UC (Báo cáo giữa kỳ)** | **HOÀN THÀNH** | P, H | 8 UR, 11 FR, 6 NFR, 12 UC trong `report/` |
+| **Bối cảnh bài toán, UR → UC (Báo cáo giữa kỳ)** | **HOÀN THÀNH** | P, H | 8 UR, 11 FR, 6 NFR, 13 UC trong `report/` |
 | **Khung Agent-Friendly Repo & `scripts/check.ps1`** | **HOÀN THÀNH** | P | Chuẩn hóa `AGENTS.md`, `contracts/`, `docs/` |
-| **Chốt bài toán mở rộng & Wireframe (`frontend/mockups/`)** | *ĐANG CHUẨN BỊ* | P | Cần chốt phạm vi 1 hay nhiều chủ nông trại trước khi vẽ |
-| **IoT Server Adafruit IO & Gateway Python** | *CHỜ TRIỂN KHAI* | N, Q | Kết nối UART Serial ↔ MQTT Adafruit IO |
+| **Chốt định hướng nghiệp vụ (Q1–Q4)** | **HOÀN THÀNH** | Cả nhóm | Multi-tenant commercial, dynamic device, open-field farm |
+| **Đối soát 9 Quality Gates (G1–G9)** | **HOÀN THÀNH** | Cả nhóm | Đạt độ phủ 100% đề bài trong `docs/USE_CASES.md` |
+| **Đặc tả Use Case chi tiết (`docs/USE_CASES.md`)** | **HOÀN THÀNH** | P | Khóa chặt 13 UC, 10 màn Responsive Web, 2 vai trò Admin/Operator |
+| **Wireframe Mockup UI (`frontend/mockups/`)** | *SẴN SÀNG TRIỂN KHAI* | P | Responsive Web (`SCR-01` $\rightarrow$ `SCR-10`) |
+| **IoT Server Adafruit IO & Gateway Python** | *CHỜ TRIỂN KHAI* | N, Q | Kết nối UART Serial ↔ MQTT Adafruit IO cho Zone PoC |
 | **Kiến trúc chi tiết, CSDL & Backend** | *CHƯA CHỐT STACK* | P | Chờ quyết định trong `docs/decisions/` |
 
 ---
@@ -17,25 +20,26 @@
 ## 2. CÁC ĐẦU VIỆC CẦN LÀM TIẾP THEO
 
 ### Việc của nhóm
-- [ ] **Độ phủ yêu cầu môn học:** Đối soát và đảm bảo độ phủ 100% 9 nhóm yêu cầu đề bài (G1–G9 trong `docs/sources/de-bai.pdf`) sang Use Case. (Phụ trách: Cả nhóm)
+- [x] **Độ phủ yêu cầu môn học:** Đối soát và đảm bảo độ phủ 100% 9 nhóm yêu cầu đề bài (G1–G9 trong `docs/sources/de-bai.pdf`) sang Use Case. (Phụ trách: Cả nhóm)
 - [ ] **Chuẩn hóa API Contract:** Thống nhất đặc tả giao tiếp Frontend ↔ Backend trong `contracts/api.md`. (Phụ trách: Cả nhóm)
 - [ ] **Tech Stack & CSDL:** Chốt lựa chọn CSDL và framework backend, ghi quyết định vào `docs/decisions/`. (Phụ trách: Cả nhóm)
 - [ ] **IoT Gateway:** Viết script Python UART ↔ Adafruit IO trong `gateway/`, test contract pass 100%. (Phụ trách: N, Q)
 - [ ] **Nghiệm thu tích hợp:** Test parser và test contract chạy tự động qua `scripts/check.ps1`. (Phụ trách: Cả nhóm)
 
 ### Việc của P
-- [ ] **Tài liệu Use Case:** Hoàn thiện đặc tả chi tiết 12 Use Case trong `docs/USE_CASES.md` và `report/section/UseCase.tex`. (Phụ trách: P)
-- [ ] **Wireframe Mockup UI:** Dựng wireframe mockup cho từng màn hình `SCR-01` đến `SCR-08` trong `frontend/mockups/` (dữ liệu theo `contracts/samples/`). (Phụ trách: P)
+- [x] **Tài liệu Use Case:** Hoàn thiện đặc tả chi tiết 13 Use Case trong `docs/USE_CASES.md` khớp bối cảnh Farm $\rightarrow$ Zone $\rightarrow$ Crop và RBAC 2 roles. (Phụ trách: P)
+- [ ] **Wireframe Mockup UI:** Dựng wireframe mockup cho từng màn hình `SCR-01` đến `SCR-10` trong `frontend/mockups/` (Responsive Web). (Phụ trách: P)
 - [ ] **Phát triển Backend:** Thiết kế ERD, API schema theo `contracts/api.md`, hiện thực bảng Audit Log và phân quyền RBAC. (Phụ trách: P)
 
 ---
 
-## 3. CÂU HỎI CẦN CHỐT
+## 3. CÁC QUYẾT ĐỊNH NGHIỆP VỤ ĐÃ CHỐT
 
-- **Q1:** Quy mô chủ thể (Tenancy): Phục vụ 1 nông trại duy nhất (nhiều khu đất/mảnh vườn) hay nhiều chủ nông trại (multi-tenant)? — chưa chốt
-- **Q2:** Quan hệ Khu đất – Cây trồng – Lịch/Ngưỡng: Lịch trình và ngưỡng an toàn gắn theo Loại cây trồng hay gắn trực tiếp trên từng Mảnh vườn? — chưa chốt
-- **Q3:** Phân cấp Thiết bị: Người dùng tự thêm/gán động thiết bị (cảm biến, bơm, đèn) vào từng mảnh vườn trên UI hay danh sách thiết bị cố định? — chưa chốt
-- **Q4:** Nền tảng hiển thị (Target Viewport): Thiết kế giao diện cho Web App hay Mobile App? — chưa chốt
+- **Q1 (Tenancy & Cấu trúc phân cấp):** Hệ thống phục vụ đa chủ (Multi-tenant: Admin/Chủ trang trại $\rightarrow$ nhiều Farm $\rightarrow$ nhiều Zone $\rightarrow$ 1 Crop/Zone). Loại hình canh tác: Nông trại ngoài trời (Open-field Farm).
+- **Q2 (Hành vi & Tự động hóa):** Cấu hình trực tiếp trên Dashboard theo từng Zone/Thiết bị (ngưỡng an toàn, luật tự động hóa, lịch tưới); khi bấm **Apply** đồng bộ ngay tức thì thời gian thực (Realtime Sync) xuống thiết bị chấp hành.
+- **Q3 (Phân cấp Thiết bị & Khả năng mở rộng):** Thiết bị động linh hoạt (Dynamic 1..N Input/Output per Zone). Có cơ chế giả lập (Simulator) mở rộng quy mô thương mại; kit phần cứng lab là PoC kết nối vật lý thực nghiệm cho 1 Zone.
+- **Q4 (Nền tảng hiển thị):** **Responsive Web App** (thiết kế chuẩn Web Desktop/Tablet, co giãn tối ưu hiển thị và điều khiển trên Mobile cho toàn bộ màn hình `SCR-01` đến `SCR-10`).
+- **Phân quyền RBAC:** Chuẩn hóa đúng 2 vai trò: **Admin** (Quản trị viên / Chủ nông trại) và **Operator** (Người vận hành).
 
 ---
 
@@ -46,3 +50,4 @@
 | P | |
 | N | |
 | Q | |
+| H | |
