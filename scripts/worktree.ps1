@@ -1,14 +1,14 @@
 # worktree.ps1 - quan ly Git worktree (.worktrees/<slug>) cho Agent
+# Gop vao main chi qua Pull Request (xem CONTRIBUTING.md).
 # Cach dung:
 #   powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 new <type>/<ten-ngan>
 #   powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 list
-#   powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 merge <branch-hoac-slug>
 #   powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 done <branch-hoac-slug>
 # ASCII-only: Windows PowerShell 5.1 doc file khong BOM theo ANSI.
 
 param(
   [Parameter(Position = 0)]
-  [ValidateSet('new', 'list', 'merge', 'done')]
+  [ValidateSet('new', 'list', 'done')]
   [string]$Action = 'list',
 
   [Parameter(Position = 1)]
@@ -120,57 +120,11 @@ switch ($Action) {
         if ($LASTEXITCODE -eq 0) {
           git -C $mainRoot branch -d $branch
         } else {
-          Write-Host "WARN branch '$branch' chua merge vao main -> giu lai branch (chay 'worktree.ps1 merge $branch' de gop)" -ForegroundColor Yellow
+          Write-Host "WARN branch '$branch' chua merge vao main -> giu lai branch de mo Pull Request (xem CONTRIBUTING.md)" -ForegroundColor Yellow
         }
       }
     }
     Write-Host "OK da don worktree: $($info.Slug)" -ForegroundColor Green
-    exit 0
-  }
-
-  'merge' {
-    $info = Resolve-Target $Target
-    $wtPath = $info.Path
-    $branch = $info.Branch
-
-    $mainBranch = (git -C $mainRoot symbolic-ref --short HEAD 2>$null).Trim()
-    if ($mainBranch -ne 'main') {
-      Write-Host "FAIL thu muc goc dang o nhanh '$mainBranch', phai o 'main' de merge" -ForegroundColor Red
-      exit 1
-    }
-    $mainDirty = @(git -C $mainRoot status --porcelain 2>$null)
-    if ($mainDirty.Count -gt 0) {
-      Write-Host "FAIL thu muc goc (main) con file chua commit -> lam sach truoc khi merge" -ForegroundColor Red
-      exit 1
-    }
-
-    if (Test-Path $wtPath) {
-      $wtDirty = @(git -C $wtPath status --porcelain 2>$null)
-      if ($wtDirty.Count -gt 0) {
-        Write-Host "FAIL worktree '$wtPath' con file chua commit -> commit het truoc khi merge" -ForegroundColor Red
-        exit 1
-      }
-      Write-Host "Chay check.ps1 trong worktree '$wtPath'..."
-      powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $wtPath 'scripts\check.ps1')
-      if ($LASTEXITCODE -ne 0) {
-        Write-Host "FAIL check.ps1 trong worktree bao loi -> sua truoc khi merge" -ForegroundColor Red
-        exit 1
-      }
-    }
-
-    git -C $mainRoot merge $branch --no-edit
-    if ($LASTEXITCODE -ne 0) {
-      Write-Host "FAIL merge '$branch' vao main bi xung dot -> giai quyet xung dot" -ForegroundColor Red
-      exit 1
-    }
-
-    if (Test-Path $wtPath) {
-      Remove-ClaudeJunctions $wtPath
-      git -C $mainRoot worktree remove $wtPath
-      git -C $mainRoot worktree prune
-    }
-    git -C $mainRoot branch -d $branch
-    Write-Host "OK da merge '$branch' vao main va don sach worktree" -ForegroundColor Green
     exit 0
   }
 }

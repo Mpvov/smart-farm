@@ -19,11 +19,9 @@
 
 - Lần đầu sau khi clone (bật Git hooks `.githooks/` và gắn junction Claude Code):
   `powershell -ExecutionPolicy Bypass -File scripts/setup.ps1`
-- Tạo/gộp worktree làm việc (theo `.agents/skills/git-workflow/SKILL.md`):
-  `powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 new <type>/<ten-ngan>`
-  `powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 merge <type>/<ten-ngan>`
 - Kiểm trước khi báo xong (phải ra OK, exit 0):
   `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
+- Quy trình git, worktree, hook: `CONTRIBUTING.md`
 - Lỗi do môi trường (thiếu tool, quyền, port): báo lỗi và dừng, không tự đổi cấu hình máy.
 
 ## Luật cứng
@@ -40,8 +38,8 @@
    Vì: đổi CSDL giữa chừng phải viết lại backend và báo cáo.
 5. Không sửa `report/` khi chưa được yêu cầu.
    Vì: report là bản nộp chính thức.
-6. Mỗi việc một worktree hoặc branch riêng (`<type>/<ten-ngan>`) tạo qua `scripts/worktree.ps1`. Thư mục gốc luôn giữ ở `main` sạch; không commit hay push thẳng lên `main`. Commit message theo Conventional Commits: `<type>(<scope>): <mô tả>`.
-   Vì: nhiều người và nhiều agent cùng sửa một repo; Git hooks (`.githooks/pre-commit`, `.githooks/commit-msg`) tự chặn nếu vi phạm.
+6. Mỗi việc một branch từ `origin/main` (chưa có remote thì từ `main`); rebase, không merge `main` vào branch; không commit thẳng lên `main` (hook chặn). Chi tiết: `CONTRIBUTING.md`.
+   Vì: nhiều người và nhiều agent cùng sửa một repo; lịch sử thẳng thì dễ đọc và dễ hoàn tác.
 7. Thư mục mới ở gốc repo: thêm một dòng vào bảng Layout, tạo `<thư mục>/AGENTS.md` và `<thư mục>/CLAUDE.md` (chỉ chứa `@AGENTS.md`). Ngoại lệ: `docs/`, `scripts/`, `report/`.
    Vì: agent chỉ biết luật của thư mục khi file đó tồn tại; check.ps1 kiểm luật này.
 
