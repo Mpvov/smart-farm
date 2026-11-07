@@ -3,6 +3,49 @@
 # Moi loi in "FAIL <cho> -> <cach sua>". Them kiem cua du an o muc cuoi.
 # ASCII-only: Windows PowerShell 5.1 doc file khong BOM theo ANSI.
 
+param(
+  [ValidateSet('', 'pre-commit', 'commit-msg')]
+  [string]$Hook = '',
+  [string]$MsgFile = ''
+)
+
+$root = Split-Path -Parent $PSScriptRoot
+Set-Location $root
+
+# Git hook: commit-msg (kiem tra Conventional Commits)
+if ($Hook -eq 'commit-msg') {
+  if (-not $MsgFile -or -not (Test-Path $MsgFile)) {
+    Write-Host "FAIL commit-msg: khong tim thay file commit message" -ForegroundColor Red
+    exit 1
+  }
+  $validLines = @(Get-Content $MsgFile -Encoding UTF8 | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() -ne '' })
+  if ($validLines.Count -eq 0) {
+    Write-Host "FAIL commit-msg: commit message rong" -ForegroundColor Red
+    exit 1
+  }
+  $firstLine = $validLines[0].Trim()
+  if ($firstLine -match '^(Merge|Revert)\b') { exit 0 }
+  if ($firstLine -notmatch '^(feat|fix|docs|chore|refactor|test|style|perf|ci|build)(\([a-z0-9_-]+\))?: \S+') {
+    Write-Host "FAIL commit message sai chuan Conventional Commits: '$firstLine'" -ForegroundColor Red
+    Write-Host "  -> Dung: <type>(<scope>): <mo ta> (vd: feat(gateway): FR-GW-01 doc do am dat, docs: cap nhat UC-01)" -ForegroundColor Yellow
+    exit 1
+  }
+  if ($firstLine -match '^feat\((firmware|gateway|backend|frontend)\):' -and $firstLine -notmatch '\b(FR|UC|NFR)-[A-Z0-9-]+\b') {
+    Write-Host "WARN feat() tren module code nen ghi kem ID yeu cau (vd: feat(gateway): FR-GW-01 ...)" -ForegroundColor Yellow
+  }
+  exit 0
+}
+
+# Git hook: pre-commit (chan commit thang tren main/master, sau do chay toan bo check.ps1)
+if ($Hook -eq 'pre-commit') {
+  $curBranch = (git -C $root symbolic-ref --short HEAD 2>$null)
+  if ($curBranch) { $curBranch = $curBranch.Trim() }
+  if ($curBranch -in @('main', 'master') -and $env:ALLOW_MAIN_COMMIT -ne '1') {
+    Write-Host "FAIL commit truc tiep tren nhanh '$curBranch' bi chan -> tao worktree: powershell -ExecutionPolicy Bypass -File scripts/worktree.ps1 new <type>/<ten-ngan>" -ForegroundColor Red
+    exit 1
+  }
+}
+
 # Thu muc goc khong can AGENTS.md rieng (van phai co trong bang Layout)
 $noAgentsDirs = @('docs','scripts','report')
 # Thu muc ngoai docs/ co nhac toi ID (bao cao, slide...): quet *.tex va *.md de bat ID chua dinh nghia
@@ -10,8 +53,6 @@ $extraIdDirs = @('report')
 # Thu muc bo qua hoan toan
 $skipDirs = @('node_modules','venv','.venv','dist','build','__pycache__')
 
-$root = Split-Path -Parent $PSScriptRoot
-Set-Location $root
 $fail = @()
 $skipRe = '\\(' + ((($skipDirs + '.git','.worktrees') | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')\\'
 
@@ -21,7 +62,7 @@ if (-not (Test-Path $rootAgents)) { $fail += "AGENTS.md: thieu o goc repo -> tao
 
 # 2. Moi AGENTS.md: duong dan trong `backtick` phai ton tai; khong con {{placeholder}}
 Get-ChildItem -Path $root -Recurse -Filter AGENTS.md -File -ErrorAction SilentlyContinue |
-  Where-Object { $_.FullName -notmatch $skipRe } |
+  Where-Object { $_.FullName.Substring($root.Length) -notmatch $skipRe } |
   ForEach-Object {
     $file = $_
     $rel = $file.FullName.Substring($root.Length + 1)
@@ -72,12 +113,21 @@ if ($LASTEXITCODE -eq 0) {
     ForEach-Object { $fail += "${_}: file Excel trong repo -> chuyen sang Markdown trong docs/" }
 }
 
-# 6. Junction cho Claude Code: chi canh bao (nguoi chi dung Antigravity khong can)
+# 6. Junction cho Claude Code va Git hooks (.githooks)
 foreach ($name in 'skills','rules') {
   $p = Join-Path $root ".claude\$name"
   if (-not (Test-Path $p) -or (Get-Item $p -Force).LinkType -ne 'Junction') {
     Write-Host "WARN .claude\$name chua link -> chay scripts/setup.ps1 neu dung Claude Code" -ForegroundColor Yellow
   }
+}
+foreach ($hk in 'pre-commit','commit-msg') {
+  if (-not (Test-Path (Join-Path $root ".githooks\$hk"))) {
+    $fail += ".githooks/${hk}: thieu git hook -> khoi phuc file .githooks/${hk}"
+  }
+}
+$hooksPath = (git -C $root config --get core.hooksPath 2>$null)
+if (-not $hooksPath -or $hooksPath.Trim() -ne '.githooks') {
+  $fail += "git core.hooksPath chua dat '.githooks' -> chay: powershell -ExecutionPolicy Bypass -File scripts/setup.ps1"
 }
 
 # 7. Ban do tai lieu: moi file trong docs/ phai co trong docs/README.md
@@ -134,11 +184,11 @@ foreach ($k in @($idHome.Keys)) {
   }
 }
 $idFiles = @(Get-ChildItem $docsDir -Recurse -Filter *.md -File -ErrorAction SilentlyContinue) +
-           @(Get-ChildItem -Path $root -Recurse -Filter AGENTS.md -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch $skipRe })
+           @(Get-ChildItem -Path $root -Recurse -Filter AGENTS.md -File -ErrorAction SilentlyContinue | Where-Object { $_.FullName.Substring($root.Length) -notmatch $skipRe })
 foreach ($d in $extraIdDirs) {
   $p = Join-Path $root $d
   if (-not (Test-Path $p)) { $fail += "${d}/: co trong extraIdDirs nhung khong ton tai -> sua danh sach o dau check.ps1"; continue }
-  $idFiles += @(Get-ChildItem $p -Recurse -File -Include *.tex,*.md -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch $skipRe })
+  $idFiles += @(Get-ChildItem $p -Recurse -File -Include *.tex,*.md -ErrorAction SilentlyContinue | Where-Object { $_.FullName.Substring($root.Length) -notmatch $skipRe })
 }
 foreach ($f in $idFiles) {
   $rel = $f.FullName.Substring($root.Length + 1).Replace('\','/')

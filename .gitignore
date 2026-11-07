@@ -52,3 +52,6 @@ Thumbs.db
 .claude/skills
 .claude/rules
 .claude/settings.local.json
+
+# Git Worktrees
+.worktrees/

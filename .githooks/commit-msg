@@ -1,0 +1,3 @@
+#!/bin/sh
+TOP="$(git rev-parse --show-toplevel)"
+exec powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$TOP/scripts/check.ps1" -Hook commit-msg -MsgFile "$1"
