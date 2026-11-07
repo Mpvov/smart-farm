@@ -13,7 +13,7 @@
 | **Đặc tả Use Case chi tiết (`docs/USE_CASES.md`)** | **HOÀN THÀNH** | P | Khóa chặt 13 UC, 10 màn Responsive Web, 2 vai trò Admin/Operator |
 | **Wireframe Mockup UI (`frontend/mockups/`)** | *SẴN SÀNG TRIỂN KHAI* | P | Responsive Web (`SCR-01` $\rightarrow$ `SCR-10`) |
 | **IoT Server Adafruit IO & Gateway Python** | *CHỜ TRIỂN KHAI* | N, Q | Kết nối UART Serial ↔ MQTT Adafruit IO cho Zone PoC |
-| **Kiến trúc chi tiết, CSDL & Backend** | *CHƯA CHỐT STACK* | P | Chờ quyết định trong `docs/decisions/` |
+| **Kiến trúc chi tiết, CSDL & Backend** | **HOÀN THÀNH** | P | Đã chốt stack prototype trong `docs/decisions/0001-tech-stack.md` |
 
 ---
 
