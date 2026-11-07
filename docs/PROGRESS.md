@@ -21,14 +21,14 @@
 
 ### Việc của nhóm
 - [x] **Độ phủ yêu cầu môn học:** Đối soát và đảm bảo độ phủ 100% 9 nhóm yêu cầu đề bài (G1–G9 trong `docs/sources/de-bai.pdf`) sang Use Case. (Phụ trách: Cả nhóm)
-- [ ] **Chuẩn hóa API Contract:** Thống nhất đặc tả giao tiếp Frontend ↔ Backend trong `contracts/api.md`. (Phụ trách: Cả nhóm)
+- [x] **Chuẩn hóa API Contract:** Thống nhất đặc tả giao tiếp Frontend ↔ Backend trong `contracts/api.md`. (Phụ trách: Cả nhóm)
 - [ ] **Tech Stack & CSDL:** Chốt lựa chọn CSDL và framework backend, ghi quyết định vào `docs/decisions/`. (Phụ trách: Cả nhóm)
 - [ ] **IoT Gateway:** Viết script Python UART ↔ Adafruit IO trong `gateway/`, test contract pass 100%. (Phụ trách: N, Q)
 - [ ] **Nghiệm thu tích hợp:** Test parser và test contract chạy tự động qua `scripts/check.ps1`. (Phụ trách: Cả nhóm)
 
 ### Việc của P (Personal Plan — Ưu tiên Live UI/UX & Prototype chạy thật để lấy Feedback)
 - [x] **Tài liệu Use Case:** Hoàn thiện đặc tả chi tiết 13 Use Case (`UC-01` → `UC-13`) trong `docs/USE_CASES.md` khớp bối cảnh Farm → Zone → Crop và RBAC 2 roles. (Phụ trách: P)
-- [ ] **Bước 1 — Chốt API Contract tối thiểu (`contracts/api.md`):** Định nghĩa các endpoint phục vụ 10 màn hình (`SCR-01` → `SCR-10`) để Frontend và Backend giao tiếp độc lập. (Phụ trách: P)
+- [x] **Bước 1 — Chốt API Contract tối thiểu (`contracts/api.md`):** Định nghĩa 10 cụm endpoint và cơ chế SSE realtime streaming phục vụ đủ 10 màn hình (`SCR-01` → `SCR-10`). (Phụ trách: P)
 - [ ] **Bước 2 — Backend FastAPI + SQLite + Realtime Simulator:** Hiện thực Backend bằng **Python FastAPI** + CSDL **SQLite**; tích hợp bộ sinh dữ liệu vi khí hậu realtime (Background Worker / Streaming) giả lập thiết bị. Kiến trúc tạm thời, sẵn sàng chỉnh sửa khi tích hợp phần cứng thật của N và Q. (Phụ trách: P)
 - [ ] **Bước 3 — Chốt Tech Stack Frontend & Xây dựng UI/UX Dashboard (`frontend/`):** Thống nhất tech stack (React/Next.js/Vite Tailwind), hiện thực hóa 10 màn hình Responsive Web (`SCR-01` → `SCR-10`) đúng chuẩn UI/UX mong muốn, kết nối Backend để vận hành và lấy feedback. (Phụ trách: P)
 - [ ] **Bước 4 — CI/CD & Web Deployment thật:** Thiết lập pipeline CI/CD tự động (chạy `scripts/check.ps1`, test, build và auto-deploy) lên môi trường Web thật để các thành viên khác thoải mái đóng góp code mà không lo vỡ hệ thống. (Phụ trách: P)
