@@ -69,6 +69,8 @@ Get-ChildItem -Path $root -Recurse -Filter AGENTS.md -File -ErrorAction Silently
     $text = Get-Content $file.FullName -Raw -Encoding UTF8
     foreach ($m in [regex]::Matches($text, '`([\w.-]+/[\w./-]*|[\w-]+\.(md|ps1|sh|json|py|ts|js|yaml|yml|toml))`')) {
       $p = $m.Groups[1].Value
+      # ten nhanh git (origin/main, feat/...) khong phai duong dan
+      if ($p -match '^(origin|upstream|refs|feat|fix|chore|perf|ci|refactor|test)/') { continue }
       if (-not (Test-Path (Join-Path $root $p)) -and -not (Test-Path (Join-Path $file.DirectoryName $p))) {
         $fail += "${rel}: '$p' khong ton tai -> tao file hoac xoa dong tro toi no"
       }
