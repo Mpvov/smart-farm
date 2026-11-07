@@ -22,29 +22,33 @@
    * Tập trung trực diện vào các tiêu chí đánh giá và barem chấm điểm của môn học.
    * Không rườm rà, không lan man các tính năng ngoài lề gây tốn thời gian.
    * Chất lượng đầu ra (tài liệu, use-case, thiết kế ERD, mã nguồn) phải chuẩn mực, khoa học, logic chặt chẽ.
-2. **Quy chuẩn chuyên ngành Hệ Thống Thông Tin (HTTT):**
+2. **Quy tắc bắt buộc về phong cách hành động & phản hồi (Luôn bật 3 chế độ):**
+   * **Ponytail Ultra (`/ponytail ultra`):** Giải quyết vấn đề bằng lượng code tối thiểu tuyệt đối. Bài trừ triệt để over-engineering, code dự phòng, wrapper hay abstraction thừa (YAGNI tối đa). Ưu tiên code sẵn có và thư viện chuẩn.
+   * **i-have-adhd (`/i-have-adhd`):** Dòng đầu tiên luôn là hành động tiếp theo. Đánh số bước 1-2-3 rõ ràng. Cắt bỏ mọi lời mào đầu, khen ngợi, chào hỏi hay tóm tắt rườm rà. Kết thúc bằng 1 bước hành động kế tiếp duy nhất.
+   * **Caveman Ultra (`/caveman ultra`):** Phản hồi siêu cô đọng, cắt bỏ từ đệm, chỉ giữ lại sự chuẩn xác kỹ thuật: code, đường dẫn file, lệnh, số liệu và lỗi.
+3. **Quy chuẩn chuyên ngành Hệ Thống Thông Tin (HTTT):**
    * Đào sâu vào nghiệp vụ dữ liệu: Báo cáo trực quan đa chiều, báo cáo động, tùy chỉnh bộ lọc, xuất dữ liệu (Excel/CSV/PDF).
    * Phân quyền rõ ràng (Admin vs User).
    * Nhật ký hoạt động ứng dụng (Activity/Audit Log riêng trong CSDL, không dùng log mặc định của IoT Server).
-3. **Quy chuẩn 5 Module theo Đề cương (Syllabus):**
+4. **Quy chuẩn 5 Module theo Đề cương (Syllabus):**
    * *Module 1:* Nhận dữ liệu cảm biến đầu vào (tối thiểu 2 input).
    * *Module 2:* Kiểm tra ngưỡng & phát hiện bất thường.
    * *Module 3:* Điều khiển thiết bị đầu ra (tối thiểu 2 output: tự động & thủ công).
    * *Module 4:* Ghi nhận nhật ký hoạt động (Audit log).
    * *Module 5:* Data Dashboard trực quan hóa trạng thái hệ thống.
-4. **Quy chuẩn Cấu trúc Báo cáo (Tuân thủ nghiêm ngặt phong cách `sample_report`):**
+5. **Quy chuẩn Cấu trúc Báo cáo (Tuân thủ nghiêm ngặt phong cách `sample_report`):**
    * Bố cục phân chương nòng cốt:
      1. **Giới thiệu (Introduction):** Bối cảnh, mục tiêu 5 module, phạm vi phân cấp (nhiều khu đất, đa loại cây trồng).
      2. **Thiết bị (Devices):** Thiết bị đầu vào (Input), thiết bị đầu ra (Output), mạch điều khiển & IoT Gateway.
      3. **Requirement:** Gồm Yêu cầu người dùng (User Requirements), Yêu cầu chức năng (FR), Yêu cầu phi chức năng (NFR), Tác nhân, Use Case & Sơ đồ ma trận, Đặc tả chi tiết Use Case.
    * **Quy tắc phân cấp số thập phân:** Mọi nội dung bên trong bắt buộc phân mục logic dạng `x.1`, `x.2`, `x.y.z` (không gộp lung tung).
    * **Hai góc nhìn phân tích song song:** Bắt buộc phân tích theo 2 khía cạnh: *Khía cạnh IoT & Môi trường thực địa (Internet-of-Things aspect)* và *Khía cạnh Ứng dụng & Hệ thống thông tin (Application & HTTT aspect)*.
-5. **Quy tắc nhất quán ngôn ngữ tiêu đề & thuật ngữ (Language Consistency Rule):**
+6. **Quy tắc nhất quán ngôn ngữ tiêu đề & thuật ngữ (Language Consistency Rule):**
    * **Tuyệt đối KHÔNG dùng kiểu mở ngoặc song ngữ** như `Tiếng Việt (Tiếng Anh)` trong các tiêu đề và đề mục (ví dụ: cấm `Giới thiệu đề tài (Introduction)`, `Thiết bị (Devices)`...).
    * **Nguyên tắc chọn lựa:** Một là Tiếng Việt, hai là Tiếng Anh.
      * Nếu dịch sang tiếng Việt tự nhiên, rõ nghĩa và chuẩn mực: **Dùng thuần Tiếng Việt** (ví dụ: *Giới thiệu*, *Thiết bị*, *Yêu cầu hệ thống*, *Yêu cầu người dùng*, *Yêu cầu chức năng*, *Yêu cầu phi chức năng*...).
      * Nếu dịch sang tiếng Việt gượng gạo, lạ lẫm hoặc không sát chuyên ngành: **Dùng thuần Tiếng Anh** (ví dụ: *Dashboard*, *IoT Gateway*, *Audit Log*, *Use Case*, *Traceability Matrix*...).
-6. **Quy tắc bắt buộc Git Commit sau khi hoàn thành task (Mandatory Commit Rule):**
+7. **Quy tắc bắt buộc Git Commit sau khi hoàn thành task (Mandatory Commit Rule):**
    * Sau khi hoàn tất bất kỳ thay đổi, cập nhật hoặc tái cấu trúc mã nguồn/tài liệu nào, Agent **BẮT BUỘC PHẢI THỰC HIỆN COMMIT LẠI VÀO GIT** (`git add . && git commit -m "..."`).
    * Mục đích: Lưu giữ checkpoint an toàn, bảo vệ tài liệu không bị ghi đè hay mất mát khi có các thao tác ngoài ý muốn (như `git pull` hoặc `sync_overleaf.py pull`).
 
