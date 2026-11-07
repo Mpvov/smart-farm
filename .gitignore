@@ -47,3 +47,8 @@ report_ready_to_upload.zip
 Thumbs.db
 .vscode/
 .idea/
+
+# junction do scripts/setup.ps1 tao; thu muc that la .agents/
+.claude/skills
+.claude/rules
+.claude/settings.local.json
