@@ -144,7 +144,6 @@ def test_FR_BE_09_rbac_admin_can_create_user():
     assert res.status_code == 200
 
 
-@pytest.mark.xfail(strict=True, reason="BUG FR-BE-09: main.py:756 khong kiem role")
 def test_FR_BE_09_rbac_operator_cannot_create_user():
     res_login = client.post("/api/v1/auth/login", json={"email": "operator@smartfarm.vn", "password": "operator123"})
     token = res_login.json()["data"]["access_token"]

@@ -6,7 +6,7 @@ import json
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel
@@ -169,6 +169,26 @@ def get_me():
             "role": user["role"],
         },
     }
+
+
+def require_admin(authorization: Optional[str] = Header(None)):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Chưa xác thực")
+    token = authorization.split(" ", 1)[1]
+    parts = token.split("-")
+    if len(parts) < 3 or parts[0] != "token":
+        raise HTTPException(status_code=401, detail="Token không hợp lệ")
+    user_id = parts[1]
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, email, full_name, role, is_active FROM users WHERE id = ?", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+    if not user or not user["is_active"]:
+        raise HTTPException(status_code=401, detail="Tài khoản không hợp lệ")
+    if user["role"] != "ADMIN":
+        raise HTTPException(status_code=403, detail="Chỉ Quản trị viên (ADMIN) mới có quyền thực hiện")
+    return user
 
 
 @app.post("/api/v1/auth/logout")
@@ -754,7 +774,7 @@ def get_users():
 
 
 @app.post("/api/v1/users")
-def create_user(req: UserCreateRequest):
+def create_user(req: UserCreateRequest, _admin: dict = Depends(require_admin)):
     conn = get_db()
     cursor = conn.cursor()
     now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
