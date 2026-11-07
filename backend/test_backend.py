@@ -170,3 +170,14 @@ def test_FR_BE_10_rbac_operator_cannot_delete_zone():
 
     res = client.delete("/api/v1/zones/1", headers=headers)
     assert res.status_code == 403
+
+
+def test_rate_limit_and_security_headers():
+    ip_headers = {"X-Forwarded-For": "198.51.100.77"}
+    for _ in range(5):
+        r = client.post("/api/v1/auth/login", json={"email": "a@b.c", "password": "x"}, headers=ip_headers)
+        assert r.status_code == 401
+        assert r.headers.get("X-Content-Type-Options") == "nosniff"
+        assert r.headers.get("X-Frame-Options") == "DENY"
+    r6 = client.post("/api/v1/auth/login", json={"email": "a@b.c", "password": "x"}, headers=ip_headers)
+    assert r6.status_code == 429

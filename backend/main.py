@@ -3,12 +3,16 @@ import csv
 import datetime
 import io
 import json
+import os
+import time
+from collections import defaultdict
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.database import get_db, hash_password, init_db, log_audit
@@ -39,6 +43,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+_rate_buckets: Dict[str, List[float]] = defaultdict(list)
+
+
+@app.middleware("http")
+async def security_and_rate_limit(request: Request, call_next):
+    path = request.url.path
+    if path.startswith("/api/") and path != "/api/v1/stream/realtime":
+        ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (
+            request.client.host if request.client else "unknown"
+        )
+        is_login = path == "/api/v1/auth/login" and request.method == "POST"
+        key = f"{ip}:{'login' if is_login else 'api'}"
+        limit = 5 if is_login else 120
+        now = time.monotonic()
+        bucket = [t for t in _rate_buckets[key] if now - t < 60.0]
+        if len(bucket) >= limit:
+            _rate_buckets[key] = bucket
+            return JSONResponse(status_code=429, content={"detail": "Too Many Requests"})
+        bucket.append(now)
+        _rate_buckets[key] = bucket
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    return response
 
 
 # ==========================================
@@ -909,3 +939,20 @@ def create_device(req: DeviceCreateRequest):
 
     conn.close()
     return {"success": True, "data": {"id": dev_id}, "message": "Đăng ký thiết bị thành công"}
+
+
+
+_DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
+if os.path.isdir(_DIST_DIR):
+    _ASSETS_DIR = os.path.join(_DIST_DIR, "assets")
+    if os.path.isdir(_ASSETS_DIR):
+        app.mount("/assets", StaticFiles(directory=_ASSETS_DIR), name="assets")
+
+    @app.get("/{full_path:path}")
+    def serve_spa(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not Found")
+        candidate = os.path.join(_DIST_DIR, full_path)
+        if full_path and os.path.isfile(candidate):
+            return FileResponse(candidate)
+        return FileResponse(os.path.join(_DIST_DIR, "index.html"))

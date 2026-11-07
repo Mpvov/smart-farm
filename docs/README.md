@@ -14,6 +14,7 @@ Không có dòng phù hợp → hỏi người dùng. Không tự tạo file m�
 | Kiến trúc, luồng dữ liệu giữa các phần | `docs/ARCHITECTURE.md` | — |
 | Quyết định khó đổi (CSDL, framework, thư viện lớn) | `docs/decisions/` (mỗi quyết định một file `NNNN-ten-ngan.md`) | số đầu tên file |
 | Tiến độ, phân công | `docs/PROGRESS.md` | — |
+| Kế hoạch thực thi chi tiết | `docs/plans/` | — |
 | Tài liệu gốc từ bên ngoài (đề bài, đề cương, timeline, giáo trình, báo cáo mẫu, ảnh thiết bị) — chỉ đọc, không sửa | `docs/sources/` | — |
 | Format dữ liệu giữa các phần | `contracts/` (không nằm trong docs) | — |
 | Luật cho agent | `AGENTS.md` (không nằm trong docs) | — |

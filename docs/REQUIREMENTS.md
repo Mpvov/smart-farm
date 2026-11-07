@@ -113,7 +113,7 @@ Hệ thống phải lưu trữ dữ liệu nhật ký hoạt động và số đ
 Hệ thống phải duy trì bộ đệm cục bộ tại Gateway lưu trữ tối thiểu 1.000 bản ghi cảm biến khi mất kết nối mạng và tự động đồng bộ bù khi kết nối khôi phục với tỷ lệ mất mát nhỏ hơn 0.1%.
 
 **NFR-04 · Bảo mật và kiểm soát truy cập**
-Hệ thống phải lưu trữ mật khẩu người dùng dưới dạng mã băm một chiều an toàn, phiên làm việc có thời hạn tối đa 24 giờ và thực thi phân quyền vai trò nghiêm ngặt giữa Quản trị viên (Admin) và Người vận hành (Operator).
+Hệ thống phải lưu trữ mật khẩu người dùng dưới dạng mã băm một chiều an toàn, phiên làm việc có thời hạn tối đa 24 giờ và thực thi phân quyền vai trò nghiêm ngặt giữa Quản trị viên (Admin) và Người vận hành (Operator), giới hạn tần suất (rate limit) chống dò mật khẩu và gắn HTTP security headers.
 
 **NFR-05 · Hiệu năng truy vấn và báo cáo**
 Hệ thống phải xử lý tổng hợp dữ liệu chuỗi thời gian dưới 2.0 giây cho 10.000 bản ghi và hoàn tất xuất file báo cáo tổng hợp dưới 3.0 giây.

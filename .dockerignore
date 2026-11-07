@@ -1,0 +1,10 @@
+node_modules
+.git
+.venv
+venv
+__pycache__
+*.pyc
+*.db
+.claude
+.agents
+report
