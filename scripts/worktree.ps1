@@ -124,7 +124,7 @@ switch ($Action) {
         }
       }
     }
-    Write-Host "OK da don worktree: $slug" -ForegroundColor Green
+    Write-Host "OK da don worktree: $($info.Slug)" -ForegroundColor Green
     exit 0
   }
 
