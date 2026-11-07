@@ -1,21 +1,43 @@
 # Smart Farm — Luật cho Agent
 
-## 1. Layout & Trách nhiệm
-| Path | Trách nhiệm | Người phụ trách |
+Đọc file này trước. Làm trong thư mục nào thì đọc thêm `AGENTS.md` của thư mục đó.
+
+## Layout
+
+| Path | Chứa gì | Phụ trách |
 | :--- | :--- | :--- |
-| `frontend/` | UI + Wireframe Mockup | Leader |
-| `backend/` | API + CSDL + Audit Log | Leader |
-| `gateway/` | UART Serial ↔ MQTT Adafruit IO | Bạn B & Bạn C |
-| `contracts/` | Đặc tả format dữ liệu + Mẫu test | Cả nhóm thống nhất |
-| `report/` | Báo cáo LaTeX chính thức | Không sửa khi chưa được yêu cầu |
+| `frontend/` | UI + wireframe (`frontend/mockups/`). Gọi API theo `contracts/api.md` | P |
+| `backend/` | API, CSDL, Audit Log, phân quyền | P |
+| `gateway/` | UART Serial ↔ MQTT Adafruit IO | N, Q |
+| `contracts/` | Format dữ liệu dùng chung: `contracts/uart.md`, `contracts/mqtt.md`, `contracts/api.md`, mẫu trong `contracts/samples/`, test | Cả nhóm duyệt |
+| `docs/` | Use case, kiến trúc, quyết định, tiến độ | P |
+| `scripts/` | `scripts/check.ps1` | P |
+| `report/` | Báo cáo LaTeX chính thức | P |
 
-## 2. Lệnh bắt buộc
-- Kiểm tra trước khi báo xong: `./scripts/check.ps1` (bắt buộc trả về exit 0).
+## Lệnh
 
-## 3. Luật cứng (Hard Rules)
-1. Format UART / MQTT / API chỉ lấy từ `contracts/`. Muốn đổi format thì phải sửa đồng thời contract + samples + test.
-2. Không commit file `.env` hay key thật. Mọi thiết lập chỉ ghi vào `.env.example`.
-3. Chỉ làm màn hình và use case được liệt kê trong `docs/USE_CASES.md`.
-4. Không đổi CSDL hay cài thêm thư viện lớn khi chưa có file trong `docs/decisions/`.
-5. Thiếu thông tin thì hỏi, tuyệt đối không tự suy diễn.
-6. Tri thức chi tiết đọc tại `docs/KNOWLEDGE.md`, tiến độ theo dõi tại `docs/PROGRESS.md`.
+- Kiểm trước khi báo xong (phải ra OK, exit 0):
+  `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
+- Lỗi do môi trường (thiếu tool, quyền, port): báo lỗi và dừng, không tự đổi cấu hình máy.
+
+## Luật cứng
+
+1. Format UART / MQTT / API chỉ lấy từ `contracts/`. Đổi format thì sửa contract + `contracts/samples/` + test trong cùng một commit.
+2. Không commit `.env` hay key thật. `.env.example` chỉ chứa tên biến, không chứa giá trị thật.
+3. Chỉ làm màn hình và use case có trong `docs/USE_CASES.md`.
+4. Không đổi CSDL hay thêm thư viện lớn khi chưa có file trong `docs/decisions/`.
+5. Không sửa `report/` khi chưa được yêu cầu.
+6. Mỗi việc một branch. Không push thẳng lên `main`.
+
+## Khi nào hỏi, khi nào tự làm
+
+- Phải hỏi trước: đổi contract, đổi CSDL, thêm màn hình hay use case, đụng secret, sửa file ngoài thư mục được giao.
+- Tự quyết: tên biến, cách tổ chức code bên trong module, nội dung test.
+
+## Tài liệu
+
+- Use case và màn hình: `docs/USE_CASES.md`
+- Kiến trúc và luồng dữ liệu: `docs/ARCHITECTURE.md`
+- Quyết định đã chốt: `docs/decisions/`
+- Tri thức môn học: `docs/KNOWLEDGE.md`
+- Tiến độ và phân công: `docs/PROGRESS.md`

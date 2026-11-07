@@ -2,7 +2,7 @@
 
 - Một nguồn luật: AGENTS.md. CLAUDE.md chỉ chứa `@AGENTS.md`. Không tạo GEMINI.md trong repo.
 - Bảng Layout chỉ ghi "chứa gì". Luật đặt ở mục Luật cứng.
-- Cột phụ trách ghi tên thật.
+- Cột phụ trách ghi chữ cái đầu (ẩn tên thật).
 - Mọi đường dẫn nhắc tới phải tồn tại.
 - Lệnh phải chạy được trên Windows: `powershell -ExecutionPolicy Bypass -File ...`.
 - README.md là cho người đọc. Luật cho agent đặt trong AGENTS.md.
