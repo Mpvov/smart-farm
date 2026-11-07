@@ -1,41 +1,45 @@
-# KẾ HOẠCH CÁ NHÂN CỦA P (TỪ BÀI TOÁN → WIREFRAME → KIẾN TRÚC)
+# KẾ HOẠCH CÁ NHÂN CỦA P (BÀI TOÁN → USE CASE → WIREFRAME → KIẾN TRÚC)
 
-**Phạm vi của P:** Bài toán nghiệp vụ, Tài liệu (`docs/`), Wireframe UI (`frontend/mockups/`), và định hình `contracts/api.md` + `backend/` sau khi chốt UI.  
+**Phạm vi của P:** Bài toán nghiệp vụ, Tài liệu Use Case (`docs/USE_CASES.md`, `report/section/UseCase.tex`), Wireframe UI (`frontend/mockups/`), và định hình `contracts/api.md` + `backend/` sau khi chốt UI.  
 **Không nằm trong plan này:** Phần IoT Gateway & Adafruit IO của N và Q (`gateway/`).
 
 ---
 
-## BƯỚC 1: CHỐT 4 CÂU HỎI BÀI TOÁN TÁC ĐỘNG TRỰC TIẾP LÊN UI
-*(Phải trả lời xong trước khi vẽ bất kỳ màn hình nào)*
+## BƯỚC 1: CHỐT 4 CÂU HỎI BÀI TOÁN TÁC ĐỘNG ĐẾN USE CASE & UI
 
-1. **Quy mô chủ thể (Tenancy):** Hệ thống phục vụ **1 nông trại duy nhất** (1 chủ, chia nhiều khu đất/Zone) hay **nhiều nông trại độc lập** (SaaS nhiều chủ)?
-   * *Tác động UI:* Có hay không màn hình chọn Nông trại / Quản lý danh sách Nông trại.
-2. **Phân cấp thực thể (Hierarchy):** Một khu đất (Zone/Plot) gắn cứng với 1 bộ cảm biến + thiết bị, hay người dùng tự gán động từng cảm biến vào khu đất trên UI?
-   * *Tác động UI:* Độ phức tạp của màn Quản lý khu vực & thiết bị (`UC-04`).
-3. **Nền tảng hiển thị (Target Viewport):** Thiết kế Wireframe cho **Web Desktop** (ưu tiên bảng biểu, báo cáo HTTT rộng) hay **Mobile App**?
-   * *Tác động UI:* Bố cục điều hướng (Sidebar vs Bottom Bar) và cách trình bày bảng báo cáo.
-4. **Phân quyền hiển thị (Admin vs Operator):** Operator chỉ bị ẩn các màn Quản trị (`UC-02, 03, 04, 05, 09, 10`) hay dùng giao diện hoàn toàn khác Admin?
+1. **Quy mô chủ thể (Tenancy):** Phục vụ **1 nông trại duy nhất** (gồm nhiều khu đất/mảnh vườn) hay **nhiều chủ nông trại** độc lập?
+2. **Quan hệ Khu đất – Cây trồng – Lịch/Ngưỡng:** Theo đề tài gốc (*"mỗi khu đất/mảnh vườn có loại cây trồng khác nhau, mỗi loại cây trồng có lịch trình tắt mở và thiết lập cảnh báo khác nhau"*): Lịch trình & ngưỡng gắn theo **Loại cây trồng** (áp cho mảnh vườn trồng cây đó) hay gắn trực tiếp trên từng **Mảnh vườn**?
+3. **Phân cấp Thiết bị:** Người dùng tự thêm/gán động thiết bị (cảm biến, bơm, đèn) vào từng mảnh vườn trên UI hay danh sách thiết bị cố định?
+4. **Nền tảng hiển thị (Target Viewport):** Thiết kế cho **Web App** hay **Mobile App**?
 
 ---
 
-## BƯỚC 2: ĐẶC TẢ KHUNG MÀN HÌNH (`docs/USE_CASES.md`)
-Từ 12 Use Case đã có trong báo cáo (`UC-01` → `UC-12`), chốt danh sách màn hình `SCR-xx` với 3 thông tin ngắn gọn cho mỗi màn:
-* **Ai dùng** (Admin / Operator).
-* **Hiển thị thông tin gì** (các khối dữ liệu trên màn hình).
-* **Bấm nút gì được** (các thao tác chính).
+## BƯỚC 2: HOÀN THIỆN TÀI LIỆU USE CASE (`docs/USE_CASES.md` & `report/`)
+**Quality Gate bắt buộc:** Phải phủ kín 100% **9 nhóm chức năng** trong `docs/ProjectTitle&FunctionalRequirement.pdf`:
+
+| Gate # | Yêu cầu gốc từ `ProjectTitle&FunctionalRequirement.pdf` | Kiểm tra độ phủ Use Case |
+| :---: | :--- | :--- |
+| **G1** | Hiển thị dữ liệu tổng hợp toàn hệ thống | Dashboard tổng quan toàn nông trại |
+| **G2** | Quản lý theo từng khu đất / mảnh vườn (có loại cây trồng khác nhau) | CRUD khu đất/mảnh vườn + loại cây trồng |
+| **G3** | Quản lý chi tiết từng thiết bị: điều khiển (nếu là actuator), xem biểu đồ lịch sử (nếu là sensor) | Xem chi tiết sensor chart + bật/tắt thiết bị |
+| **G4** | Quản lý lịch trình điều khiển thiết bị theo ngày / thời gian trong ngày tự động (theo cấp mảnh vườn/loại cây) | CRUD lịch trình tự động theo mảnh vườn/cây trồng |
+| **G5** | Quản lý thiết lập ngưỡng và **các hành động đi kèm nếu có** | Đặt ngưỡng min/max + cấu hình hành động tự động đi kèm (VD: tự bật bơm/quạt) |
+| **G6** | Cảnh báo vượt ngưỡng | Phát hiện, thông báo và xử lý cảnh báo vượt ngưỡng |
+| **G7** | Quản lý nhật ký hành động của ứng dụng (không dùng log tự động của IoT server) | Tra cứu & ghi nhận Audit Log độc lập của ứng dụng |
+| **G8** | Quản lý user và phân quyền: có tác nhân người dùng và quản trị riêng biệt | Quản lý tài khoản + phân quyền Admin / Người dùng |
+| **G9** | **Chuyên biệt HTTT:** Báo cáo trực quan, đa chiều, báo cáo động, **tuỳ chỉnh hiển thị báo cáo**, tải/xuất dữ liệu báo cáo | Lọc báo cáo động đa chiều + tuỳ chọn cột/biểu đồ hiển thị + xuất file |
 
 ---
 
 ## BƯỚC 3: DỰNG WIREFRAME MOCKUP (`frontend/mockups/`)
-Thực hiện tuần tự theo 4 cụm màn hình:
-1. **Cụm Giám sát & Điều khiển (`UC-06, 07, 08`):** Màn Dashboard theo khu đất, xem cảm biến và bật/tắt thiết bị thủ công.
-2. **Cụm Tự động hóa & Cảnh báo (`UC-09, 10, 11`):** Màn đặt ngưỡng min/max, lập lịch tưới/đèn, và xử lý cảnh báo.
-3. **Cụm Trọng tâm HTTT (`UC-12, UC-05`):** Màn Báo cáo động đa chiều (bộ lọc linh hoạt + nút xuất Excel/CSV/PDF) và màn tra cứu Audit Log.
-4. **Cụm Quản trị & Đăng nhập (`UC-01, 02, 03, 04`):** Màn Login, quản lý User/Role và quản lý Khu đất.
+Chỉ bắt đầu vẽ sau khi Bước 2 vượt qua đủ 9 Gate (`G1` → `G9`). Mỗi màn hình `SCR-xx` bám sát Use Case đã chốt:
+1. Cụm Giám sát toàn hệ thống & Chi tiết Khu đất / Thiết bị (`G1, G2, G3`).
+2. Cụm Lịch trình tự động, Ngưỡng + Hành động đi kèm & Cảnh báo (`G4, G5, G6`).
+3. Cụm Báo cáo HTTT (đa chiều, động, tuỳ chỉnh hiển thị, xuất file) & Nhật ký ứng dụng (`G9, G7`).
+4. Cụm Quản lý User & Phân quyền (`G8`).
 
 ---
 
-## BƯỚC 4: CHỐT CONTRACT & TECH STACK (SAU KHI XONG WIREFRAME)
-Khi các màn hình Wireframe đã rõ từng ô dữ liệu:
-1. Viết `contracts/api.md` dựa đúng trên dữ liệu các màn hình cần gọi.
-2. Chốt quyết định chọn Tech Stack & CSDL vào `docs/decisions/` để chuẩn bị cho giai đoạn code.
+## BƯỚC 4: CHỐT CONTRACT & KIẾN TRÚC (SAU KHI XONG WIREFRAME)
+1. Chốt `contracts/api.md` từ các màn hình đã vẽ.
+2. Chốt Tech Stack & CSDL vào `docs/decisions/`.
