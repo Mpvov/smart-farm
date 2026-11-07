@@ -221,6 +221,16 @@ if ($LASTEXITCODE -ne 0) {
   $fail += "contracts/test_contracts.py: test contract FAIL -> sua contract/samples/code cho khop"
 }
 
+python -c "import pytest" 2>$null
+if ($LASTEXITCODE -ne 0) {
+  $fail += "backend tests: chua cai dat pytest -> pip install -r backend/requirements.txt"
+} else {
+  python -m pytest backend -q
+  if ($LASTEXITCODE -ne 0) {
+    $fail += "backend tests: pytest FAIL -> sua backend code cho pass hoac kiem tra test"
+  }
+}
+
 if ($fail.Count -gt 0) {
   $fail | Select-Object -Unique | ForEach-Object { Write-Host "FAIL $_" -ForegroundColor Red }
   exit 1

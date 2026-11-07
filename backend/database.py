@@ -5,7 +5,7 @@ import os
 import sqlite3
 from typing import Any, Dict, List, Optional
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "smartfarm.db")
+DB_PATH = os.environ.get("SMARTFARM_DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "smartfarm.db"))
 
 
 def hash_password(password: str) -> str:
@@ -13,7 +13,7 @@ def hash_password(password: str) -> str:
 
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(os.environ.get("SMARTFARM_DB_PATH", DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 
