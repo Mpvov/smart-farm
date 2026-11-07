@@ -9,6 +9,7 @@
 | `frontend/` | UI + wireframe (`frontend/mockups/`). Gọi API theo `contracts/api.md` | P |
 | `backend/` | API, CSDL, Audit Log, phân quyền | P |
 | `gateway/` | UART Serial ↔ MQTT Adafruit IO | N, Q |
+| `firmware/` | Code nạp vi điều khiển (đọc cảm biến, LCD, giao tiếp UART theo `contracts/uart.md`) | N, Q |
 | `contracts/` | Format dữ liệu dùng chung: `contracts/uart.md`, `contracts/mqtt.md`, `contracts/api.md`, mẫu trong `contracts/samples/`, test | Cả nhóm duyệt |
 | `docs/` | Use case, kiến trúc, quyết định, tiến độ | P |
 | `scripts/` | `scripts/check.ps1` | P |
@@ -16,29 +17,36 @@
 
 ## Lệnh
 
+- Lần đầu sau khi clone (nếu dùng Claude Code): `powershell -ExecutionPolicy Bypass -File scripts/setup.ps1`
 - Kiểm trước khi báo xong (phải ra OK, exit 0):
   `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
 - Lỗi do môi trường (thiếu tool, quyền, port): báo lỗi và dừng, không tự đổi cấu hình máy.
 
 ## Luật cứng
 
-1. Format UART / MQTT / API chỉ lấy từ `contracts/`. Đổi format thì sửa contract + `contracts/samples/` + test trong cùng một commit.
+1. Doc đi cùng code, trong cùng một commit:
+   - Đổi format UART / MQTT / API: sửa `contracts/` + `contracts/samples/` + test.
+   - Đổi hành vi (tính năng mới, sửa logic): sửa `docs/REQUIREMENTS.md`; commit message ghi ID, ví dụ `feat(gateway): FR-XX-NN đọc độ ẩm đất`.
+   Vì: doc sửa "sau" thì không bao giờ được sửa; gateway và backend do người khác nhau viết, chỉ khớp nhau qua doc.
 2. Không commit `.env` hay key thật. `.env.example` chỉ chứa tên biến, không chứa giá trị thật.
+   Vì: có AIO key là điều khiển được thiết bị thật.
 3. Chỉ làm màn hình và use case có trong `docs/USE_CASES.md`.
+   Vì: phạm vi bám barem môn học; màn ngoài danh sách không được điểm và tốn thời gian.
 4. Không đổi CSDL hay thêm thư viện lớn khi chưa có file trong `docs/decisions/`.
+   Vì: đổi CSDL giữa chừng phải viết lại backend và báo cáo.
 5. Không sửa `report/` khi chưa được yêu cầu.
+   Vì: report là bản nộp chính thức.
 6. Mỗi việc một branch. Không push thẳng lên `main`.
-7. Khi được hỏi về kiến thức bên ngoài dự án: phải tìm kiếm web trước khi trả lời, để đảm bảo dữ liệu mới và chính xác nhất.
+   Vì: nhiều người và nhiều agent cùng sửa một repo.
+7. Thư mục mới ở gốc repo: thêm một dòng vào bảng Layout, tạo `<thư mục>/AGENTS.md` và `<thư mục>/CLAUDE.md` (chỉ chứa `@AGENTS.md`). Ngoại lệ: `docs/`, `scripts/`, `report/`.
+   Vì: agent chỉ biết luật của thư mục khi file đó tồn tại; check.ps1 kiểm luật này.
 
 ## Khi nào hỏi, khi nào tự làm
 
 - Phải hỏi trước: đổi contract, đổi CSDL, thêm màn hình hay use case, đụng secret, sửa file ngoài thư mục được giao.
 - Tự quyết: tên biến, cách tổ chức code bên trong module, nội dung test.
+- Phải kiểm tài liệu chính thức (web) trước khi dùng: API Adafruit IO, thư viện ngoài, phiên bản tool. Ghi link nguồn trong câu trả lời.
 
 ## Tài liệu
 
-- Use case và màn hình: `docs/USE_CASES.md`
-- Kiến trúc và luồng dữ liệu: `docs/ARCHITECTURE.md`
-- Quyết định đã chốt: `docs/decisions/`
-- Tri thức môn học: `docs/KNOWLEDGE.md`
-- Tiến độ và phân công: `docs/PROGRESS.md`
+Bản đồ tài liệu: `docs/README.md`. Mỗi loại thông tin chỉ ở một file trong bảng đó. Tra bảng trước khi ghi gì vào docs.

@@ -1,7 +1,11 @@
+---
+trigger: always_on
+---
 # Khi sửa AGENTS.md, CLAUDE.md, rule hoặc skill
 
 - Một nguồn luật: AGENTS.md. CLAUDE.md chỉ chứa `@AGENTS.md`. Không tạo GEMINI.md trong repo.
-- Bảng Layout chỉ ghi "chứa gì". Luật đặt ở mục Luật cứng.
+- Mọi file trong .agents/rules/ phải mở đầu bằng frontmatter `trigger:` (always_on | model_decision | glob | manual). Thiếu thì Antigravity bỏ file mà không báo. Claude Code đọc cùng file qua junction .claude/rules.
+- Bảng Layout chỉ ghi "chứa gì". "Luật cứng" chỉ chứa ràng buộc dự án kiểm được bằng lệnh hoặc review; thói quen/quy trình làm việc đặt ở "Khi nào hỏi, khi nào tự làm"; sở thích cá nhân đặt ở ~/.gemini/GEMINI.md.
 - Cột phụ trách ghi chữ cái đầu (ẩn tên thật).
 - Mọi đường dẫn nhắc tới phải tồn tại.
 - Lệnh phải chạy được trên Windows: `powershell -ExecutionPolicy Bypass -File ...`.

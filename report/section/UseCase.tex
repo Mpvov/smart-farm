@@ -8,17 +8,17 @@ Các yêu cầu chức năng được chuẩn hóa và mã hóa nhằm phục v�
 \begin{tabularx}{\textwidth}{|l|p{3.8cm}|X|}
 \hline
 \textbf{Mã FR} & \textbf{Phân hệ / Chức năng} & \textbf{Mô tả chi tiết} \\ \hline
-FR-01 & Quản lý truy cập \& Tài khoản & Xác thực người dùng (Đăng nhập/Đăng xuất), quản lý danh sách tài khoản và phân cấp vai trò truy cập hệ thống (Admin, Operator). \\ \hline
-FR-02 & Quản lý cấu trúc nông trại & Cho phép tạo, sửa, xóa các Khu đất/Mảnh vườn (Zone); gán và quản lý thông tin các loại cây trồng tương ứng cho từng khu đất. \\ \hline
-FR-03 & Quản lý danh mục thiết bị & Quản lý thông tin thiết bị (ID, định danh phần cứng, vị trí khu đất gán vào, chủng loại: cảm biến đo đạc hoặc cơ cấu chấp hành). \\ \hline
-FR-04 & Nhật ký ứng dụng (Audit Log) & Ghi nhận độc lập mọi hành động của người dùng (bật/tắt thiết bị, sửa lịch trình, đổi ngưỡng cảnh báo) vào cơ sở dữ liệu nội bộ; hỗ trợ tra cứu thanh tra. \\ \hline
-FR-05 & Giám sát tổng quan (Dashboard) & Hiển thị dữ liệu tổng hợp toàn hệ thống theo thời gian thực (trạng thái kết nối Online/Offline của thiết bị, số lượng khu đất, cảnh báo đang kích hoạt). \\ \hline
-FR-06 & Giám sát chi tiết \& Biểu đồ & Hiển thị biểu đồ chuỗi thời gian (time-series chart) thu thập từ các thiết bị cảm biến (nhiệt độ, độ ẩm không khí, độ ẩm đất, cường độ ánh sáng). \\ \hline
-FR-07 & Điều khiển thiết bị thủ công & Cho phép người vận hành gửi lệnh Bật/Tắt tức thì tới các thiết bị chấp hành (máy bơm tưới, van điện từ, hệ thống phun sương làm mát, dàn đèn quang kỳ). \\ \hline
-FR-08 & Quản lý lịch trình tự động & Cấu hình lịch bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian trong ngày; áp dụng theo từng khu đất hoặc loại cây trồng. \\ \hline
-FR-09 & Thiết lập ngưỡng \& Hành động & Cấu hình ngưỡng an toàn (Min/Max) cho từng thông số cảm biến theo loại cây; thiết lập hành động tự động kích hoạt thiết bị chấp hành đi kèm. \\ \hline
-FR-10 & Tiếp nhận \& Xử lý cảnh báo & Tự động phát hiện cảm biến vượt ngưỡng, hiển thị cảnh báo đỏ thời gian thực trên giao diện và ghi nhận trạng thái xác nhận xử lý của nhân viên. \\ \hline
-FR-11 & Báo cáo động \& Xuất dữ liệu & Cung cấp báo cáo chuyên biệt HTTT: phân tích đa chiều tương quan môi trường và thời lượng vận hành thiết bị, hỗ trợ lọc động và xuất tệp (CSV/Excel/PDF). \\ \hline
+FR-BE-09 & Quản lý truy cập \& Tài khoản & Xác thực người dùng (Đăng nhập/Đăng xuất), quản lý danh sách tài khoản và phân cấp vai trò truy cập hệ thống (Admin, Operator). \\ \hline
+FR-BE-10 & Quản lý cấu trúc nông trại & Cho phép tạo, sửa, xóa các Khu đất/Mảnh vườn (Zone); gán và quản lý thông tin các loại cây trồng tương ứng cho từng khu đất. \\ \hline
+FR-BE-11 & Quản lý danh mục thiết bị & Quản lý thông tin thiết bị (ID, định danh phần cứng, vị trí khu đất gán vào, chủng loại: cảm biến đo đạc hoặc cơ cấu chấp hành). \\ \hline
+FR-BE-06, FR-BE-07, FR-FE-05 & Nhật ký ứng dụng (Audit Log) & Ghi nhận độc lập mọi hành động của người dùng (bật/tắt thiết bị, sửa lịch trình, đổi ngưỡng cảnh báo) vào cơ sở dữ liệu nội bộ; hỗ trợ tra cứu thanh tra. \\ \hline
+FR-FE-01, FR-FE-02 & Giám sát tổng quan (Dashboard) & Hiển thị dữ liệu tổng hợp toàn hệ thống theo thời gian thực (trạng thái kết nối Online/Offline của thiết bị, số lượng khu đất, cảnh báo đang kích hoạt). \\ \hline
+FR-FE-06 & Giám sát chi tiết \& Biểu đồ & Hiển thị biểu đồ chuỗi thời gian (time-series chart) thu thập từ các thiết bị cảm biến (nhiệt độ, độ ẩm không khí, độ ẩm đất, cường độ ánh sáng). \\ \hline
+FR-FE-04, FR-GW-03 & Điều khiển thiết bị thủ công & Cho phép người vận hành gửi lệnh Bật/Tắt tức thì tới các thiết bị chấp hành (máy bơm tưới, van điện từ, hệ thống phun sương làm mát, dàn đèn quang kỳ). \\ \hline
+FR-BE-04 & Quản lý lịch trình tự động & Cấu hình lịch bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian trong ngày; áp dụng theo từng khu đất hoặc loại cây trồng. \\ \hline
+FR-BE-01, FR-BE-05 & Thiết lập ngưỡng \& Hành động & Cấu hình ngưỡng an toàn (Min/Max) cho từng thông số cảm biến theo loại cây; thiết lập hành động tự động kích hoạt thiết bị chấp hành đi kèm. \\ \hline
+FR-BE-02, FR-BE-03 & Tiếp nhận \& Xử lý cảnh báo & Tự động phát hiện cảm biến vượt ngưỡng, hiển thị cảnh báo đỏ thời gian thực trên giao diện và ghi nhận trạng thái xác nhận xử lý của nhân viên. \\ \hline
+FR-FE-07, FR-BE-08 & Báo cáo động \& Xuất dữ liệu & Cung cấp báo cáo chuyên biệt HTTT: phân tích đa chiều tương quan môi trường và thời lượng vận hành thiết bị, hỗ trợ lọc động và xuất tệp (CSV/Excel). \\ \hline
 \end{tabularx}
 \caption{Danh sách yêu cầu chức năng của hệ thống}
 \label{tab:fr_list}

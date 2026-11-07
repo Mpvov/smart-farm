@@ -1,21 +1,58 @@
 # DANH MỤC USE CASE & ÁNH XẠ MÀN HÌNH (USE CASES & SCREENS)
 
-Tài liệu khóa chặt phạm vi 12 Use Case đã hoàn thiện trong báo cáo và ánh xạ trực tiếp sang 8 màn hình giao diện (`SCR-01` $\rightarrow$ `SCR-08`). Agent không được tự ý vẽ thêm màn hình ngoài danh mục này.
+Tài liệu khóa chặt phạm vi 13 Use Case đã hoàn thiện trong báo cáo và ánh xạ trực tiếp sang 10 màn hình giao diện (`SCR-01` $\rightarrow$ `SCR-10`). Agent không được tự ý vẽ thêm màn hình ngoài danh mục này.
 
 ---
 
 ## 1. MA TRẬN ÁNH XẠ USE CASE VÀ MÀN HÌNH
 
-| Mã Màn | Tên Màn hình | Use Case ánh xạ | Tác nhân chính | Module liên quan |
-| :---: | :--- | :--- | :---: | :---: |
-| **`SCR-01`** | Đăng nhập & Xác thực | `UC-01`: Đăng nhập hệ thống | Admin, Operator | Hệ thống |
-| **`SCR-02`** | Giám sát thời gian thực (Dashboard) | `UC-06`: Giám sát thông số cảm biến | Admin, Operator | Module 1, Module 5 |
-| **`SCR-03`** | Điều khiển thiết bị & Trạng thái | `UC-07`: Giám sát trạng thái thiết bị<br>`UC-08`: Điều khiển thiết bị thủ công | Admin, Operator | Module 3 |
-| **`SCR-04`** | Cấu hình Ngưỡng & Lịch trình | `UC-09`: Lập lịch tưới/chiếu sáng<br>`UC-10`: Thiết lập ngưỡng cảnh báo | Admin | Module 2, Module 3 |
-| **`SCR-05`** | Trung tâm Cảnh báo & Sự cố | `UC-11`: Xử lý và ghi nhận cảnh báo | Admin, Operator | Module 2 |
-| **`SCR-06`** | Báo cáo động & Xuất dữ liệu HTTT | `UC-12`: Báo cáo thống kê & Xuất file | Admin, Operator | Module 5 (Trọng tâm HTTT) |
-| **`SCR-07`** | Nhật ký hoạt động (Audit Log) | `UC-05`: Tra cứu nhật ký hoạt động | Admin | Module 4 (Trọng tâm HTTT) |
-| **`SCR-08`** | Quản lý người dùng & Phân quyền | `UC-02`: Quản lý tài khoản người dùng<br>`UC-03`: Phân quyền vai trò (RBAC)<br>`UC-04`: Quản lý thông tin khu vực/vườn | Admin | Quản trị |
+| Mã UC | Tên Use Case | Mã Màn | Tên Màn hình | Tác nhân chính | Module liên quan |
+| :--- | :--- | :---: | :--- | :---: | :---: |
+| UC-01 | Đăng nhập hệ thống | `SCR-01` | Đăng nhập & Xác thực | Admin, Operator | Hệ thống |
+| UC-02 | Quản lý tài khoản người dùng | `SCR-08` | Quản lý người dùng & Phân quyền | Admin | Quản trị |
+| UC-03 | Phân quyền vai trò (RBAC) | `SCR-08` | Quản lý người dùng & Phân quyền | Admin | Quản trị |
+| UC-04 | Quản lý thông tin khu vực/vườn | `SCR-09` | Quản lý khu vực/vườn | Admin | Quản trị |
+| UC-05 | Tra cứu nhật ký hoạt động | `SCR-07` | Nhật ký hoạt động (Audit Log) | Admin | Module 4 (Trọng tâm HTTT) |
+| UC-06 | Giám sát thông số cảm biến | `SCR-02` | Giám sát thời gian thực (Dashboard) | Admin, Operator | Module 1, Module 5 |
+| UC-07 | Giám sát trạng thái thiết bị | `SCR-03` | Điều khiển thiết bị & Trạng thái | Admin, Operator | Module 3 |
+| UC-08 | Điều khiển thiết bị thủ công | `SCR-03` | Điều khiển thiết bị & Trạng thái | Admin, Operator | Module 3 |
+| UC-09 | Lập lịch tưới/chiếu sáng | `SCR-04` | Cấu hình Ngưỡng & Lịch trình | Admin | Module 2, Module 3 |
+| UC-10 | Thiết lập ngưỡng cảnh báo | `SCR-04` | Cấu hình Ngưỡng & Lịch trình | Admin | Module 2, Module 3 |
+| UC-11 | Xử lý và ghi nhận cảnh báo | `SCR-05` | Trung tâm Cảnh báo & Sự cố | Admin, Operator | Module 2 |
+| UC-12 | Báo cáo thống kê & Xuất file | `SCR-06` | Báo cáo động & Xuất dữ liệu HTTT | Admin, Operator | Module 5 (Trọng tâm HTTT) |
+| UC-13 | Quản lý thiết bị (thêm, sửa, gán thiết bị vào khu vực) | `SCR-10` | Quản lý thiết bị | Admin | Quản trị (Chờ: Q3) |
+
+---
+
+## Yêu cầu người dùng
+
+| Mã UR | Nội dung yêu cầu người dùng | UC liên quan |
+| :--- | :--- | :--- |
+| UR-01 | Hệ thống phải liên tục thu thập và cập nhật các chỉ số môi trường (độ ẩm đất, nhiệt độ không khí, độ ẩm không khí, cường độ ánh sáng) từ các khu đất về trung tâm theo chu kỳ đều đặn (không quá 10 giây/lần). | UC-06 |
+| UR-02 | Hệ thống phải cho phép người dùng định nghĩa dải ngưỡng môi trường an toàn (Min/Max) cho từng loại cây trồng và tự động kích hoạt thiết bị tương ứng (bơm nước tưới gốc, hệ thống phun sương làm mát) khi thông số vượt ngưỡng. | UC-09, UC-10 |
+| UR-03 | Hệ thống phải hỗ trợ người dùng lên lịch trình bật/tắt thiết bị định kỳ theo ngày trong tuần và khoảng thời gian xác định trong ngày nhằm tối ưu hóa chu kỳ tưới tiêu hoặc chong đèn quang kỳ. | UC-09 |
+| UR-04 | Khi phát hiện điều kiện môi trường vi phạm ngưỡng nguy hiểm hoặc sự cố thiết bị, hệ thống phải kích hoạt còi báo động tại chỗ (Buzzer) và đồng thời gửi cảnh báo nổi bật trên giao diện người dùng. | UC-10, UC-11 |
+| UR-05 | Người dùng có thể theo dõi hiện trạng hoạt động của toàn bộ nông trại qua giao diện Dashboard tập trung, bao gồm trạng thái kết nối của các thiết bị (Online/Offline) và biểu đồ chuỗi thời gian của từng cảm biến. | UC-06, UC-07 |
+| UR-06 | Người vận hành có thể gửi lệnh bật/tắt tức thì tới máy bơm tưới, hệ thống phun sương hoặc dàn đèn từ giao diện ứng dụng với phản hồi nhanh chóng (dưới 2 giây). | UC-08 |
+| UR-07 | Hệ thống cung cấp công cụ khai thác số liệu chuyên sâu của HTTT, cho phép người dùng lọc động theo khu đất, loại cây, khoảng thời gian để đánh giá tương quan môi trường và tải tệp báo cáo tổng hợp (CSV/Excel/PDF). | UC-12 |
+| UR-08 | Hệ thống phải ghi nhận tự động toàn bộ lịch sử can thiệp của người dùng và các sự kiện chuyển trạng thái thiết bị vào cơ sở dữ liệu nội bộ phục vụ tra cứu thanh tra. | UC-05 |
+
+---
+
+## Màn hình
+
+| Mã màn hình | Tên màn hình | Phục vụ UC |
+| :--- | :--- | :--- |
+| SCR-01 | Đăng nhập & Xác thực | UC-01 |
+| SCR-02 | Giám sát thời gian thực (Dashboard) | UC-06 |
+| SCR-03 | Điều khiển thiết bị & Trạng thái | UC-07, UC-08 |
+| SCR-04 | Cấu hình Ngưỡng & Lịch trình | UC-09, UC-10 |
+| SCR-05 | Trung tâm Cảnh báo & Sự cố | UC-11 |
+| SCR-06 | Báo cáo động & Xuất dữ liệu HTTT | UC-12 |
+| SCR-07 | Nhật ký hoạt động (Audit Log) | UC-05 |
+| SCR-08 | Quản lý người dùng & Phân quyền | UC-02, UC-03 |
+| SCR-09 | Quản lý khu vực/vườn | UC-04 |
+| SCR-10 | Quản lý thiết bị | UC-13 (Chờ: Q3) |
 
 ---
 
@@ -45,3 +82,9 @@ Tài liệu khóa chặt phạm vi 12 Use Case đã hoàn thiện trong báo cá
 8. **`SCR-08` (User Management):**
    * Bảng danh sách tài khoản: Họ tên, Email, Role (Admin / Operator), Trạng thái kích hoạt.
    * Nút Thêm mới / Đổi role / Khóa tài khoản.
+9. **`SCR-09` (Zone Management):**
+   * Danh sách khu đất/mảnh vườn: Tên khu, diện tích, loại cây trồng hiện tại.
+   * Form thêm, sửa, xoá khu vực canh tác và cập nhật cây trồng.
+10. **`SCR-10` (Device Inventory Management):**
+   * Danh mục thiết bị: Mã thiết bị, tên, phân loại (cảm biến / chấp hành), khu vực đang gán, trạng thái hoạt động.
+   * Form thêm, sửa thông tin thiết bị và gán thiết bị vào mảnh vườn (Chờ: Q3).
