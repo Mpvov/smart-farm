@@ -52,6 +52,11 @@ $noAgentsDirs = @('docs','scripts','report')
 $extraIdDirs = @('report')
 # Thu muc bo qua hoan toan
 $skipDirs = @('node_modules','venv','.venv','dist','build','__pycache__')
+$importRules = @(
+  @{ dir = 'frontend/src'; re = '(from|require\(|import)\s*["\x27](\.\./)+(backend|gateway|firmware)/?' },
+  @{ dir = 'backend';      re = '^\s*(from|import)\s+(gateway|firmware)\b' },
+  @{ dir = 'gateway';      re = '^\s*(from|import)\s+backend\b' }
+)
 
 $fail = @()
 $skipRe = '\\(' + ((($skipDirs + '.git','.worktrees') | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')\\'
@@ -237,83 +242,81 @@ if ($LASTEXITCODE -ne 0) {
   $fail += "contracts/test_api_contracts.py: api contract test FAIL -> sua backend hoac samples cho khop"
 }
 
-# 3. So voi base (origin/main neu co, khong thi main)
-$baseRef = if ((git rev-parse --verify origin/main 2>$null) -and (git merge-base --is-ancestor main origin/main 2>$null)) { "origin/main" } else { "main" }
-$currentBranch = (git branch --show-current).Trim()
-$isAtBase = ($currentBranch -eq "main") -or ($currentBranch -eq "origin/main")
-
-if (-not $isAtBase) {
-  # 3a. So luong test khong duoc giam
-  $baseGrepOut = git grep -c -E "^ *def test_" $baseRef -- "**/test_*.py" "test_*.py" 2>$null
-  if ($baseGrepOut) {
-    foreach ($line in $baseGrepOut) {
-      $parts = $line -split ":"
-      $relPath = $parts[1]
-      $baseFileCount = [int]$parts[-1]
-      $fullPath = Join-Path $root $relPath
-      $workingFileCount = 0
-      if (Test-Path $fullPath) {
-        $workingFileCount = (Select-String -Path $fullPath -Pattern "^ *def test_" | Measure-Object).Count
-      }
-      if ($workingFileCount -lt $baseFileCount) {
-        $fail += "${relPath}: so luong test giam ($workingFileCount < $baseFileCount) -> khong xoa test; FR doi thi sua test va ghi ID FR trong commit"
-      }
+# 9. Chong gian lan test, so voi base = diem cat branch (merge-base cua HEAD voi ban MOI HON
+#    trong origin/main va main; chua push thi main di truoc origin/main).
+#    a. Moi TEN test co o base phai con (o file nao cung duoc): bat xoa, doi ten, "xoa 1 them 2".
+#    b. Dong moi co skip/xfail/.only phai dung dang cho phep. Dang cho phep (viet tren MOT dong):
+#      @pytest.mark.xfail(strict=True, reason="BUG FR-XX-NN: <file:dong> <vi sao>")
+#      @pytest.mark.xfail(strict=True, reason="CHUA LAM FR-XX-NN: <thieu gi>")
+#      JS: it.skip('BUG FR-XX-NN: ...', ...)
+$testNameRe = '(^|[\\/])(test_[^\\/]*\.py|[^\\/]*_test\.py|[^\\/]*\.(test|spec)\.[cm]?[jt]sx?)$'
+$testDefRe = '(?m)^[ \t]*(?:(?:async[ \t]+)?def[ \t]+(test_\w+)|(?:it|test)[ \t]*\([ \t]*[''"`]([^''"`]+))'
+function Add-TestNames($text, $where, $bag) {
+  foreach ($m in [regex]::Matches($text, $testDefRe)) {
+    $n = if ($m.Groups[1].Success) { $m.Groups[1].Value } else { $m.Groups[2].Value }
+    if ($bag.ContainsKey($n)) { [void]$bag[$n].Add($where) } else { $bag[$n] = New-Object System.Collections.ArrayList; [void]$bag[$n].Add($where) }
+  }
+}
+$ref = $null
+$refs = @('origin/main','main' | Where-Object { git rev-parse --verify --quiet "$_^{commit}" 2>$null | Out-Null; $LASTEXITCODE -eq 0 })
+if ($refs.Count -eq 2) {
+  git merge-base --is-ancestor origin/main main 2>$null
+  $ref = if ($LASTEXITCODE -eq 0) { 'main' } else { 'origin/main' }
+} elseif ($refs.Count -eq 1) { $ref = $refs[0] }
+$base = $null
+if ($ref) { $base = git merge-base HEAD $ref 2>$null; if ($LASTEXITCODE -ne 0) { $base = $null } }
+if ($base) {
+  $baseLabel = "$ref@$($base.Substring(0,7))"
+  # a. ten test: base (git) vs ban hien tai (o dia)
+  $baseTests = @{}; $nowTests = @{}
+  foreach ($p in @(git ls-tree -r --name-only $base 2>$null)) {
+    if (($p -notmatch $testNameRe) -or (('\' + $p.Replace('/','\')) -match $skipRe)) { continue }
+    Add-TestNames ((git show "${base}:$p" 2>$null) -join "`n") $p $baseTests
+  }
+  Get-ChildItem $root -Recurse -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch $skipRe -and $_.Name -match $testNameRe } |
+    ForEach-Object { Add-TestNames (Get-Content $_.FullName -Raw -Encoding UTF8) $_.FullName $nowTests }
+  foreach ($n in $baseTests.Keys) {
+    $had = $baseTests[$n].Count
+    $has = if ($nowTests.ContainsKey($n)) { $nowTests[$n].Count } else { 0 }
+    if ($has -lt $had) {
+      $fail += "$($baseTests[$n][0]): test '$n' co o $baseLabel nhung da mat -> khong xoa/doi ten test; FR doi thi hoi nguoi, ghi ID FR trong commit"
     }
   }
-
-  # 3b. Dong them moi trong diff *.py chua skip / skipif / xfail / .only
-  $diffLines = git diff -U0 $baseRef -- "*.py"
-  $currentDiffFile = ""
-  $currentLineNum = 0
-  foreach ($dLine in $diffLines) {
-    if ($dLine -match '^\+\+\+ b/(.+)$') {
-      $currentDiffFile = $Matches[1]
-    } elseif ($dLine -match '^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@') {
-      $currentLineNum = [int]$Matches[1]
-    } elseif ($dLine -match '^\+(?!\+\+)(.*)$') {
-      $addedText = $Matches[1]
-      if ($addedText -match '@(?:pytest\.mark\.)?(?:skip|skipif|xfail)|\.only') {
-        $hasStrict = ($addedText -match 'strict\s*=\s*True')
-        $hasReason = ($addedText -match 'reason\s*=\s*["\x27](BUG FR-|CHUA LAM FR-)')
-        if (-not ($hasStrict -and $hasReason)) {
-          $fail += "${currentDiffFile}:${currentLineNum}: dong them moi chua skip/xfail khong hop le -> chi hop le khi co strict=True va reason bat dau bang BUG FR- hoac CHUA LAM FR-"
-        }
-      }
-      $currentLineNum++
+  # b. skip/xfail/.only trong dong them moi (diff voi base + file chua track)
+  $skipLineRe = '(mark\.(skip|skipif|xfail)\b|pytest\.(skip|xfail)\(|unittest\.skip|\.(skip|only|todo)\(|\b(xit|fit|xdescribe|fdescribe)\()'
+  $okTagRe = '["''](BUG|CHUA LAM) [A-Z]{2,5}-'
+  $codeExt = @('*.py','*.js','*.jsx','*.ts','*.tsx','*.mjs','*.cjs')
+  $added = @()
+  $cur = $null; $ln = 0
+  foreach ($line in @(git diff $base -U0 --no-color -- $codeExt 2>$null)) {
+    if ($line -match '^\+\+\+ b/(.+)$') { $cur = $Matches[1]; continue }
+    if ($line -match '^@@ -\S+ \+(\d+)') { $ln = [int]$Matches[1]; continue }
+    if ($line.StartsWith('+')) { $added += [pscustomobject]@{ f = $cur; n = $ln; t = $line.Substring(1) }; $ln++ }
+  }
+  foreach ($p in @(git ls-files --others --exclude-standard -- $codeExt 2>$null)) {
+    $n = 0
+    foreach ($t in @(Get-Content (Join-Path $root $p) -Encoding UTF8)) { $n++; $added += [pscustomobject]@{ f = $p; n = $n; t = $t } }
+  }
+  foreach ($a in $added) {
+    if ($a.t -notmatch $skipLineRe) { continue }
+    $ok = ($a.t -match $okTagRe) -and (($a.f -notmatch '\.py$') -or ($a.t -match 'xfail\(.*strict\s*=\s*True'))
+    if (-not $ok) {
+      $fail += "$($a.f):$($a.n): skip/xfail/.only moi -> khong skip de cho xanh; bug that thi dung xfail(strict=True, reason=""BUG FR-XX-NN: ..."") tren mot dong"
     }
   }
 }
 
-# 4. Ranh gioi import
-# frontend khong import backend, gateway, firmware
-$feFiles = Get-ChildItem -Path (Join-Path $root "frontend/src") -Recurse -Include "*.ts", "*.tsx", "*.js", "*.jsx" -ErrorAction SilentlyContinue
-foreach ($f in $feFiles) {
-  $matches = Select-String -Path $f.FullName -Pattern 'from\s+["\x27].*(backend|gateway|firmware)|require\(["\x27].*(backend|gateway|firmware)'
-  foreach ($m in $matches) {
-    $rel = Resolve-Path -Relative $f.FullName
-    $fail += "${rel}:$($m.LineNumber): frontend khong duoc import truc tiep backend/gateway/firmware"
-  }
+# 10. Ranh gioi import (cau hinh $importRules o dau file)
+foreach ($r in $importRules) {
+  $dir = Join-Path $root $r.dir
+  if (-not (Test-Path $dir)) { continue }
+  Get-ChildItem $dir -Recurse -File -Include *.py,*.js,*.jsx,*.ts,*.tsx,*.mjs,*.c,*.cpp,*.h,*.ino -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch $skipRe } |
+    Select-String -Pattern $r.re -CaseSensitive |
+    ForEach-Object { $fail += "$($_.Path.Substring($root.Length + 1)):$($_.LineNumber): import vuot ranh gioi -> chi noi chuyen qua contracts/ (API, MQTT, UART)" }
 }
 
-# backend khong import gateway, firmware
-$beFiles = Get-ChildItem -Path (Join-Path $root "backend") -Recurse -Filter "*.py" -ErrorAction SilentlyContinue
-foreach ($f in $beFiles) {
-  $matches = Select-String -Path $f.FullName -Pattern "^\s*(import\s+(gateway|firmware)|from\s+(gateway|firmware))"
-  foreach ($m in $matches) {
-    $rel = Resolve-Path -Relative $f.FullName
-    $fail += "${rel}:$($m.LineNumber): backend khong duoc import gateway hoac firmware"
-  }
-}
-
-# gateway khong import backend
-$gwFiles = Get-ChildItem -Path (Join-Path $root "gateway") -Recurse -Filter "*.py" -ErrorAction SilentlyContinue
-foreach ($f in $gwFiles) {
-  $matches = Select-String -Path $f.FullName -Pattern "^\s*(import\s+backend|from\s+backend)"
-  foreach ($m in $matches) {
-    $rel = Resolve-Path -Relative $f.FullName
-    $fail += "${rel}:$($m.LineNumber): gateway khong duoc import backend"
-  }
-}
 
 if ($fail.Count -gt 0) {
   $fail | Select-Object -Unique | ForEach-Object { Write-Host "FAIL $_" -ForegroundColor Red }
