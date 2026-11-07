@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "zone_id": 1,
+      "device_id": 4,
+      "device_name": "Máy bơm tưới đất Z1",
+      "start_time": "06:00",
+      "duration_minutes": 15,
+      "days_of_week": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "zone_id": 1,
+      "device_id": 4,
+      "device_name": "Máy bơm tưới đất Z1",
+      "start_time": "17:00",
+      "duration_minutes": 20,
+      "days_of_week": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "is_active": true
+    }
+  ]
+}

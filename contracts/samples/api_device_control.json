@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "data": {
+    "device_id": 4,
+    "new_state": "ON",
+    "executed_at": "2026-11-07T15:45:01.665152+00:00",
+    "ack_status": "SUCCESS"
+  },
+  "message": "Đã gửi lệnh ON thiết bị thành công"
+}

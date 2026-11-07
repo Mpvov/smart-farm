@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "data": {
+    "farm_id": 1,
+    "farm_name": "Trang trại Đà Lạt Mộng Mơ",
+    "total_zones": 5,
+    "total_devices": 21,
+    "devices_online": 21,
+    "active_alerts_count": 0
+  }
+}

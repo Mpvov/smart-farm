@@ -1,0 +1,180 @@
+{
+  "success": true,
+  "data": {
+    "summary": {
+      "total_operational_hours": 168.0,
+      "optimal_condition_rate": 96.2,
+      "total_water_liters": 1420.0
+    },
+    "series": [
+      {
+        "timestamp": "2026-11-06 16:00:00",
+        "avg_temp": 22.4,
+        "avg_humi": 74.2,
+        "avg_soil": 58.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 17:00:00",
+        "avg_temp": 22.8,
+        "avg_humi": 73.3,
+        "avg_soil": 59.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 18:00:00",
+        "avg_temp": 23.2,
+        "avg_humi": 72.5,
+        "avg_soil": 60.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 19:00:00",
+        "avg_temp": 23.7,
+        "avg_humi": 71.7,
+        "avg_soil": 60.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 20:00:00",
+        "avg_temp": 24.1,
+        "avg_humi": 70.8,
+        "avg_soil": 61.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 21:00:00",
+        "avg_temp": 24.5,
+        "avg_humi": 70.0,
+        "avg_soil": 58.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 22:00:00",
+        "avg_temp": 24.9,
+        "avg_humi": 69.2,
+        "avg_soil": 58.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-06 23:00:00",
+        "avg_temp": 25.3,
+        "avg_humi": 68.3,
+        "avg_soil": 59.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 00:00:00",
+        "avg_temp": 25.8,
+        "avg_humi": 67.5,
+        "avg_soil": 60.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 01:00:00",
+        "avg_temp": 26.2,
+        "avg_humi": 66.7,
+        "avg_soil": 60.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 02:00:00",
+        "avg_temp": 26.6,
+        "avg_humi": 65.8,
+        "avg_soil": 61.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 03:00:00",
+        "avg_temp": 22.0,
+        "avg_humi": 75.0,
+        "avg_soil": 58.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 04:00:00",
+        "avg_temp": 22.4,
+        "avg_humi": 74.2,
+        "avg_soil": 58.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 05:00:00",
+        "avg_temp": 22.8,
+        "avg_humi": 73.3,
+        "avg_soil": 59.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 06:00:00",
+        "avg_temp": 23.2,
+        "avg_humi": 72.5,
+        "avg_soil": 60.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 07:00:00",
+        "avg_temp": 23.7,
+        "avg_humi": 71.7,
+        "avg_soil": 60.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 08:00:00",
+        "avg_temp": 24.1,
+        "avg_humi": 70.8,
+        "avg_soil": 61.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 09:00:00",
+        "avg_temp": 24.5,
+        "avg_humi": 70.0,
+        "avg_soil": 58.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 10:00:00",
+        "avg_temp": 24.9,
+        "avg_humi": 69.2,
+        "avg_soil": 58.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 11:00:00",
+        "avg_temp": 25.3,
+        "avg_humi": 68.3,
+        "avg_soil": 59.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 12:00:00",
+        "avg_temp": 25.8,
+        "avg_humi": 67.5,
+        "avg_soil": 60.0,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 13:00:00",
+        "avg_temp": 26.2,
+        "avg_humi": 66.7,
+        "avg_soil": 60.7,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 14:00:00",
+        "avg_temp": 26.6,
+        "avg_humi": 65.8,
+        "avg_soil": 61.3,
+        "pump_active_minutes": 20
+      },
+      {
+        "timestamp": "2026-11-07 15:00:00",
+        "avg_temp": 22.0,
+        "avg_humi": 75.0,
+        "avg_soil": 58.0,
+        "pump_active_minutes": 20
+      }
+    ]
+  }
+}

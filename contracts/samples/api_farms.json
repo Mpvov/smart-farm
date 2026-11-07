@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Trang trại Đà Lạt Mộng Mơ",
+      "location": "Phường 7, TP. Đà Lạt, Lâm Đồng",
+      "total_area": 5000.0,
+      "created_at": "2026-11-07T15:45:00.946504+00:00"
+    }
+  ]
+}

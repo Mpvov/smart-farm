@@ -231,6 +231,90 @@ if ($LASTEXITCODE -ne 0) {
   }
 }
 
+# 2. Contract test API
+python (Join-Path $root 'contracts/test_api_contracts.py')
+if ($LASTEXITCODE -ne 0) {
+  $fail += "contracts/test_api_contracts.py: api contract test FAIL -> sua backend hoac samples cho khop"
+}
+
+# 3. So voi base (origin/main neu co, khong thi main)
+$baseRef = if ((git rev-parse --verify origin/main 2>$null) -and (git merge-base --is-ancestor main origin/main 2>$null)) { "origin/main" } else { "main" }
+$currentBranch = (git branch --show-current).Trim()
+$isAtBase = ($currentBranch -eq "main") -or ($currentBranch -eq "origin/main")
+
+if (-not $isAtBase) {
+  # 3a. So luong test khong duoc giam
+  $baseGrepOut = git grep -c -E "^ *def test_" $baseRef -- "**/test_*.py" "test_*.py" 2>$null
+  if ($baseGrepOut) {
+    foreach ($line in $baseGrepOut) {
+      $parts = $line -split ":"
+      $relPath = $parts[1]
+      $baseFileCount = [int]$parts[-1]
+      $fullPath = Join-Path $root $relPath
+      $workingFileCount = 0
+      if (Test-Path $fullPath) {
+        $workingFileCount = (Select-String -Path $fullPath -Pattern "^ *def test_" | Measure-Object).Count
+      }
+      if ($workingFileCount -lt $baseFileCount) {
+        $fail += "${relPath}: so luong test giam ($workingFileCount < $baseFileCount) -> khong xoa test; FR doi thi sua test va ghi ID FR trong commit"
+      }
+    }
+  }
+
+  # 3b. Dong them moi trong diff *.py chua skip / skipif / xfail / .only
+  $diffLines = git diff -U0 $baseRef -- "*.py"
+  $currentDiffFile = ""
+  $currentLineNum = 0
+  foreach ($dLine in $diffLines) {
+    if ($dLine -match '^\+\+\+ b/(.+)$') {
+      $currentDiffFile = $Matches[1]
+    } elseif ($dLine -match '^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@') {
+      $currentLineNum = [int]$Matches[1]
+    } elseif ($dLine -match '^\+(?!\+\+)(.*)$') {
+      $addedText = $Matches[1]
+      if ($addedText -match '@(?:pytest\.mark\.)?(?:skip|skipif|xfail)|\.only') {
+        $hasStrict = ($addedText -match 'strict\s*=\s*True')
+        $hasReason = ($addedText -match 'reason\s*=\s*["\x27](BUG FR-|CHUA LAM FR-)')
+        if (-not ($hasStrict -and $hasReason)) {
+          $fail += "${currentDiffFile}:${currentLineNum}: dong them moi chua skip/xfail khong hop le -> chi hop le khi co strict=True va reason bat dau bang BUG FR- hoac CHUA LAM FR-"
+        }
+      }
+      $currentLineNum++
+    }
+  }
+}
+
+# 4. Ranh gioi import
+# frontend khong import backend, gateway, firmware
+$feFiles = Get-ChildItem -Path (Join-Path $root "frontend/src") -Recurse -Include "*.ts", "*.tsx", "*.js", "*.jsx" -ErrorAction SilentlyContinue
+foreach ($f in $feFiles) {
+  $matches = Select-String -Path $f.FullName -Pattern 'from\s+["\x27].*(backend|gateway|firmware)|require\(["\x27].*(backend|gateway|firmware)'
+  foreach ($m in $matches) {
+    $rel = Resolve-Path -Relative $f.FullName
+    $fail += "${rel}:$($m.LineNumber): frontend khong duoc import truc tiep backend/gateway/firmware"
+  }
+}
+
+# backend khong import gateway, firmware
+$beFiles = Get-ChildItem -Path (Join-Path $root "backend") -Recurse -Filter "*.py" -ErrorAction SilentlyContinue
+foreach ($f in $beFiles) {
+  $matches = Select-String -Path $f.FullName -Pattern "^\s*(import\s+(gateway|firmware)|from\s+(gateway|firmware))"
+  foreach ($m in $matches) {
+    $rel = Resolve-Path -Relative $f.FullName
+    $fail += "${rel}:$($m.LineNumber): backend khong duoc import gateway hoac firmware"
+  }
+}
+
+# gateway khong import backend
+$gwFiles = Get-ChildItem -Path (Join-Path $root "gateway") -Recurse -Filter "*.py" -ErrorAction SilentlyContinue
+foreach ($f in $gwFiles) {
+  $matches = Select-String -Path $f.FullName -Pattern "^\s*(import\s+backend|from\s+backend)"
+  foreach ($m in $matches) {
+    $rel = Resolve-Path -Relative $f.FullName
+    $fail += "${rel}:$($m.LineNumber): gateway khong duoc import backend"
+  }
+}
+
 if ($fail.Count -gt 0) {
   $fail | Select-Object -Unique | ForEach-Object { Write-Host "FAIL $_" -ForegroundColor Red }
   exit 1

@@ -42,6 +42,13 @@
    Vì: nhiều người và nhiều agent cùng sửa một repo; lịch sử thẳng thì dễ đọc và dễ hoàn tác.
 7. Thư mục mới ở gốc repo: thêm một dòng vào bảng Layout, tạo `<thư mục>/AGENTS.md` và `<thư mục>/CLAUDE.md` (chỉ chứa `@AGENTS.md`). Ngoại lệ: `docs/`, `scripts/`, `report/`.
    Vì: agent chỉ biết luật của thư mục khi file đó tồn tại; check.ps1 kiểm luật này.
+8. Không làm hỏng phần khác:
+   - Sửa bug: viết test tái hiện bug trước (thấy đỏ), rồi mới sửa code.
+   - Sửa code chưa có test: viết test giữ hành vi cũ trước khi sửa.
+   - Chỉ sửa assert khi FR đổi; commit ghi ID FR và lý do.
+   - Không xoá test. Không skip. xfail chỉ dùng dạng strict=True, reason="BUG FR-..." hoặc "CHUA LAM FR-...".
+   - Test đỏ ngoài phạm vi việc của bạn: dừng, báo người.
+   Vì: phần khác do người khác viết; test của họ là cách duy nhất biết mình làm hỏng gì.
 
 ## Khi nào hỏi, khi nào tự làm
 

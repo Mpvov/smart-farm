@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "data": {
+    "access_token": "token-1-2b7494ba683b",
+    "token_type": "bearer",
+    "user": {
+      "id": 1,
+      "email": "admin@smartfarm.vn",
+      "full_name": "Quản Trị Viên (Owner)",
+      "role": "ADMIN"
+    }
+  },
+  "message": "Đăng nhập thành công"
+}

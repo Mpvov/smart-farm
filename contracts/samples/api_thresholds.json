@@ -1,0 +1,56 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "zone_id": 1,
+      "metric": "TEMP",
+      "warning_min": 18.0,
+      "warning_max": 32.0,
+      "danger_min": 15.0,
+      "danger_max": 38.0,
+      "auto_actions": [
+        {
+          "trigger": "ABOVE_DANGER_MAX",
+          "action": "ALERT"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "zone_id": 1,
+      "metric": "HUMI",
+      "warning_min": 50.0,
+      "warning_max": 85.0,
+      "danger_min": 40.0,
+      "danger_max": 95.0,
+      "auto_actions": []
+    },
+    {
+      "id": 3,
+      "zone_id": 1,
+      "metric": "SOIL",
+      "warning_min": 45.0,
+      "warning_max": 75.0,
+      "danger_min": 30.0,
+      "danger_max": 85.0,
+      "auto_actions": [
+        {
+          "trigger": "BELOW_DANGER_MIN",
+          "action": "ON",
+          "target_metric": "PUMP"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "zone_id": 1,
+      "metric": "LIGHT",
+      "warning_min": 1000.0,
+      "warning_max": 8000.0,
+      "danger_min": 500.0,
+      "danger_max": 10000.0,
+      "auto_actions": []
+    }
+  ]
+}

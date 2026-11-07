@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "data": [
+    {
+      "device_id": 4,
+      "device_code": "PUMP-Z1-01",
+      "name": "Máy bơm tưới đất Z1",
+      "type": "ACTUATOR",
+      "metric": "PUMP",
+      "state": "OFF",
+      "mode": "AUTO",
+      "status": "ONLINE",
+      "last_action_at": "2026-11-07T15:45:00.946504+00:00"
+    },
+    {
+      "device_id": 5,
+      "device_code": "VALVE-Z1-01",
+      "name": "Van điện từ luống Z1",
+      "type": "ACTUATOR",
+      "metric": "VALVE",
+      "state": "OFF",
+      "mode": "AUTO",
+      "status": "ONLINE",
+      "last_action_at": "2026-11-07T15:45:00.946504+00:00"
+    },
+    {
+      "device_id": 6,
+      "device_code": "LED-Z1-01",
+      "name": "Đèn chiếu sáng xua côn trùng Z1",
+      "type": "ACTUATOR",
+      "metric": "LED",
+      "state": "OFF",
+      "mode": "AUTO",
+      "status": "ONLINE",
+      "last_action_at": "2026-11-07T15:45:00.946504+00:00"
+    }
+  ]
+}

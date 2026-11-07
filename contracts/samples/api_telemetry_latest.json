@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "data": {
+    "zone_id": 1,
+    "zone_name": "Khu A - Dâu tây",
+    "crop_type": "Dâu tây New Zealand",
+    "metrics": {
+      "TEMP": {
+        "value": 22.0,
+        "unit": "°C",
+        "status": "NORMAL",
+        "updated_at": "2026-11-07T15:45:00.947488+00:00"
+      },
+      "HUMI": {
+        "value": 75.0,
+        "unit": "%",
+        "status": "NORMAL",
+        "updated_at": "2026-11-07T15:45:00.947488+00:00"
+      },
+      "SOIL": {
+        "value": 58.0,
+        "unit": "%",
+        "status": "NORMAL",
+        "updated_at": "2026-11-07T15:45:00.947488+00:00"
+      },
+      "LIGHT": {
+        "value": 100.0,
+        "unit": "Lux",
+        "status": "CRITICAL",
+        "updated_at": "2026-11-07T15:45:00.947488+00:00"
+      }
+    }
+  }
+}

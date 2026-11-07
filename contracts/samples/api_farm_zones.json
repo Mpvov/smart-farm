@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "farm_id": 1,
+      "name": "Khu A - Dâu tây",
+      "crop_type": "Dâu tây New Zealand",
+      "area_m2": 1200.0,
+      "description": "Canh tác ngoài trời luống cao",
+      "device_count": 6
+    },
+    {
+      "id": 2,
+      "farm_id": 1,
+      "name": "Khu B - Cà chua bi",
+      "crop_type": "Cà chua bi Cherry",
+      "area_m2": 1500.0,
+      "description": "Canh tác ngoài trời giàn leo",
+      "device_count": 5
+    },
+    {
+      "id": 3,
+      "farm_id": 1,
+      "name": "Khu C - Xà lách thủy canh",
+      "crop_type": "Xà lách Romaine",
+      "area_m2": 1000.0,
+      "description": "Canh tác máng bán tự nhiên",
+      "device_count": 5
+    },
+    {
+      "id": 4,
+      "farm_id": 1,
+      "name": "Khu D - Ớt chuông",
+      "crop_type": "Ớt chuông Đà Lạt",
+      "area_m2": 1300.0,
+      "description": "Canh tác ngoài trời luống thấp",
+      "device_count": 5
+    }
+  ]
+}

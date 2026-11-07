@@ -1,0 +1,67 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 4,
+      "timestamp": "2026-11-07T15:45:01.639047+00:00",
+      "user_id": 1,
+      "user_name": "Quản Trị Viên (Owner)",
+      "role": "ADMIN",
+      "event_type": "ALERT_ACK",
+      "farm_name": null,
+      "zone_name": null,
+      "device_name": null,
+      "action": "Xác nhận xử lý sự cố #1",
+      "details": "da kiem tra",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-11-07T15:45:01.606515+00:00",
+      "user_id": 1,
+      "user_name": "Quản Trị Viên (Owner)",
+      "role": "ADMIN",
+      "event_type": "LOGIN",
+      "farm_name": null,
+      "zone_name": null,
+      "device_name": null,
+      "action": "Đăng nhập hệ thống",
+      "details": "Đăng nhập thành công từ admin@smartfarm.vn",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": 1,
+      "timestamp": "2026-11-07T15:45:00.946504+00:00",
+      "user_id": 1,
+      "user_name": "Quản Trị Viên (Admin)",
+      "role": "ADMIN",
+      "event_type": "DEVICE_CONTROL",
+      "farm_name": "Trang trại Đà Lạt Mộng Mơ",
+      "zone_name": "Khu A - Dâu tây",
+      "device_name": "Máy bơm tưới đất Z1",
+      "action": "Bật máy bơm thủ công",
+      "details": "Chạy tưới bù ẩm 15 phút",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-11-07T15:45:00.946504+00:00",
+      "user_id": 1,
+      "user_name": "Quản Trị Viên (Admin)",
+      "role": "ADMIN",
+      "event_type": "CONFIG_CHANGE",
+      "farm_name": "Trang trại Đà Lạt Mộng Mơ",
+      "zone_name": "Khu A - Dâu tây",
+      "device_name": null,
+      "action": "Cập nhật ngưỡng an toàn",
+      "details": "Đặt ngưỡng độ ẩm đất an toàn 45% - 75%",
+      "ip_address": "127.0.0.1"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 4,
+    "total_pages": 1
+  }
+}

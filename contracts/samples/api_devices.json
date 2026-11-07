@@ -1,0 +1,84 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "hardware_uid": "DHT20-Z1-01",
+      "name": "Cảm biến Vi khí hậu Z1",
+      "type": "SENSOR",
+      "zone_id": 1,
+      "status": "ONLINE",
+      "is_simulated": 0,
+      "created_at": "2026-11-07T15:45:00.946504+00:00",
+      "metrics": [
+        "TEMP",
+        "HUMI"
+      ]
+    },
+    {
+      "id": 2,
+      "hardware_uid": "SOIL-Z1-01",
+      "name": "Cảm biến Độ ẩm đất Z1",
+      "type": "SENSOR",
+      "zone_id": 1,
+      "status": "ONLINE",
+      "is_simulated": 0,
+      "created_at": "2026-11-07T15:45:00.946504+00:00",
+      "metrics": [
+        "SOIL"
+      ]
+    },
+    {
+      "id": 3,
+      "hardware_uid": "LIGHT-Z1-01",
+      "name": "Cảm biến Ánh sáng Z1",
+      "type": "SENSOR",
+      "zone_id": 1,
+      "status": "ONLINE",
+      "is_simulated": 0,
+      "created_at": "2026-11-07T15:45:00.946504+00:00",
+      "metrics": [
+        "LIGHT"
+      ]
+    },
+    {
+      "id": 4,
+      "hardware_uid": "PUMP-Z1-01",
+      "name": "Máy bơm tưới đất Z1",
+      "type": "ACTUATOR",
+      "zone_id": 1,
+      "status": "ONLINE",
+      "is_simulated": 0,
+      "created_at": "2026-11-07T15:45:00.946504+00:00",
+      "metrics": [
+        "PUMP"
+      ]
+    },
+    {
+      "id": 5,
+      "hardware_uid": "VALVE-Z1-01",
+      "name": "Van điện từ luống Z1",
+      "type": "ACTUATOR",
+      "zone_id": 1,
+      "status": "ONLINE",
+      "is_simulated": 1,
+      "created_at": "2026-11-07T15:45:00.946504+00:00",
+      "metrics": [
+        "VALVE"
+      ]
+    },
+    {
+      "id": 6,
+      "hardware_uid": "LED-Z1-01",
+      "name": "Đèn chiếu sáng xua côn trùng Z1",
+      "type": "ACTUATOR",
+      "zone_id": 1,
+      "status": "ONLINE",
+      "is_simulated": 0,
+      "created_at": "2026-11-07T15:45:00.946504+00:00",
+      "metrics": [
+        "LED"
+      ]
+    }
+  ]
+}
