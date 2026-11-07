@@ -28,6 +28,7 @@
 4. Không đổi CSDL hay thêm thư viện lớn khi chưa có file trong `docs/decisions/`.
 5. Không sửa `report/` khi chưa được yêu cầu.
 6. Mỗi việc một branch. Không push thẳng lên `main`.
+7. Khi được hỏi về kiến thức bên ngoài dự án: phải tìm kiếm web trước khi trả lời, để đảm bảo dữ liệu mới và chính xác nhất.
 
 ## Khi nào hỏi, khi nào tự làm
 
