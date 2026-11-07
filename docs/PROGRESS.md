@@ -30,7 +30,7 @@
 - [x] **Tài liệu Use Case:** Hoàn thiện đặc tả chi tiết 13 Use Case (`UC-01` → `UC-13`) trong `docs/USE_CASES.md` khớp bối cảnh Farm → Zone → Crop và RBAC 2 roles. (Phụ trách: P)
 - [x] **Bước 1 — Chốt API Contract tối thiểu (`contracts/api.md`):** Định nghĩa 10 cụm endpoint và cơ chế SSE realtime streaming phục vụ đủ 10 màn hình (`SCR-01` → `SCR-10`). (Phụ trách: P)
 - [x] **Bước 2 — Backend FastAPI + SQLite + Realtime Simulator:** Đã hiện thực hóa toàn bộ backend bằng Python FastAPI + SQLite, bộ sinh giả lập vi khí hậu realtime qua SSE stream và bộ test tích hợp pass 100%. (Phụ trách: P)
-- [ ] **Bước 3 — Chốt Tech Stack Frontend & Xây dựng UI/UX Dashboard (`frontend/`):** Thống nhất tech stack (React/Next.js/Vite Tailwind), hiện thực hóa 10 màn hình Responsive Web (`SCR-01` → `SCR-10`) đúng chuẩn UI/UX mong muốn, kết nối Backend để vận hành và lấy feedback. (Phụ trách: P)
+- [x] **Bước 3 — Chốt Tech Stack Frontend & Xây dựng UI/UX Dashboard (`frontend/`):** Đã hiện thực hóa toàn diện 10 màn hình Responsive Web (`SCR-01` → `SCR-10`) bằng React + Vite + Tailwind CSS + Apache ECharts + Zustand, build production thành công và kết nối Backend REST/SSE. (Phụ trách: P)
 - [ ] **Bước 4 — CI/CD & Web Deployment thật:** Thiết lập pipeline CI/CD tự động (chạy `scripts/check.ps1`, test, build và auto-deploy) lên môi trường Web thật để các thành viên khác thoải mái đóng góp code mà không lo vỡ hệ thống. (Phụ trách: P)
 
 ---
