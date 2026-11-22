@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { apiFetch } from '../../lib/api';
 import { ActuatorItem } from '../../types';
-import { Power, Radio, Clock, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Power, Clock, CheckCircle2, CircleSlash } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const DeviceControlScreen: React.FC = () => {
@@ -55,7 +55,7 @@ export const DeviceControlScreen: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {actuators.map((dev) => {
           const isOn = dev.state === 'ON';
           const isLoading = loadingId === dev.device_id;
@@ -63,26 +63,42 @@ export const DeviceControlScreen: React.FC = () => {
           return (
             <div
               key={dev.device_id}
-              className={`bg-slate-900 border rounded-2xl p-5 transition flex flex-col justify-between ${
-                isOn ? 'border-emerald-500/50 shadow-lg shadow-emerald-950/20' : 'border-slate-800'
+              className={`bg-slate-900 rounded-2xl p-5 transition flex flex-col justify-between ${
+                isOn ? 'border-2 border-emerald-500/50 shadow-lg' : 'border border-slate-800'
               }`}
             >
               <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-slate-500">{dev.device_code}</span>
-                  <span
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold ${
-                      dev.status === 'ONLINE'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                        : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                    }`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${dev.status === 'ONLINE' ? 'bg-emerald-400' : 'bg-rose-400'}`} />
-                    {dev.status}
-                  </span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[11px] font-mono text-slate-500">{dev.device_code}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                        isOn
+                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700'
+                      }`}
+                    >
+                      {isOn ? <CheckCircle2 className="w-3 h-3" /> : <CircleSlash className="w-3 h-3" />}
+                      <span>{isOn ? 'ĐANG BẬT' : 'ĐANG TẮT'}</span>
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                        dev.status === 'ONLINE'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          dev.status === 'ONLINE' ? 'bg-emerald-400' : 'bg-rose-400'
+                        }`}
+                      />
+                      {dev.status}
+                    </span>
+                  </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-100 mt-2">{dev.name}</h3>
+                <h3 className="text-base font-bold text-slate-100 mt-2.5">{dev.name}</h3>
                 <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
                   <span className="px-2 py-0.5 bg-slate-800 rounded font-medium text-[11px] text-slate-300">
                     Chế độ: {dev.mode === 'AUTO' ? 'Tự động' : 'Thủ công'}
@@ -92,22 +108,23 @@ export const DeviceControlScreen: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
-                <div className="text-[10px] text-slate-500 flex items-center gap-1.5">
+              <div className="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="text-xs text-slate-500 flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5" />
                   <span>{dev.last_action_at ? dev.last_action_at.slice(11, 19) : 'Chưa có'}</span>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => toggleDevice(dev)}
                   disabled={isLoading}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
+                  className={`min-h-[48px] w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold transition shadow-sm active:scale-[0.98] ${
                     isOn
-                      ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-950/50'
-                      : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950/50'
+                      ? 'bg-rose-600 hover:bg-rose-500 text-white'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white'
                   }`}
                 >
-                  <Power className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                  <Power className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                   <span>{isLoading ? 'Đang gửi...' : isOn ? 'TẮT THIẾT BỊ' : 'BẬT THIẾT BỊ'}</span>
                 </button>
               </div>

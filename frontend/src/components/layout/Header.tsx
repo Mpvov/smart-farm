@@ -1,9 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Bell, ChevronDown, ChevronRight, Layers, LogOut, MapPin, UserCircle } from 'lucide-react';
+import {
+  Bell,
+  ChevronDown,
+  ChevronRight,
+  Layers,
+  LogOut,
+  MapPin,
+  Moon,
+  Sun,
+  UserCircle,
+} from 'lucide-react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { apiFetch } from '../../lib/api';
 import { DashboardSummary, Farm, Zone } from '../../types';
 import { getScreenMeta } from '../../config/navigation';
+import { Select } from '../ui/Select';
+import { Tooltip } from '../ui/Tooltip';
 
 export const Header: React.FC = () => {
   const {
@@ -16,6 +28,8 @@ export const Header: React.FC = () => {
     setActiveScreen,
     unreadAlertsCount,
     setUnreadAlertsCount,
+    theme,
+    toggleTheme,
     logout,
   } = useFarmStore();
 
@@ -74,46 +88,34 @@ export const Header: React.FC = () => {
     };
   }, [profileOpen]);
 
+  const farmOptions = farms.map((f) => ({ value: f.id, label: f.name }));
+  const zoneOptions = zones.map((z) => ({ value: z.id, label: z.name, sublabel: z.crop_type }));
+
   const renderContextSelectors = (compact = false) => {
     if (!showFarm) return null;
-    const selectClass = `${
-      compact ? 'w-full min-w-0' : ''
-    } bg-slate-800 border border-slate-700 text-xs sm:text-sm rounded-lg px-2.5 py-1.5 font-medium text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500`;
 
     return (
       <>
-        <div className={`flex items-center gap-2 ${compact ? 'flex-1 min-w-0' : ''}`}>
-          <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-          <select
-            aria-label="Chọn nông trại"
-            value={activeFarmId}
-            onChange={(e) => setActiveFarmId(Number(e.target.value))}
-            className={selectClass}
-          >
-            {farms.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          value={activeFarmId}
+          options={farmOptions}
+          onChange={(val) => setActiveFarmId(Number(val))}
+          ariaLabel="Chọn nông trại"
+          icon={<MapPin className="w-4 h-4 text-emerald-400" />}
+          className={compact ? 'flex-1 min-w-0' : 'min-w-[200px]'}
+          buttonClassName={compact ? 'min-h-[44px]' : 'min-h-[40px]'}
+        />
 
         {showZone && (
-          <div className={`flex items-center gap-2 ${compact ? 'flex-1 min-w-0' : ''}`}>
-            <Layers className="w-4 h-4 text-emerald-400 shrink-0" />
-            <select
-              aria-label="Chọn phân khu"
-              value={activeZoneId}
-              onChange={(e) => setActiveZoneId(Number(e.target.value))}
-              className={selectClass}
-            >
-              {zones.map((z) => (
-                <option key={z.id} value={z.id}>
-                  {z.name} ({z.crop_type})
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select
+            value={activeZoneId}
+            options={zoneOptions}
+            onChange={(val) => setActiveZoneId(Number(val))}
+            ariaLabel="Chọn phân khu"
+            icon={<Layers className="w-4 h-4 text-emerald-400" />}
+            className={compact ? 'flex-1 min-w-0' : 'min-w-[210px]'}
+            buttonClassName={compact ? 'min-h-[44px]' : 'min-h-[40px]'}
+          />
         )}
       </>
     );
@@ -145,22 +147,54 @@ export const Header: React.FC = () => {
           </div>
         )}
 
-        {/* Right Actions: Alerts + User Popover */}
+        {/* Right Actions: Theme Toggle + Alerts + User Popover */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <button
-            type="button"
-            onClick={() => setActiveScreen('SCR-05')}
-            className="relative p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg transition"
-            title="Trung tâm cảnh báo"
-            aria-label="Trung tâm cảnh báo"
+          <Tooltip
+            title="Đổi chế độ hiển thị"
+            description={
+              theme === 'sunlight'
+                ? 'Đang bật nền sáng tương phản cao cho ngoài trời. Bấm để chuyển sang nền tối.'
+                : 'Đang dùng nền tối. Bấm để bật nền sáng tương phản cao dễ đọc dưới nắng gắt.'
+            }
           >
-            <Bell className="w-5 h-5" />
-            {unreadAlertsCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-rose-500 text-white text-[10px] font-bold leading-none">
-                {badgeText}
-              </span>
-            )}
-          </button>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === 'sunlight' ? 'Chuyển sang chế độ Tối' : 'Bật chế độ Ngoài trời'}
+              className="min-h-[44px] min-w-[44px] px-2.5 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition active:scale-[0.97]"
+            >
+              {theme === 'sunlight' ? (
+                <>
+                  <Sun className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="hidden sm:inline">Nắng gắt</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span className="hidden sm:inline">Tối</span>
+                </>
+              )}
+            </button>
+          </Tooltip>
+
+          <Tooltip
+            title="Trung tâm cảnh báo"
+            description="Mở danh sách cảnh báo vượt ngưỡng để xem chi tiết và xác nhận xử lý."
+          >
+            <button
+              type="button"
+              onClick={() => setActiveScreen('SCR-05')}
+              className="relative min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-xl transition active:scale-[0.97]"
+              aria-label="Trung tâm cảnh báo"
+            >
+              <Bell className="w-5 h-5" />
+              {unreadAlertsCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-rose-500 text-white text-[10px] font-bold leading-none">
+                  {badgeText}
+                </span>
+              )}
+            </button>
+          </Tooltip>
 
           <div ref={profileRef} className="relative pl-2 sm:pl-3 border-l border-slate-800">
             <button
@@ -168,7 +202,7 @@ export const Header: React.FC = () => {
               onClick={() => setProfileOpen((prev) => !prev)}
               aria-expanded={profileOpen}
               aria-haspopup="menu"
-              className="flex items-center gap-2 py-1 px-1.5 rounded-lg hover:bg-slate-800/70 transition"
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center gap-2 py-1 px-2 rounded-xl hover:bg-slate-800/70 transition"
             >
               <UserCircle className="w-6 h-6 text-emerald-400 shrink-0" />
               <div className="hidden sm:block text-left text-xs">

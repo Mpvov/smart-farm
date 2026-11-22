@@ -4,6 +4,9 @@ import { ScreenId } from '../config/navigation';
 
 const SIDEBAR_STORAGE_KEY = 'sf_sidebar_collapsed';
 const DEFAULT_FARM_STORAGE_KEY = 'sf_default_farm_id';
+const THEME_STORAGE_KEY = 'sf_theme';
+
+export type ThemeMode = 'sunlight' | 'dark';
 
 function readInitialSidebarCollapsed(): boolean {
   try {
@@ -25,7 +28,25 @@ function readInitialDefaultFarmId(): number | null {
   }
 }
 
+function readInitialTheme(): ThemeMode {
+  try {
+    if (typeof window === 'undefined') return 'sunlight';
+    const raw = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return raw === 'dark' || raw === 'sunlight' ? raw : 'sunlight';
+  } catch {
+    return 'sunlight';
+  }
+}
+
+function applyThemeAttribute(theme: ThemeMode): void {
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+}
+
 const initialDefaultFarmId = readInitialDefaultFarmId();
+const initialTheme = readInitialTheme();
+applyThemeAttribute(initialTheme);
 
 interface FarmState {
   user: User | null;
@@ -33,6 +54,7 @@ interface FarmState {
   activeFarmId: number;
   activeZoneId: number;
   defaultFarmId: number | null;
+  theme: ThemeMode;
   sidebarCollapsed: boolean;
   unreadAlertsCount: number;
   liveTelemetry: Record<string, { value: number; timestamp: string }>;
@@ -41,6 +63,8 @@ interface FarmState {
   setActiveFarmId: (farmId: number) => void;
   setActiveZoneId: (zoneId: number) => void;
   setDefaultFarmId: (farmId: number | null) => void;
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
   toggleSidebar: () => void;
   setUnreadAlertsCount: (count: number) => void;
   logout: () => void;
@@ -58,6 +82,7 @@ export const useFarmStore = create<FarmState>((set) => ({
   activeFarmId: initialDefaultFarmId ?? 1,
   activeZoneId: 1,
   defaultFarmId: initialDefaultFarmId,
+  theme: initialTheme,
   sidebarCollapsed: readInitialSidebarCollapsed(),
   unreadAlertsCount: 0,
   liveTelemetry: {},
@@ -77,6 +102,26 @@ export const useFarmStore = create<FarmState>((set) => ({
     }
     set({ defaultFarmId: farmId });
   },
+  setTheme: (theme) => {
+    applyThemeAttribute(theme);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Ignore storage errors
+    }
+    set({ theme });
+  },
+  toggleTheme: () =>
+    set((state) => {
+      const next: ThemeMode = state.theme === 'sunlight' ? 'dark' : 'sunlight';
+      applyThemeAttribute(next);
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch {
+        // Ignore storage errors
+      }
+      return { theme: next };
+    }),
   toggleSidebar: () =>
     set((state) => {
       const next = !state.sidebarCollapsed;

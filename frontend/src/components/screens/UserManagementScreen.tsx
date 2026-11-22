@@ -3,6 +3,7 @@ import { apiFetch } from '../../lib/api';
 import { User } from '../../types';
 import { Users, UserPlus, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { Select } from '../ui/Select';
 
 export const UserManagementScreen: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -100,14 +101,16 @@ export const UserManagementScreen: React.FC = () => {
           </div>
           <div>
             <label className="block text-[11px] text-slate-400 mb-1">Vai trò (Role)</label>
-            <select
+            <Select<'OPERATOR' | 'ADMIN'>
               value={role}
-              onChange={(e) => setRole(e.target.value as any)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-medium"
-            >
-              <option value="OPERATOR">OPERATOR (Vận hành)</option>
-              <option value="ADMIN">ADMIN (Quản trị viên)</option>
-            </select>
+              onChange={(val) => setRole(val)}
+              ariaLabel="Chọn vai trò người dùng"
+              buttonClassName="min-h-[38px] rounded-lg text-xs py-1.5"
+              options={[
+                { value: 'OPERATOR', label: 'OPERATOR (Vận hành)' },
+                { value: 'ADMIN', label: 'ADMIN (Quản trị viên)' },
+              ]}
+            />
           </div>
           <div className="flex items-end">
             <button
