@@ -9,7 +9,7 @@ Base URL: `/api/v1`
 
 1. **Format dữ liệu:** `application/json` (UTF-8).
 2. **Xác thực (Authentication):** Header `Authorization: Bearer <access_token>`.
-3. **Cơ chế Realtime Streaming:** Sử dụng Server-Sent Events (SSE) với header `Accept: text/event-stream`.
+3. **Cơ chế Realtime Streaming (Prototype):** Tạm dùng Server-Sent Events (SSE) với header `Accept: text/event-stream` để phục vụ UI/UX (chưa chốt giao thức chính thức, xem `docs/decisions/0001-tech-stack.md` và `docs/decisions/0002-ui-overview-defaults.md`).
 4. **Định dạng phản hồi chuẩn:**
    - Thành công: `{ "success": true, "data": { ... }, "message": "..." }`
    - Phân trang: `{ "success": true, "data": [ ... ], "pagination": { "page": 1, "limit": 20, "total": 150, "total_pages": 8 } }`
@@ -101,7 +101,7 @@ Base URL: `/api/v1`
     }
     ```
 
-* **`GET /zones/{zone_id}/telemetry/stream` (SSE Realtime)**
+* **`GET /zones/{zone_id}/telemetry/stream` (SSE Realtime — Prototype)**
   - **Mô tả:** Stream Server-Sent Events đẩy dữ liệu vi khí hậu mỗi khi có số đo mới (tần suất ~5-10s).
   - **SSE Format:**
     ```text

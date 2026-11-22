@@ -6,7 +6,7 @@ import { AlertTriangle, CheckCircle, Clock, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const AlertCenterScreen: React.FC = () => {
-  const { activeFarmId } = useFarmStore();
+  const { activeFarmId, setUnreadAlertsCount } = useFarmStore();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [ackNote, setAckNote] = useState('');
@@ -16,6 +16,7 @@ export const AlertCenterScreen: React.FC = () => {
     try {
       const res = await apiFetch<{ data: Alert[] }>(`/alerts?farm_id=${activeFarmId}`);
       setAlerts(res.data);
+      setUnreadAlertsCount(res.data.filter((a) => a.status === 'UNACKNOWLEDGED').length);
     } catch (err: any) {
       toast.error('Lỗi tải danh sách cảnh báo');
     }
