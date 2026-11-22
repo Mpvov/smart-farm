@@ -34,8 +34,8 @@
    Vì: có AIO key là điều khiển được thiết bị thật.
 3. Chỉ làm màn hình và use case có trong `docs/USE_CASES.md`.
    Vì: phạm vi bám barem môn học; màn ngoài danh sách không được điểm và tốn thời gian.
-4. Không đổi CSDL hay thêm thư viện lớn khi chưa có file trong `docs/decisions/`.
-   Vì: đổi CSDL giữa chừng phải viết lại backend và báo cáo.
+4. Không đổi CSDL, thêm thư viện lớn hay chốt giao thức realtime khi chưa có file trong `docs/decisions/` (chưa có = prototype tạm thời, phải tách qua adapter). Chỉ đọc `docs/decisions/` khi đụng các phần này — không đọc khi sửa cục bộ.
+   Vì: tránh đổi nền tảng giữa chừng, tránh hiểu nhầm prototype là chính thức, và không tốn context đọc quyết định không liên quan.
 5. Không sửa `report/` khi chưa được yêu cầu.
    Vì: report là bản nộp chính thức.
 6. Mỗi việc một branch từ `origin/main` (chưa có remote thì từ `main`); rebase, không merge `main` vào branch; không commit thẳng lên `main` (hook chặn). Chi tiết: `CONTRIBUTING.md`.
