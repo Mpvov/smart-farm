@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFarmStore } from './store/useFarmStore';
+import { canAccessScreen } from './config/navigation';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { MobileNav } from './components/layout/MobileNav';
@@ -18,7 +19,13 @@ import { FarmZoneScreen } from './components/screens/FarmZoneScreen';
 import { DeviceInventoryScreen } from './components/screens/DeviceInventoryScreen';
 
 export const App: React.FC = () => {
-  const { activeScreen, user } = useFarmStore();
+  const { activeScreen, setActiveScreen, user } = useFarmStore();
+
+  useEffect(() => {
+    if (user && !canAccessScreen(activeScreen, user.role)) {
+      setActiveScreen('SCR-02');
+    }
+  }, [activeScreen, user, setActiveScreen]);
 
   if (activeScreen === 'SCR-01' || !user) {
     return (
@@ -29,8 +36,10 @@ export const App: React.FC = () => {
     );
   }
 
+  const safeScreen = canAccessScreen(activeScreen, user.role) ? activeScreen : 'SCR-02';
+
   const renderScreen = () => {
-    switch (activeScreen) {
+    switch (safeScreen) {
       case 'SCR-02':
         return <DashboardScreen />;
       case 'SCR-03':
@@ -61,7 +70,7 @@ export const App: React.FC = () => {
       <Sidebar />
 
       {/* 2. Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
+      <div className="flex-1 flex flex-col min-w-0 pb-20 lg:pb-0">
         <Header />
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {renderScreen()}
