@@ -19,7 +19,11 @@ import { FarmZoneScreen } from './components/screens/FarmZoneScreen';
 import { DeviceInventoryScreen } from './components/screens/DeviceInventoryScreen';
 
 export const App: React.FC = () => {
-  const { activeScreen, setActiveScreen, user } = useFarmStore();
+  const { activeScreen, setActiveScreen, user, theme } = useFarmStore();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     if (user && !canAccessScreen(activeScreen, user.role)) {
@@ -27,10 +31,12 @@ export const App: React.FC = () => {
     }
   }, [activeScreen, user, setActiveScreen]);
 
+  const toastTheme = theme === 'sunlight' ? 'light' : 'dark';
+
   if (activeScreen === 'SCR-01' || !user) {
     return (
       <>
-        <Toaster richColors position="top-right" theme="dark" />
+        <Toaster richColors position="top-right" theme={toastTheme} />
         <LoginScreen />
       </>
     );
@@ -65,7 +71,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-100">
-      <Toaster richColors position="top-right" theme="dark" />
+      <Toaster richColors position="top-right" theme={toastTheme} />
       {/* 1. Desktop Sidebar */}
       <Sidebar />
 

@@ -4,6 +4,7 @@ import { apiFetch } from '../../lib/api';
 import { Device } from '../../types';
 import { Cpu, Plus, Wifi, Radio } from 'lucide-react';
 import { toast } from 'sonner';
+import { Select } from '../ui/Select';
 
 export const DeviceInventoryScreen: React.FC = () => {
   const { activeZoneId } = useFarmStore();
@@ -99,14 +100,16 @@ export const DeviceInventoryScreen: React.FC = () => {
           </div>
           <div>
             <label className="block text-[11px] text-slate-400 mb-1">Phân loại</label>
-            <select
+            <Select<'SENSOR' | 'ACTUATOR'>
               value={type}
-              onChange={(e) => setType(e.target.value as any)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
-            >
-              <option value="SENSOR">Cảm biến (Input)</option>
-              <option value="ACTUATOR">Chấp hành (Output)</option>
-            </select>
+              onChange={(val) => setType(val)}
+              ariaLabel="Phân loại thiết bị"
+              buttonClassName="min-h-[38px] rounded-lg text-xs py-1.5"
+              options={[
+                { value: 'SENSOR', label: 'Cảm biến (Input)' },
+                { value: 'ACTUATOR', label: 'Chấp hành (Output)' },
+              ]}
+            />
           </div>
           <div>
             <label className="block text-[11px] text-slate-400 mb-1">Metrics (cách bởi dấu phẩy)</label>
@@ -121,14 +124,16 @@ export const DeviceInventoryScreen: React.FC = () => {
           </div>
           <div>
             <label className="block text-[11px] text-slate-400 mb-1">Nguồn cấp</label>
-            <select
+            <Select<string>
               value={isSim ? 'true' : 'false'}
-              onChange={(e) => setIsSim(e.target.value === 'true')}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200"
-            >
-              <option value="true">Giả lập (Simulator Engine)</option>
-              <option value="false">Phần cứng thật (Kit PoC)</option>
-            </select>
+              onChange={(val) => setIsSim(val === 'true')}
+              ariaLabel="Nguồn cấp thiết bị"
+              buttonClassName="min-h-[38px] rounded-lg text-xs py-1.5"
+              options={[
+                { value: 'true', label: 'Giả lập (Simulator Engine)' },
+                { value: 'false', label: 'Phần cứng thật (Kit PoC)' },
+              ]}
+            />
           </div>
           <div className="flex items-end">
             <button

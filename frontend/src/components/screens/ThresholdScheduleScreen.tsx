@@ -4,6 +4,7 @@ import { apiFetch } from '../../lib/api';
 import { Threshold, Schedule } from '../../types';
 import { Sliders, Calendar, Plus, Trash2, Check, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { Tooltip } from '../ui/Tooltip';
 
 export const ThresholdScheduleScreen: React.FC = () => {
   const { activeZoneId } = useFarmStore();
@@ -228,13 +229,20 @@ export const ThresholdScheduleScreen: React.FC = () => {
                 </span>
                 <span className="ml-3 text-[10px] text-slate-500">Mỗi ngày trong tuần</span>
               </div>
-              <button
-                onClick={() => handleDeleteSchedule(sc.id)}
-                className="p-1.5 text-slate-500 hover:text-rose-400 transition"
-                title="Xóa lịch"
+              <Tooltip
+                title="Xóa lịch trình"
+                description="Hủy lịch bật/tắt tự động này khỏi phân khu."
+                placement="left"
               >
-                <Trash2 className="w-4 h-4" />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteSchedule(sc.id)}
+                  aria-label="Xóa lịch trình"
+                  className="p-2 text-slate-500 hover:text-rose-400 rounded-lg transition"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </Tooltip>
             </div>
           ))}
         </div>

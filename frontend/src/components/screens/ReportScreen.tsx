@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { apiFetch } from '../../lib/api';
+import { getChartThemeColors } from '../../config/dashboard';
 import ReactECharts from 'echarts-for-react';
-import { FileBarChart2, Download, Filter, Calendar } from 'lucide-react';
+import { FileBarChart2, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const ReportScreen: React.FC = () => {
-  const { activeFarmId, activeZoneId } = useFarmStore();
+  const { activeFarmId, activeZoneId, theme } = useFarmStore();
   const [data, setData] = useState<{
     summary: { total_operational_hours: number; optimal_condition_rate: number; total_water_liters: number };
     series: Array<{ timestamp: string; avg_temp: number; avg_humi: number; avg_soil: number; pump_active_minutes: number }>;
@@ -23,25 +24,32 @@ export const ReportScreen: React.FC = () => {
     toast.success('Đang tải tệp báo cáo tổng hợp CSV...');
   };
 
+  const chartColors = getChartThemeColors(theme);
+
   const chartOption = {
     backgroundColor: 'transparent',
-    tooltip: { trigger: 'axis', backgroundColor: '#0f172a', borderColor: '#334155', textStyle: { color: '#f8fafc' } },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: chartColors.tooltipBg,
+      borderColor: chartColors.tooltipBorder,
+      textStyle: { color: chartColors.tooltipText },
+    },
     legend: {
       data: ['Nhiệt độ (°C)', 'Độ ẩm đất (%)', 'Độ ẩm không khí (%)'],
-      textStyle: { color: '#94a3b8', fontSize: 11 },
+      textStyle: { color: chartColors.legendText, fontSize: 11 },
       top: 0,
     },
     grid: { top: 40, left: 45, right: 20, bottom: 30 },
     xAxis: {
       type: 'category',
       data: (data?.series || []).map((s) => s.timestamp.slice(11, 16)),
-      axisLabel: { color: '#94a3b8', fontSize: 10 },
-      axisLine: { lineStyle: { color: '#334155' } },
+      axisLabel: { color: chartColors.axisText, fontSize: 10 },
+      axisLine: { lineStyle: { color: chartColors.axisLine } },
     },
     yAxis: {
       type: 'value',
-      splitLine: { lineStyle: { color: '#1e293b' } },
-      axisLabel: { color: '#94a3b8', fontSize: 10 },
+      splitLine: { lineStyle: { color: chartColors.splitLine } },
+      axisLabel: { color: chartColors.axisText, fontSize: 10 },
     },
     series: [
       {
@@ -82,8 +90,9 @@ export const ReportScreen: React.FC = () => {
         </div>
 
         <button
+          type="button"
           onClick={handleExportCSV}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition shadow-sm"
+          className="min-h-[48px] flex items-center justify-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold rounded-xl transition shadow-sm active:scale-[0.98]"
         >
           <Download className="w-4 h-4" />
           <span>XUẤT BÁO CÁO (CSV)</span>

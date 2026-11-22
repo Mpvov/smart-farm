@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { apiFetch } from '../../lib/api';
 import { Alert } from '../../types';
-import { AlertTriangle, CheckCircle, Clock, MessageSquare } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, OctagonAlert } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const AlertCenterScreen: React.FC = () => {
@@ -71,15 +71,20 @@ export const AlertCenterScreen: React.FC = () => {
               }`}
             >
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
                       isCritical
-                        ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        ? 'bg-rose-500/15 text-rose-400 border-2 border-rose-500/40'
+                        : 'bg-amber-500/15 text-amber-400 border-2 border-amber-500/40'
                     }`}
                   >
-                    {al.severity}
+                    {isCritical ? (
+                      <OctagonAlert className="w-3.5 h-3.5" />
+                    ) : (
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                    )}
+                    <span>{isCritical ? 'NGUY HIỂM' : 'CẢNH BÁO'}</span>
                   </span>
                   <span className="text-xs font-semibold text-slate-300">{al.zone_name || 'Khu vực'}</span>
                   <span className="text-slate-600">•</span>
@@ -100,11 +105,12 @@ export const AlertCenterScreen: React.FC = () => {
               <div>
                 {isUnack ? (
                   <button
+                    type="button"
                     onClick={() => {
                       setSelectedAlert(al);
                       setAckNote('');
                     }}
-                    className="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition shadow-sm"
+                    className="min-h-[48px] w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold rounded-xl transition shadow-sm active:scale-[0.98]"
                   >
                     Xác nhận Xử lý (ACK)
                   </button>
@@ -146,14 +152,14 @@ export const AlertCenterScreen: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedAlert(null)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg"
+                  className="min-h-[48px] px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs sm:text-sm font-semibold rounded-xl active:scale-[0.98]"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg"
+                  className="min-h-[48px] px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold rounded-xl active:scale-[0.98]"
                 >
                   {loading ? 'Đang lưu...' : 'Lưu Xác nhận'}
                 </button>

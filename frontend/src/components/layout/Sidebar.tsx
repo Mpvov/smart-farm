@@ -2,6 +2,7 @@ import React from 'react';
 import { LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { getVisibleNavGroups } from '../../config/navigation';
+import { Tooltip } from '../ui/Tooltip';
 
 export const Sidebar: React.FC = () => {
   const {
@@ -44,19 +45,28 @@ export const Sidebar: React.FC = () => {
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={toggleSidebar}
+          <Tooltip
             title={sidebarCollapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
-            aria-label={sidebarCollapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
-            className="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/80 transition"
+            description={
+              sidebarCollapsed
+                ? 'Hiện đầy đủ tên màn hình và nhóm chức năng bên trái.'
+                : 'Thu gọn thanh bên thành dải icon để mở rộng vùng xem biểu đồ.'
+            }
+            placement="right"
           >
-            {sidebarCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4" />
-            ) : (
-              <PanelLeftClose className="w-4 h-4" />
-            )}
-          </button>
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              aria-label={sidebarCollapsed ? 'Mở rộng thanh điều hướng' : 'Thu gọn thanh điều hướng'}
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/80 transition"
+            >
+              {sidebarCollapsed ? (
+                <PanelLeftOpen className="w-4 h-4" />
+              ) : (
+                <PanelLeftClose className="w-4 h-4" />
+              )}
+            </button>
+          </Tooltip>
         </div>
 
         {/* Grouped Navigation */}
@@ -78,45 +88,52 @@ export const Sidebar: React.FC = () => {
                   const showBadge = Boolean(item.showAlertBadge && unreadAlertsCount > 0);
 
                   return (
-                    <button
+                    <Tooltip
                       key={item.id}
-                      type="button"
-                      onClick={() => setActiveScreen(item.id)}
-                      aria-current={isActive ? 'page' : undefined}
-                      title={sidebarCollapsed ? item.label : undefined}
-                      className={`relative w-full flex items-center ${
-                        sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'gap-3 px-3 py-2.5'
-                      } rounded-lg text-xs font-medium transition ${
-                        isActive
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold shadow-sm'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
-                      }`}
+                      title={item.label}
+                      description={`Chuyển tới màn ${item.label}.`}
+                      placement="right"
+                      disabled={!sidebarCollapsed}
+                      className="block w-full"
                     >
-                      {isActive && (
-                        <span
-                          aria-hidden="true"
-                          className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-emerald-400 rounded-r"
-                        />
-                      )}
-
-                      <span className="relative shrink-0">
-                        <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
-                        {sidebarCollapsed && showBadge && (
+                      <button
+                        type="button"
+                        onClick={() => setActiveScreen(item.id)}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`relative w-full flex items-center ${
+                          sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'gap-3 px-3 py-2.5'
+                        } rounded-lg text-xs font-medium transition ${
+                          isActive
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold shadow-sm'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
+                        }`}
+                      >
+                        {isActive && (
                           <span
                             aria-hidden="true"
-                            className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-rose-500"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-emerald-400 rounded-r"
                           />
                         )}
-                      </span>
 
-                      {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
-
-                      {!sidebarCollapsed && showBadge && (
-                        <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                          {badgeText}
+                        <span className="relative shrink-0">
+                          <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                          {sidebarCollapsed && showBadge && (
+                            <span
+                              aria-hidden="true"
+                              className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-rose-500"
+                            />
+                          )}
                         </span>
-                      )}
-                    </button>
+
+                        {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
+
+                        {!sidebarCollapsed && showBadge && (
+                          <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                            {badgeText}
+                          </span>
+                        )}
+                      </button>
+                    </Tooltip>
                   );
                 })}
               </div>
@@ -127,18 +144,25 @@ export const Sidebar: React.FC = () => {
 
       {/* Footer Logout */}
       <div className="p-3 border-t border-slate-800 shrink-0">
-        <button
-          type="button"
-          onClick={logout}
-          title={sidebarCollapsed ? 'Đăng xuất' : undefined}
-          aria-label="Đăng xuất"
-          className={`w-full flex items-center ${
-            sidebarCollapsed ? 'justify-center px-2 py-2' : 'gap-3 px-3 py-2'
-          } text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition`}
+        <Tooltip
+          title="Đăng xuất"
+          description="Thoát phiên hiện tại và quay lại màn đăng nhập."
+          placement="right"
+          disabled={!sidebarCollapsed}
+          className="block w-full"
         >
-          <LogOut className="w-4 h-4 shrink-0" />
-          {!sidebarCollapsed && <span>Đăng xuất</span>}
-        </button>
+          <button
+            type="button"
+            onClick={logout}
+            aria-label="Đăng xuất"
+            className={`w-full flex items-center ${
+              sidebarCollapsed ? 'justify-center px-2 py-2' : 'gap-3 px-3 py-2'
+            } text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition`}
+          >
+            <LogOut className="w-4 h-4 shrink-0" />
+            {!sidebarCollapsed && <span>Đăng xuất</span>}
+          </button>
+        </Tooltip>
       </div>
     </aside>
   );

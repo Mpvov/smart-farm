@@ -47,7 +47,7 @@ export const MobileNav: React.FC = () => {
     <>
       <nav
         aria-label="Điều hướng di động"
-        className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur z-40 px-1 py-1.5 grid grid-cols-5"
+        className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur z-40 px-1.5 py-1.5 grid grid-cols-5 gap-1"
       >
         {primaryTabs.map((tab) => {
           const Icon = tab.icon;
@@ -60,14 +60,14 @@ export const MobileNav: React.FC = () => {
               type="button"
               onClick={() => handleSelectScreen(tab.id)}
               aria-current={isActive ? 'page' : undefined}
-              className={`flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg text-[10px] font-medium transition ${
-                isActive ? 'text-emerald-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+              className={`min-h-[52px] flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-[11px] font-medium transition active:scale-[0.97] ${
+                isActive ? 'text-emerald-400 font-bold bg-emerald-500/10' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <span className="relative">
-                <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
                 {showBadge && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center rounded-full bg-rose-500 text-white text-[9px] font-bold leading-none">
+                  <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center rounded-full bg-rose-500 text-white text-[9px] font-bold leading-none">
                     {badgeText}
                   </span>
                 )}
@@ -81,13 +81,13 @@ export const MobileNav: React.FC = () => {
           type="button"
           onClick={() => setDrawerOpen(true)}
           aria-expanded={drawerOpen}
-          className={`flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg text-[10px] font-medium transition ${
+          className={`min-h-[52px] flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-[11px] font-medium transition active:scale-[0.97] ${
             drawerOpen || isDrawerScreenActive
-              ? 'text-emerald-400 font-bold'
+              ? 'text-emerald-400 font-bold bg-emerald-500/10'
               : 'text-slate-400 hover:text-slate-200'
           }`}
         >
-          <Menu className="w-4 h-4" />
+          <Menu className="w-5 h-5" />
           <span>Thêm</span>
         </button>
       </nav>
@@ -149,13 +149,13 @@ export const MobileNav: React.FC = () => {
                         type="button"
                         onClick={() => handleSelectScreen(item.id)}
                         aria-current={isActive ? 'page' : undefined}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition ${
+                        className={`w-full min-h-[48px] flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition active:scale-[0.98] ${
                           isActive
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold'
                             : 'text-slate-300 hover:bg-slate-800/60 border border-transparent'
                         }`}
                       >
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                        <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
                         <span>{item.label}</span>
                       </button>
                     );
@@ -171,7 +171,7 @@ export const MobileNav: React.FC = () => {
                 setDrawerOpen(false);
                 logout();
               }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition"
+              className="w-full min-h-[48px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition active:scale-[0.98]"
             >
               <LogOut className="w-4 h-4" />
               <span>Đăng xuất</span>

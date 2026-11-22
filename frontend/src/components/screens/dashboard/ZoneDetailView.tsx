@@ -20,7 +20,10 @@ import {
   METRICS_ORDER,
   METRIC_META,
   MetricKey,
+  STATUS_META,
   filterHistoryByRange,
+  getChartThemeColors,
+  getPlainMetricHint,
 } from '../../../config/dashboard';
 import {
   ActuatorItem,
@@ -72,7 +75,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
   onBackToFarms,
   onBackToZones,
 }) => {
-  const { user, setActiveFarmId, setActiveZoneId, setActiveScreen, updateLiveTelemetry } = useFarmStore();
+  const { user, theme, setActiveFarmId, setActiveZoneId, setActiveScreen, updateLiveTelemetry } = useFarmStore();
   const isAdmin = user?.role === 'ADMIN';
 
   const [activeTab, setActiveTab] = useState<DetailTab>('realtime');
@@ -160,25 +163,29 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
     setActiveScreen(screenId);
   };
 
+  const chartColors = getChartThemeColors(theme);
+  const activeThreshold = thresholds.find((t) => t.metric === chartMetric);
+
   const chartOption = {
     backgroundColor: 'transparent',
     tooltip: {
       trigger: 'axis',
-      backgroundColor: '#0f172a',
-      borderColor: '#334155',
-      textStyle: { color: '#f8fafc', fontSize: 12 },
+      backgroundColor: chartColors.tooltipBg,
+      borderColor: chartColors.tooltipBorder,
+      textStyle: { color: chartColors.tooltipText, fontSize: 12 },
     },
-    grid: { top: 30, left: 50, right: 20, bottom: 30 },
+    grid: { top: 32, left: 50, right: 20, bottom: 30 },
     xAxis: {
       type: 'category',
       data: chartData.map((d) => d.timestamp.slice(11, 19)),
-      axisLine: { lineStyle: { color: '#334155' } },
-      axisLabel: { color: '#94a3b8', fontSize: 10 },
+      axisLine: { lineStyle: { color: chartColors.axisLine } },
+      axisLabel: { color: chartColors.axisText, fontSize: 11 },
     },
     yAxis: {
       type: 'value',
-      splitLine: { lineStyle: { color: '#1e293b' } },
-      axisLabel: { color: '#94a3b8', fontSize: 10 },
+      scale: true,
+      splitLine: { lineStyle: { color: chartColors.splitLine } },
+      axisLabel: { color: chartColors.axisText, fontSize: 11 },
     },
     series: [
       {
@@ -187,7 +194,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
         smooth: true,
         showSymbol: false,
         data: chartData.map((d) => d.value),
-        lineStyle: { color: '#10b981', width: 2.5 },
+        lineStyle: { color: chartColors.lineColor, width: 3 },
         areaStyle: {
           color: {
             type: 'linear',
@@ -196,11 +203,45 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
             x2: 0,
             y2: 1,
             colorStops: [
-              { offset: 0, color: 'rgba(16, 185, 129, 0.35)' },
-              { offset: 1, color: 'rgba(16, 185, 129, 0.0)' },
+              { offset: 0, color: chartColors.areaTop },
+              { offset: 1, color: chartColors.areaBottom },
             ],
           },
         },
+        ...(activeThreshold
+          ? {
+              markArea: {
+                silent: true,
+                itemStyle: { color: chartColors.optimalBandBg },
+                label: {
+                  show: true,
+                  position: 'insideTopRight',
+                  color: chartColors.optimalBandText,
+                  fontSize: 10,
+                },
+                data: [
+                  [
+                    { name: 'Vùng tối ưu', yAxis: activeThreshold.warning_min },
+                    { yAxis: activeThreshold.warning_max },
+                  ],
+                ],
+              },
+              markLine: {
+                silent: true,
+                symbol: 'none',
+                lineStyle: { color: chartColors.dangerLine, type: 'dashed', width: 1.5 },
+                label: {
+                  color: chartColors.dangerLine,
+                  fontSize: 10,
+                  formatter: '{b}: {c}',
+                },
+                data: [
+                  { name: 'Nguy hiểm thấp', yAxis: activeThreshold.danger_min },
+                  { name: 'Nguy hiểm cao', yAxis: activeThreshold.danger_max },
+                ],
+              },
+            }
+          : {}),
       },
     ],
   };
@@ -261,9 +302,9 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
             <button
               type="button"
               onClick={() => jumpToScreen('SCR-03')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition"
+              className="min-h-[48px] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold rounded-xl transition active:scale-[0.98]"
             >
-              <Power className="w-3.5 h-3.5" />
+              <Power className="w-4 h-4" />
               <span>Điều khiển thiết bị</span>
             </button>
 
@@ -271,9 +312,9 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
               <button
                 type="button"
                 onClick={() => jumpToScreen('SCR-04')}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition border border-slate-700"
+                className="min-h-[48px] flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition border border-slate-700 active:scale-[0.98]"
               >
-                <Sliders className="w-3.5 h-3.5 text-emerald-400" />
+                <Sliders className="w-4 h-4 text-emerald-400" />
                 <span>Cấu hình ngưỡng &amp; lịch</span>
               </button>
             )}
@@ -282,9 +323,9 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
               type="button"
               onClick={loadZoneContext}
               disabled={loading}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition border border-slate-700"
+              className="min-h-[48px] flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs sm:text-sm font-semibold rounded-xl transition border border-slate-700 active:scale-[0.98]"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               <span>Làm mới</span>
             </button>
           </div>
@@ -292,7 +333,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
       </div>
 
       {/* 3-Tab Switcher */}
-      <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 p-1 rounded-xl w-fit">
+      <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 p-1 rounded-xl w-full sm:w-fit overflow-x-auto">
         {[
           { id: 'realtime' as DetailTab, label: 'Realtime & Biểu đồ' },
           { id: 'config' as DetailTab, label: 'Cấu hình & Thiết bị' },
@@ -302,9 +343,9 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+            className={`min-h-[44px] flex-1 sm:flex-initial whitespace-nowrap px-3.5 py-2 rounded-lg text-xs font-semibold transition ${
               activeTab === tab.id
-                ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 font-semibold'
+                ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 font-bold'
                 : 'text-slate-400 hover:text-slate-200 border border-transparent'
             }`}
           >
@@ -322,42 +363,48 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
               const meta = METRIC_META[key];
               const Icon = meta.Icon;
               const isSelected = chartMetric === key;
-              const isCritical = data?.status === 'CRITICAL';
-              const isWarning = data?.status === 'WARNING';
+              const status = data?.status ?? 'NORMAL';
+              const stMeta = STATUS_META[status];
+              const StatusIcon = stMeta.Icon;
+              const thresh = thresholds.find((t) => t.metric === key);
+              const plainHint = getPlainMetricHint(key, data?.value, status, thresh);
 
               return (
                 <div
                   key={key}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setChartMetric(key)}
-                  className={`cursor-pointer bg-slate-900 border rounded-xl p-4 transition ${
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setChartMetric(key);
+                    }
+                  }}
+                  className={`cursor-pointer bg-slate-900 rounded-2xl p-4 transition active:scale-[0.99] ${
                     isSelected
-                      ? 'border-emerald-500 shadow-md shadow-emerald-950/40 ring-1 ring-emerald-500/20'
-                      : 'border-slate-800 hover:border-slate-700'
+                      ? 'border-2 border-emerald-500 shadow-md ring-1 ring-emerald-500/20'
+                      : `${stMeta.cardCls} hover:border-slate-700`
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-300">{meta.title}</span>
+                    <span className="text-xs font-bold text-slate-300">{meta.title}</span>
                     <Icon className={`w-5 h-5 ${meta.color}`} />
                   </div>
 
-                  <div className="mt-3 flex items-baseline gap-1.5">
+                  <div className="mt-2.5 flex items-baseline gap-1.5">
                     <span className="text-3xl font-extrabold text-slate-100 font-mono tracking-tight">
                       {data ? data.value : '--'}
                     </span>
-                    <span className="text-sm font-medium text-slate-400">{data?.unit ?? meta.unit}</span>
+                    <span className="text-sm font-semibold text-slate-400">{data?.unit ?? meta.unit}</span>
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between text-[10px]">
-                    <span
-                      className={`font-semibold px-2 py-0.5 rounded ${
-                        isCritical
-                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                          : isWarning
-                          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                          : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      }`}
-                    >
-                      {isCritical ? 'Nguy hiểm' : isWarning ? 'Cảnh báo' : 'An toàn'}
+                  <div className="mt-1.5 text-xs font-semibold text-slate-200">{plainHint}</div>
+
+                  <div className="mt-3 flex items-center justify-between text-[11px]">
+                    <span className={`inline-flex items-center gap-1 font-bold px-2 py-0.5 rounded-full ${stMeta.badgeCls}`}>
+                      <StatusIcon className="w-3.5 h-3.5" />
+                      <span>{stMeta.label}</span>
                     </span>
                     <span className="text-slate-500 font-mono">
                       {data?.updated_at ? data.updated_at.slice(11, 19) : ''}
@@ -368,23 +415,25 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
             })}
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div>
                 <h3 className="text-sm font-bold text-slate-200">
                   Biểu đồ Diễn biến {METRIC_META[chartMetric].title} (
                   {CHART_RANGE_PRESETS.find((r) => r.id === chartRange)?.titleLabel ?? '24 giờ gần nhất'})
                 </h3>
-                <p className="text-xs text-slate-400">Xu hướng thay đổi và cập nhật điểm đo thời gian thực</p>
+                <p className="text-xs text-slate-400">
+                  Vùng xanh: ngưỡng tối ưu · Vạch đứt đỏ: ngưỡng nguy hiểm
+                </p>
               </div>
               <div className="flex items-center gap-2 flex-wrap self-start lg:self-auto">
-                <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-lg">
+                <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl">
                   {CHART_RANGE_PRESETS.map((preset) => (
                     <button
                       key={preset.id}
                       type="button"
                       onClick={() => setChartRange(preset.id)}
-                      className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                      className={`min-h-[40px] min-w-[40px] px-2.5 py-1 text-xs font-semibold rounded-lg transition ${
                         chartRange === preset.id
                           ? 'bg-slate-700 text-emerald-400 font-bold'
                           : 'text-slate-400 hover:text-slate-200'
@@ -394,13 +443,13 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
                     </button>
                   ))}
                 </div>
-                <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-lg">
+                <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl">
                   {METRICS_ORDER.map((m) => (
                     <button
                       key={m}
                       type="button"
                       onClick={() => setChartMetric(m)}
-                      className={`px-2.5 py-1 text-xs font-medium rounded-md transition ${
+                      className={`min-h-[40px] px-3 py-1 text-xs font-semibold rounded-lg transition ${
                         chartMetric === m
                           ? 'bg-emerald-500 text-slate-950 font-bold'
                           : 'text-slate-400 hover:text-slate-200'

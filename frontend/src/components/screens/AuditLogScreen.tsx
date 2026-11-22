@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../../lib/api';
 import { AuditLog } from '../../types';
-import { ShieldCheck, Search, Filter } from 'lucide-react';
+import { ShieldCheck, Filter } from 'lucide-react';
+import { Select } from '../ui/Select';
 
 export const AuditLogScreen: React.FC = () => {
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -28,17 +29,20 @@ export const AuditLogScreen: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <select
+          <Select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="bg-slate-800 border border-slate-700 text-xs rounded-xl px-3 py-2 text-slate-200"
-          >
-            <option value="">Tất cả loại sự kiện</option>
-            <option value="DEVICE_CONTROL">Điều khiển thiết bị</option>
-            <option value="CONFIG_CHANGE">Thay đổi cấu hình</option>
-            <option value="LOGIN">Đăng nhập</option>
-            <option value="ALERT_ACK">Xác nhận cảnh báo</option>
-          </select>
+            onChange={(val) => setFilterType(val)}
+            ariaLabel="Lọc theo loại sự kiện"
+            icon={<Filter className="w-4 h-4 text-emerald-400" />}
+            className="min-w-[210px]"
+            options={[
+              { value: '', label: 'Tất cả loại sự kiện' },
+              { value: 'DEVICE_CONTROL', label: 'Điều khiển thiết bị' },
+              { value: 'CONFIG_CHANGE', label: 'Thay đổi cấu hình' },
+              { value: 'LOGIN', label: 'Đăng nhập' },
+              { value: 'ALERT_ACK', label: 'Xác nhận cảnh báo' },
+            ]}
+          />
         </div>
       </div>
 
