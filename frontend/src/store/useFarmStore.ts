@@ -3,6 +3,7 @@ import { User } from '../types';
 import { ScreenId } from '../config/navigation';
 
 const SIDEBAR_STORAGE_KEY = 'sf_sidebar_collapsed';
+const DEFAULT_FARM_STORAGE_KEY = 'sf_default_farm_id';
 
 function readInitialSidebarCollapsed(): boolean {
   try {
@@ -12,11 +13,26 @@ function readInitialSidebarCollapsed(): boolean {
   }
 }
 
+function readInitialDefaultFarmId(): number | null {
+  try {
+    if (typeof window === 'undefined') return null;
+    const raw = window.localStorage.getItem(DEFAULT_FARM_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = Number(raw);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+const initialDefaultFarmId = readInitialDefaultFarmId();
+
 interface FarmState {
   user: User | null;
   activeScreen: ScreenId;
   activeFarmId: number;
   activeZoneId: number;
+  defaultFarmId: number | null;
   sidebarCollapsed: boolean;
   unreadAlertsCount: number;
   liveTelemetry: Record<string, { value: number; timestamp: string }>;
@@ -24,6 +40,7 @@ interface FarmState {
   setActiveScreen: (screenId: ScreenId) => void;
   setActiveFarmId: (farmId: number) => void;
   setActiveZoneId: (zoneId: number) => void;
+  setDefaultFarmId: (farmId: number | null) => void;
   toggleSidebar: () => void;
   setUnreadAlertsCount: (count: number) => void;
   logout: () => void;
@@ -38,8 +55,9 @@ export const useFarmStore = create<FarmState>((set) => ({
     role: 'ADMIN',
   },
   activeScreen: 'SCR-02',
-  activeFarmId: 1,
+  activeFarmId: initialDefaultFarmId ?? 1,
   activeZoneId: 1,
+  defaultFarmId: initialDefaultFarmId,
   sidebarCollapsed: readInitialSidebarCollapsed(),
   unreadAlertsCount: 0,
   liveTelemetry: {},
@@ -47,6 +65,18 @@ export const useFarmStore = create<FarmState>((set) => ({
   setActiveScreen: (screenId) => set({ activeScreen: screenId }),
   setActiveFarmId: (farmId) => set({ activeFarmId: farmId }),
   setActiveZoneId: (zoneId) => set({ activeZoneId: zoneId }),
+  setDefaultFarmId: (farmId) => {
+    try {
+      if (farmId === null) {
+        window.localStorage.removeItem(DEFAULT_FARM_STORAGE_KEY);
+      } else {
+        window.localStorage.setItem(DEFAULT_FARM_STORAGE_KEY, String(farmId));
+      }
+    } catch {
+      // Ignore storage errors in restricted contexts
+    }
+    set({ defaultFarmId: farmId });
+  },
   toggleSidebar: () =>
     set((state) => {
       const next = !state.sidebarCollapsed;

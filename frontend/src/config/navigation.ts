@@ -56,7 +56,7 @@ export const NAV_ITEMS: NavItem[] = [
     shortLabel: 'Tổng quan',
     group: 'operations',
     icon: LayoutDashboard,
-    contextScope: 'farm-zone',
+    contextScope: 'global',
   },
   {
     id: 'SCR-03',
