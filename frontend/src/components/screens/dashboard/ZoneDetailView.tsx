@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import {
-  Activity,
   ChevronRight,
   Clock,
   Cpu,
-  Droplets,
   MapPin,
   Power,
   RefreshCw,
   Sliders,
   Sprout,
-  Sun,
-  Thermometer,
 } from 'lucide-react';
 import { useFarmStore } from '../../../store/useFarmStore';
-import { apiFetch } from '../../../lib/api';
+import { apiFetch, subscribeZoneTelemetry } from '../../../lib/api';
+import {
+  CHART_RANGE_PRESETS,
+  ChartRangeId,
+  DEFAULT_CHART_METRIC,
+  DEFAULT_CHART_RANGE,
+  METRICS_ORDER,
+  METRIC_META,
+  MetricKey,
+  filterHistoryByRange,
+} from '../../../config/dashboard';
 import {
   ActuatorItem,
   Device,
@@ -37,15 +43,6 @@ interface ZoneDetailViewProps {
 }
 
 type DetailTab = 'realtime' | 'config' | 'profile';
-
-const METRICS_ORDER = ['TEMP', 'HUMI', 'SOIL', 'LIGHT'] as const;
-
-const METRIC_META: Record<string, { title: string; unit: string; Icon: React.ElementType; color: string }> = {
-  TEMP: { title: 'Nhiệt độ không khí', unit: '°C', Icon: Thermometer, color: 'text-amber-400' },
-  HUMI: { title: 'Độ ẩm không khí', unit: '%', Icon: Droplets, color: 'text-blue-400' },
-  SOIL: { title: 'Độ ẩm đất canh tác', unit: '%', Icon: Activity, color: 'text-emerald-400' },
-  LIGHT: { title: 'Cường độ ánh sáng', unit: 'Lux', Icon: Sun, color: 'text-yellow-300' },
-};
 
 const DAY_LABELS: Record<number, string> = {
   1: 'T2',
@@ -80,7 +77,8 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
 
   const [activeTab, setActiveTab] = useState<DetailTab>('realtime');
   const [telemetry, setTelemetry] = useState<ZoneLatestTelemetry | null>(null);
-  const [chartMetric, setChartMetric] = useState<string>('SOIL');
+  const [chartMetric, setChartMetric] = useState<MetricKey>(DEFAULT_CHART_METRIC);
+  const [chartRange, setChartRange] = useState<ChartRangeId>(DEFAULT_CHART_RANGE);
   const [chartData, setChartData] = useState<Array<{ timestamp: string; value: number }>>([]);
   const [actuators, setActuators] = useState<ActuatorItem[]>([]);
   const [thresholds, setThresholds] = useState<Threshold[]>([]);
@@ -94,7 +92,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
       const [telRes, histRes, actRes, thRes, scRes, devRes] = await Promise.all([
         apiFetch<{ data: ZoneLatestTelemetry }>(`/zones/${zone.id}/telemetry/latest`).catch(() => null),
         apiFetch<{ data: Array<{ timestamp: string; value: number }> }>(
-          `/zones/${zone.id}/telemetry/history?metric=${chartMetric}`
+          `/zones/${zone.id}/telemetry/history?metric=${chartMetric}&range=${chartRange}`
         ).catch(() => null),
         apiFetch<{ data: ActuatorItem[] }>(`/zones/${zone.id}/actuators`).catch(() => null),
         apiFetch<{ data: Threshold[] }>(`/zones/${zone.id}/thresholds`).catch(() => null),
@@ -103,7 +101,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
       ]);
 
       if (telRes) setTelemetry(telRes.data);
-      if (histRes) setChartData(histRes.data);
+      if (histRes) setChartData(filterHistoryByRange(histRes.data, chartRange));
       if (actRes) setActuators(actRes.data);
       if (thRes) setThresholds(thRes.data);
       if (scRes) setSchedules(scRes.data);
@@ -119,52 +117,41 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
 
   useEffect(() => {
     apiFetch<{ data: Array<{ timestamp: string; value: number }> }>(
-      `/zones/${zone.id}/telemetry/history?metric=${chartMetric}`
+      `/zones/${zone.id}/telemetry/history?metric=${chartMetric}&range=${chartRange}`
     )
-      .then((res) => setChartData(res.data))
+      .then((res) => setChartData(filterHistoryByRange(res.data, chartRange)))
       .catch(() => null);
-  }, [zone.id, chartMetric]);
+  }, [zone.id, chartMetric, chartRange]);
 
-  // Single SSE connection only for the active Zone detail view
+  // Single realtime stream subscription via prototype adapter
   useEffect(() => {
-    const eventSource = new EventSource(`/api/v1/zones/${zone.id}/telemetry/stream`);
+    return subscribeZoneTelemetry(zone.id, (data) => {
+      updateLiveTelemetry(data.metric, data.value, data.timestamp);
 
-    eventSource.addEventListener('telemetry', (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        updateLiveTelemetry(data.metric, data.value, data.timestamp);
-
-        setTelemetry((prev) => {
-          if (!prev) return prev;
-          const meta = METRIC_META[data.metric];
-          const unit = meta?.unit ?? '%';
-          const thresh = thresholds.find((t) => t.metric === data.metric);
-          const prevStatus = prev.metrics[data.metric]?.status ?? 'NORMAL';
-          return {
-            ...prev,
-            metrics: {
-              ...prev.metrics,
-              [data.metric]: {
-                value: data.value,
-                unit,
-                status: computeMetricStatus(data.value, thresh, prevStatus),
-                updated_at: data.timestamp,
-              },
+      setTelemetry((prev) => {
+        if (!prev) return prev;
+        const meta = METRIC_META[data.metric as MetricKey];
+        const unit = meta?.unit ?? '%';
+        const thresh = thresholds.find((t) => t.metric === data.metric);
+        const prevStatus = prev.metrics[data.metric]?.status ?? 'NORMAL';
+        return {
+          ...prev,
+          metrics: {
+            ...prev.metrics,
+            [data.metric]: {
+              value: data.value,
+              unit,
+              status: computeMetricStatus(data.value, thresh, prevStatus),
+              updated_at: data.timestamp,
             },
-          };
-        });
+          },
+        };
+      });
 
-        if (data.metric === chartMetric) {
-          setChartData((prev) => [...prev.slice(-30), { timestamp: data.timestamp, value: data.value }]);
-        }
-      } catch (err) {
-        console.error('SSE parse error', err);
+      if (data.metric === chartMetric) {
+        setChartData((prev) => [...prev.slice(-30), { timestamp: data.timestamp, value: data.value }]);
       }
     });
-
-    return () => {
-      eventSource.close();
-    };
   }, [zone.id, chartMetric, thresholds, updateLiveTelemetry]);
 
   const jumpToScreen = (screenId: ScreenId) => {
@@ -259,7 +246,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
               </span>
               <span className="flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                LIVE SSE
+                LIVE
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
@@ -382,28 +369,47 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
           </div>
 
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div>
                 <h3 className="text-sm font-bold text-slate-200">
-                  Biểu đồ Diễn biến {METRIC_META[chartMetric]?.title ?? chartMetric} (24 Giờ gần nhất)
+                  Biểu đồ Diễn biến {METRIC_META[chartMetric].title} (
+                  {CHART_RANGE_PRESETS.find((r) => r.id === chartRange)?.titleLabel ?? '24 giờ gần nhất'})
                 </h3>
-                <p className="text-xs text-slate-400">Xu hướng thay đổi và cập nhật điểm đo realtime SSE</p>
+                <p className="text-xs text-slate-400">Xu hướng thay đổi và cập nhật điểm đo thời gian thực</p>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-lg self-start sm:self-auto">
-                {METRICS_ORDER.map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setChartMetric(m)}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition ${
-                      chartMetric === m
-                        ? 'bg-emerald-500 text-slate-950 font-bold'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    {m}
-                  </button>
-                ))}
+              <div className="flex items-center gap-2 flex-wrap self-start lg:self-auto">
+                <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-lg">
+                  {CHART_RANGE_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => setChartRange(preset.id)}
+                      className={`px-2 py-1 text-xs font-medium rounded-md transition ${
+                        chartRange === preset.id
+                          ? 'bg-slate-700 text-emerald-400 font-bold'
+                          : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-lg">
+                  {METRICS_ORDER.map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setChartMetric(m)}
+                      className={`px-2.5 py-1 text-xs font-medium rounded-md transition ${
+                        chartMetric === m
+                          ? 'bg-emerald-500 text-slate-950 font-bold'
+                          : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -491,7 +497,7 @@ export const ZoneDetailView: React.FC<ZoneDetailViewProps> = ({
                     className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-800 text-xs"
                   >
                     <span className="font-semibold text-slate-200">
-                      {METRIC_META[t.metric]?.title ?? t.metric}
+                      {METRIC_META[t.metric as MetricKey]?.title ?? t.metric}
                     </span>
                     <div className="text-right font-mono text-[11px]">
                       <div className="text-amber-400">

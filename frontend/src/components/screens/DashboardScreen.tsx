@@ -1,32 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Activity,
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
-  Droplets,
   Layers,
   MapPin,
   RefreshCw,
   Sprout,
   Star,
-  Sun,
-  Thermometer,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFarmStore } from '../../store/useFarmStore';
 import { apiFetch } from '../../lib/api';
+import { METRICS_ORDER, METRIC_META } from '../../config/dashboard';
 import { DashboardSummary, Farm, MetricReading, Zone, ZoneLatestTelemetry } from '../../types';
 import { ZoneDetailView } from './dashboard/ZoneDetailView';
 
 type ViewLevel = 'farms' | 'zones' | 'zone-detail';
-
-const MINI_METRICS: Array<{ key: string; label: string; unit: string; Icon: React.ElementType }> = [
-  { key: 'TEMP', label: 'Nhiệt độ', unit: '°C', Icon: Thermometer },
-  { key: 'HUMI', label: 'Ẩm KK', unit: '%', Icon: Droplets },
-  { key: 'SOIL', label: 'Ẩm đất', unit: '%', Icon: Activity },
-  { key: 'LIGHT', label: 'Ánh sáng', unit: 'Lux', Icon: Sun },
-];
 
 function getZoneWorstStatus(telemetry?: ZoneLatestTelemetry): MetricReading['status'] {
   if (!telemetry?.metrics) return 'NORMAL';
@@ -356,7 +346,8 @@ export const DashboardScreen: React.FC = () => {
 
                   {/* Mini 2x2 Telemetry Grid */}
                   <div className="grid grid-cols-2 gap-2">
-                    {MINI_METRICS.map(({ key, label, unit, Icon }) => {
+                    {METRICS_ORDER.map((key) => {
+                      const { shortLabel, unit, Icon } = METRIC_META[key];
                       const reading = tel?.metrics?.[key];
                       const statusCls =
                         reading?.status === 'CRITICAL'
@@ -371,7 +362,7 @@ export const DashboardScreen: React.FC = () => {
                           className={`p-2.5 rounded-xl bg-slate-800/50 border ${statusCls}`}
                         >
                           <div className="flex items-center justify-between text-[10px] text-slate-400">
-                            <span>{label}</span>
+                            <span>{shortLabel}</span>
                             <Icon className="w-3 h-3 text-slate-400" />
                           </div>
                           <div className="mt-1 font-mono text-sm font-bold">
