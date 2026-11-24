@@ -181,3 +181,51 @@ def test_rate_limit_and_security_headers():
         assert r.headers.get("X-Frame-Options") == "DENY"
     r6 = client.post("/api/v1/auth/login", json={"email": "a@b.c", "password": "x"}, headers=ip_headers)
     assert r6.status_code == 429
+
+
+def test_create_farm():
+    res = client.post(
+        "/api/v1/farms",
+        json={"name": "Nông trại Test Phase 3", "location": "Đà Lạt", "total_area": 2500.0},
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["success"] is True
+    assert body["data"]["id"] >= 2
+
+    farms_res = client.get("/api/v1/farms")
+    assert farms_res.status_code == 200
+    assert any(f["name"] == "Nông trại Test Phase 3" for f in farms_res.json()["data"])
+
+
+def test_update_zone_thresholds():
+    payload = {
+        "thresholds": [
+            {
+                "metric": "SOIL",
+                "warning_min": 38.0,
+                "warning_max": 78.0,
+                "danger_min": 25.0,
+                "danger_max": 88.0,
+                "auto_actions": [
+                    {
+                        "trigger": "BELOW_DANGER_MIN",
+                        "target_device_id": 4,
+                        "target_metric": "PUMP",
+                        "action": "ON",
+                    }
+                ],
+            }
+        ]
+    }
+    res = client.put("/api/v1/zones/1/thresholds", json=payload)
+    assert res.status_code == 200
+    assert res.json()["success"] is True
+
+    get_res = client.get("/api/v1/zones/1/thresholds")
+    assert get_res.status_code == 200
+    soil = next(t for t in get_res.json()["data"] if t["metric"] == "SOIL")
+    assert soil["warning_min"] == 38.0
+    assert soil["danger_min"] == 25.0
+    assert soil["auto_actions"][0]["target_device_id"] == 4
+    assert soil["auto_actions"][0]["target_metric"] == "PUMP"

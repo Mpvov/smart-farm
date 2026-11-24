@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Bell,
+  BookOpen,
   ChevronDown,
   ChevronRight,
   Layers,
@@ -16,6 +17,7 @@ import { DashboardSummary, Farm, Zone } from '../../types';
 import { getScreenMeta } from '../../config/navigation';
 import { Select } from '../ui/Select';
 import { Tooltip } from '../ui/Tooltip';
+import { GuideDrawer } from './GuideDrawer';
 
 export const Header: React.FC = () => {
   const {
@@ -36,6 +38,7 @@ export const Header: React.FC = () => {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [zones, setZones] = useState<Zone[]>([]);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
   const meta = getScreenMeta(activeScreen);
@@ -47,7 +50,7 @@ export const Header: React.FC = () => {
     apiFetch<{ data: Farm[] }>('/farms')
       .then((res) => setFarms(res.data))
       .catch((err) => console.error(err));
-  }, []);
+  }, [activeScreen, activeFarmId]);
 
   useEffect(() => {
     if (!activeFarmId) return;
@@ -124,7 +127,8 @@ export const Header: React.FC = () => {
   const badgeText = unreadAlertsCount > 99 ? '99+' : String(unreadAlertsCount);
 
   return (
-    <header className="border-b border-slate-800 bg-slate-900/75 backdrop-blur sticky top-0 z-30">
+    <>
+      <header className="border-b border-slate-800 bg-slate-900/75 backdrop-blur sticky top-0 z-30">
       {/* Primary Row */}
       <div className="h-16 px-4 sm:px-6 flex items-center justify-between gap-3">
         {/* Page Breadcrumb & Title */}
@@ -196,7 +200,21 @@ export const Header: React.FC = () => {
             </button>
           </Tooltip>
 
-          <div ref={profileRef} className="relative pl-2 sm:pl-3 border-l border-slate-800">
+          <Tooltip
+            title="Hướng dẫn sử dụng"
+            description="Mở sổ tay thao tác bàn giao cho màn hình hiện tại (tạo farm, nối thiết bị, đặt ngưỡng)."
+          >
+            <button
+              type="button"
+              onClick={() => setGuideOpen(true)}
+              aria-label="Mở sổ tay hướng dẫn sử dụng"
+              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-xl transition active:scale-[0.97]"
+            >
+              <BookOpen className="w-5 h-5" />
+            </button>
+          </Tooltip>
+
+          <div ref={profileRef} className="relative pl-2 sm:pl-3 border-l border-slate-800 lg:hidden">
             <button
               type="button"
               onClick={() => setProfileOpen((prev) => !prev)}
@@ -253,5 +271,7 @@ export const Header: React.FC = () => {
         </div>
       )}
     </header>
+      <GuideDrawer open={guideOpen} onClose={() => setGuideOpen(false)} />
+    </>
   );
 };
