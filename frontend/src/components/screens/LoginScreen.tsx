@@ -6,27 +6,30 @@ import { Sprout, Lock, Mail, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const LoginScreen: React.FC = () => {
-  const { setUser, setActiveScreen } = useFarmStore();
+  const { setAuth } = useFarmStore();
   const [email, setEmail] = useState('admin@smartfarm.vn');
   const [password, setPassword] = useState('admin123');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const loginWith = async (targetEmail: string, targetPassword: string) => {
     setLoading(true);
     try {
       const res = await apiFetch<{ data: { user: User; access_token: string } }>('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: targetEmail, password: targetPassword }),
       });
-      setUser(res.data.user);
+      setAuth(res.data.user, res.data.access_token);
       toast.success(`Chào mừng trở lại, ${res.data.user.full_name}!`);
-      setActiveScreen('SCR-02');
     } catch (err: any) {
       toast.error(err.message || 'Đăng nhập thất bại');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await loginWith(email, password);
   };
 
   return (
@@ -82,10 +85,26 @@ export const LoginScreen: React.FC = () => {
           </div>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-slate-800/80 text-center text-xs text-slate-500 space-y-1">
-          <div>Tài khoản demo:</div>
-          <div>Admin: <code className="text-slate-300">admin@smartfarm.vn / admin123</code></div>
-          <div>Operator: <code className="text-slate-300">operator@smartfarm.vn / operator123</code></div>
+        <div className="mt-6 pt-5 border-t border-slate-800/80 space-y-2.5">
+          <div className="text-center text-xs text-slate-400">Đăng nhập nhanh theo vai trò (lấy Token thật):</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => loginWith('admin@smartfarm.vn', 'admin123')}
+              className="min-h-[48px] px-3 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 disabled:opacity-50 text-xs font-semibold text-emerald-400 transition active:scale-[0.98]"
+            >
+              Đăng nhập nhanh Admin
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => loginWith('operator@smartfarm.vn', 'operator123')}
+              className="min-h-[48px] px-3 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-xs font-semibold text-slate-200 transition active:scale-[0.98]"
+            >
+              Đăng nhập nhanh Operator
+            </button>
+          </div>
         </div>
       </div>
     </div>

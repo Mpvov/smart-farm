@@ -509,6 +509,7 @@ def update_zone_thresholds(zone_id: int, req: UpdateThresholdsRequest):
         )
 
     conn.commit()
+    conn.close()
     log_audit(
         1,
         "Quản Trị Viên (Owner)",
@@ -517,7 +518,6 @@ def update_zone_thresholds(zone_id: int, req: UpdateThresholdsRequest):
         "Cập nhật ngưỡng an toàn",
         f"Zone {zone_id}: Cập nhật {len(req.thresholds)} cấu hình ngưỡng",
     )
-    conn.close()
     return {"success": True, "message": "Đã áp dụng cấu hình ngưỡng mới thành công"}
 
 
@@ -837,6 +837,33 @@ def get_farms():
     farms = cursor.fetchall()
     conn.close()
     return {"success": True, "data": [dict(f) for f in farms]}
+
+
+@app.post("/api/v1/farms")
+def create_farm(req: FarmCreateRequest):
+    conn = get_db()
+    cursor = conn.cursor()
+    now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    cursor.execute(
+        """
+    INSERT INTO farms (name, location, total_area, created_at)
+    VALUES (?, ?, ?, ?)
+    """,
+        (req.name, req.location, req.total_area, now_iso),
+    )
+    fid = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    log_audit(
+        1,
+        "Quản Trị Viên (Owner)",
+        "ADMIN",
+        "CONFIG_CHANGE",
+        "Tạo nông trại mới",
+        f"Farm #{fid}: {req.name} ({req.location}, {req.total_area} m²)",
+        farm_name=req.name,
+    )
+    return {"success": True, "data": {"id": fid}, "message": "Tạo nông trại thành công"}
 
 
 @app.get("/api/v1/farms/{farm_id}/zones")

@@ -5,6 +5,8 @@ import { ScreenId } from '../config/navigation';
 const SIDEBAR_STORAGE_KEY = 'sf_sidebar_collapsed';
 const DEFAULT_FARM_STORAGE_KEY = 'sf_default_farm_id';
 const THEME_STORAGE_KEY = 'sf_theme';
+const AUTH_TOKEN_STORAGE_KEY = 'sf_access_token';
+const AUTH_USER_STORAGE_KEY = 'sf_user';
 
 export type ThemeMode = 'sunlight' | 'dark';
 
@@ -44,12 +46,30 @@ function applyThemeAttribute(theme: ThemeMode): void {
   }
 }
 
+function readInitialAuth(): { user: User | null; accessToken: string | null } {
+  try {
+    if (typeof window === 'undefined') return { user: null, accessToken: null };
+    const token = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    const rawUser = window.localStorage.getItem(AUTH_USER_STORAGE_KEY);
+    if (!token || !rawUser) return { user: null, accessToken: null };
+    const parsed = JSON.parse(rawUser) as User;
+    if (!parsed || typeof parsed.id !== 'number' || !parsed.role) {
+      return { user: null, accessToken: null };
+    }
+    return { user: parsed, accessToken: token };
+  } catch {
+    return { user: null, accessToken: null };
+  }
+}
+
 const initialDefaultFarmId = readInitialDefaultFarmId();
 const initialTheme = readInitialTheme();
+const initialAuth = readInitialAuth();
 applyThemeAttribute(initialTheme);
 
 interface FarmState {
   user: User | null;
+  accessToken: string | null;
   activeScreen: ScreenId;
   activeFarmId: number;
   activeZoneId: number;
@@ -59,6 +79,7 @@ interface FarmState {
   unreadAlertsCount: number;
   liveTelemetry: Record<string, { value: number; timestamp: string }>;
   setUser: (u: User | null) => void;
+  setAuth: (user: User, token: string) => void;
   setActiveScreen: (screenId: ScreenId) => void;
   setActiveFarmId: (farmId: number) => void;
   setActiveZoneId: (zoneId: number) => void;
@@ -72,13 +93,9 @@ interface FarmState {
 }
 
 export const useFarmStore = create<FarmState>((set) => ({
-  user: {
-    id: 1,
-    email: 'admin@smartfarm.vn',
-    full_name: 'Quản Trị Viên (Owner)',
-    role: 'ADMIN',
-  },
-  activeScreen: 'SCR-02',
+  user: initialAuth.user,
+  accessToken: initialAuth.accessToken,
+  activeScreen: initialAuth.user && initialAuth.accessToken ? 'SCR-02' : 'SCR-01',
   activeFarmId: initialDefaultFarmId ?? 1,
   activeZoneId: 1,
   defaultFarmId: initialDefaultFarmId,
@@ -87,6 +104,15 @@ export const useFarmStore = create<FarmState>((set) => ({
   unreadAlertsCount: 0,
   liveTelemetry: {},
   setUser: (user) => set({ user }),
+  setAuth: (user, accessToken) => {
+    try {
+      window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, accessToken);
+      window.localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
+    } catch {
+      // Ignore storage errors
+    }
+    set({ user, accessToken, activeScreen: 'SCR-02' });
+  },
   setActiveScreen: (screenId) => set({ activeScreen: screenId }),
   setActiveFarmId: (farmId) => set({ activeFarmId: farmId }),
   setActiveZoneId: (zoneId) => set({ activeZoneId: zoneId }),
@@ -133,7 +159,15 @@ export const useFarmStore = create<FarmState>((set) => ({
       return { sidebarCollapsed: next };
     }),
   setUnreadAlertsCount: (count) => set({ unreadAlertsCount: count }),
-  logout: () => set({ user: null, activeScreen: 'SCR-01', unreadAlertsCount: 0 }),
+  logout: () => {
+    try {
+      window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+      window.localStorage.removeItem(AUTH_USER_STORAGE_KEY);
+    } catch {
+      // Ignore storage errors
+    }
+    set({ user: null, accessToken: null, activeScreen: 'SCR-01', unreadAlertsCount: 0 });
+  },
   updateLiveTelemetry: (metric, value, timestamp) =>
     set((state) => ({
       liveTelemetry: {

@@ -49,6 +49,7 @@ def _get_admin_headers():
     [
         ("POST", "/api/v1/auth/login", {"email": "admin@smartfarm.vn", "password": "admin123"}, "api_auth_login.json", False),
         ("GET", "/api/v1/farms", None, "api_farms.json", False),
+        ("POST", "/api/v1/farms", {"name": "Farm Moi", "location": "Da Lat", "total_area": 1000.0}, "api_create_farm.json", False),
         ("GET", "/api/v1/farms/1/zones", None, "api_farm_zones.json", False),
         ("POST", "/api/v1/farms/1/zones", {"name": "Z", "crop_type": "T", "area_m2": 10.0, "description": ""}, "api_create_zone.json", False),
         ("GET", "/api/v1/alerts?farm_id=1", None, "api_alerts.json", False),
@@ -84,7 +85,6 @@ def test_api_contract_shape(method, url, body, sample_file, use_auth):
     assert diff is None, f"{sample_file} shape mismatch: {diff}"
 
 
-@pytest.mark.xfail(strict=True, reason="BUG FR-BE-01: main.py:463 ON CONFLICT thieu UNIQUE constraint trong database.py")
 def test_api_contract_update_thresholds_shape():
     res = client.put(
         "/api/v1/zones/1/thresholds",

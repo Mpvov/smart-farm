@@ -322,6 +322,8 @@ Base URL: `/api/v1`
 
 * **`GET /farms`** / **`POST /farms`** / **`PUT /farms/{farm_id}`** / **`DELETE /farms/{farm_id}`**
   - **Mô tả:** Quản lý Nông trại của chủ sở hữu.
+  - **Request (`POST /farms`):** `{ "name": "Nông trại Đà Lạt 2", "location": "Lâm Đồng", "total_area": 3000.0 }`
+  - **Response (`POST /farms`, 200):** `{ "success": true, "data": { "id": 2 }, "message": "Tạo nông trại thành công" }`
 * **`GET /farms/{farm_id}/zones`**
   - **Mô tả:** Danh sách các Zone trực thuộc 1 Nông trại.
   - **Response (200):**

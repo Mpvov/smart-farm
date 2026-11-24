@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogOut, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { LogOut, PanelLeftClose, PanelLeftOpen, UserCircle } from 'lucide-react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { getVisibleNavGroups } from '../../config/navigation';
 import { Tooltip } from '../ui/Tooltip';
@@ -142,8 +142,44 @@ export const Sidebar: React.FC = () => {
         </nav>
       </div>
 
-      {/* Footer Logout */}
-      <div className="p-3 border-t border-slate-800 shrink-0">
+      {/* Footer User Card & Logout */}
+      <div className="p-3 border-t border-slate-800 shrink-0 space-y-2">
+        {sidebarCollapsed ? (
+          <Tooltip
+            title={user?.full_name || 'Người dùng'}
+            description={`${user?.role || 'OPERATOR'}${user?.email ? ` · ${user.email}` : ''}`}
+            placement="right"
+            className="flex justify-center w-full"
+          >
+            <div className="w-9 h-9 rounded-xl bg-slate-800/50 border border-slate-800 flex items-center justify-center text-emerald-400">
+              <UserCircle className="w-5 h-5" />
+            </div>
+          </Tooltip>
+        ) : (
+          <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-slate-800/50 border border-slate-800">
+            <UserCircle className="w-8 h-8 text-emerald-400 shrink-0" />
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-semibold text-slate-100 truncate">
+                {user?.full_name || 'Người dùng'}
+              </div>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span
+                  className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${
+                    user?.role === 'ADMIN'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-sky-500/10 text-sky-400 border border-slate-700'
+                  }`}
+                >
+                  {user?.role || 'OPERATOR'}
+                </span>
+              </div>
+              {user?.email && (
+                <div className="text-[11px] text-slate-400 truncate mt-0.5">{user.email}</div>
+              )}
+            </div>
+          </div>
+        )}
+
         <Tooltip
           title="Đăng xuất"
           description="Thoát phiên hiện tại và quay lại màn đăng nhập."

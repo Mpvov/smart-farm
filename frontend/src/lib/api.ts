@@ -7,13 +7,23 @@ export interface LiveTelemetryPacket {
   timestamp: string;
 }
 
+function getStoredAccessToken(): string | null {
+  try {
+    return typeof window !== 'undefined' ? window.localStorage.getItem('sf_access_token') : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const token = getStoredAccessToken();
   const res = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
-    ...options,
   });
 
   if (!res.ok) {

@@ -95,8 +95,11 @@ def init_db():
         danger_min REAL NOT NULL,
         danger_max REAL NOT NULL,
         auto_actions_json TEXT, -- '[{"trigger": "BELOW_DANGER_MIN", "target_device_id": 101, "action": "ON"}]'
+        UNIQUE(zone_id, metric),
         FOREIGN KEY (zone_id) REFERENCES zones(id)
     );
+
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_thresholds_zone_metric ON thresholds(zone_id, metric);
 
     CREATE TABLE IF NOT EXISTS schedules (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -60,6 +60,13 @@ export interface ZoneLatestTelemetry {
   metrics: Record<string, MetricReading>;
 }
 
+export interface ThresholdAutoAction {
+  trigger: string;
+  target_device_id?: number;
+  target_metric?: string;
+  action: string;
+}
+
 export interface Threshold {
   id: number;
   zone_id: number;
@@ -68,7 +75,7 @@ export interface Threshold {
   warning_max: number;
   danger_min: number;
   danger_max: number;
-  auto_actions?: Array<{ trigger: string; target_metric?: string; action: string }>;
+  auto_actions?: ThresholdAutoAction[];
 }
 
 export interface Schedule {
