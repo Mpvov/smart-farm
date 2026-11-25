@@ -1,7 +1,7 @@
 # Cách làm việc với git
 
 Áp dụng cho người và agent. Ý chính: **bắt đầu từ `origin/main` mới nhất, rebase thay vì merge, không push thẳng `main`.**
-*(Ghi chú: hiện repo chưa có remote; khi chưa có, thay `origin/main` bằng `main`.)*
+Remote chính thức: `origin` — https://github.com/Mpvov/smart-farm.git
 
 ## 1. Bắt đầu một việc
 
@@ -75,6 +75,15 @@ Sửa xong chạy lại `check.ps1` trước khi push.
 - Không dùng `--no-verify`.
 
 ## 8. Cấu hình một lần
+
+Lần đầu clone repo về máy và kích hoạt hooks:
+
+```bash
+git clone https://github.com/Mpvov/smart-farm.git
+powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
+```
+
+Cấu hình Git toàn cục:
 
 ```bash
 git config --global pull.rebase true
