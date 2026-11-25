@@ -38,7 +38,7 @@
    Vì: tránh đổi nền tảng giữa chừng, tránh hiểu nhầm prototype là chính thức, và không tốn context đọc quyết định không liên quan.
 5. Không sửa `report/` khi chưa được yêu cầu.
    Vì: report là bản nộp chính thức.
-6. Mỗi việc một branch từ `origin/main` (chưa có remote thì từ `main`); rebase, không merge `main` vào branch; không commit thẳng lên `main` (hook chặn). Chi tiết: `CONTRIBUTING.md`.
+6. Mỗi việc một branch từ `origin/main`; rebase, không merge `main` vào branch; không commit thẳng lên `main` (hook chặn). Chi tiết: `CONTRIBUTING.md`.
    Vì: nhiều người và nhiều agent cùng sửa một repo; lịch sử thẳng thì dễ đọc và dễ hoàn tác.
 7. Thư mục mới ở gốc repo: thêm một dòng vào bảng Layout, tạo `<thư mục>/AGENTS.md` và `<thư mục>/CLAUDE.md` (chỉ chứa `@AGENTS.md`). Ngoại lệ: `docs/`, `scripts/`, `report/`.
    Vì: agent chỉ biết luật của thư mục khi file đó tồn tại; check.ps1 kiểm luật này.
