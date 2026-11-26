@@ -13,8 +13,13 @@ def hash_password(password: str) -> str:
 
 
 def get_db():
-    conn = sqlite3.connect(os.environ.get("SMARTFARM_DB_PATH", DB_PATH))
+    conn = sqlite3.connect(
+        os.environ.get("SMARTFARM_DB_PATH", DB_PATH),
+        timeout=5.0,
+    )
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA busy_timeout=5000;")
     return conn
 
 

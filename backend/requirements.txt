@@ -6,3 +6,5 @@ python-multipart>=0.0.9
 pytest>=8.0.0
 httpx>=0.28.0
 httpx2>=2.0.0
+paho-mqtt>=2.1.0
+python-dotenv>=1.0.1
