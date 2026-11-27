@@ -46,7 +46,7 @@ def on_event_condition_callback_a_H_H_V_d():
 
 event_manager.add_condition_event(lambda:(button_a.is_pressed()), on_event_condition_callback_a_H_H_V_d)
 
-aiot_dht20 = DHT20()
+aiot_dht20 = DHT20(SoftI2C(scl=Pin(22), sda=Pin(21)))
 
 def on_event_timer_callback_t_z_G_f_O():
   global cmd, temp, humi, soil, light, pump, led
@@ -56,15 +56,15 @@ def on_event_timer_callback_t_z_G_f_O():
   soil = round(translate((pin1.read_analog()), 0, 4095, 0, 100))
   light = round(translate((pin2.read_analog()), 0, 4095, 0, 100))
   aiot_lcd1602.move_to(0, 0)
-  aiot_lcd1602.putstr((''.join([str(x) for x in ['T:', temp, 'H:', humi]])))
+  aiot_lcd1602.putstr('%-16s' % ('T:%s H:%s' % (temp, humi)))
   aiot_lcd1602.move_to(0, 1)
-  aiot_lcd1602.putstr((''.join([str(x2) for x2 in ['S:', soil, 'L:', light]])))
+  aiot_lcd1602.putstr('%-16s' % ('S:%s L:%s' % (soil, light)))
   print((''.join([str(x3) for x3 in ['!1:TEMP:', temp, '#']])), end =' ')
   print((''.join([str(x4) for x4 in ['!1:HUMI:', humi, '#']])), end =' ')
   print((''.join([str(x5) for x5 in ['!1:SOIL:', soil, '#']])), end =' ')
   print((''.join([str(x6) for x6 in ['!1:LIGHT:', light, '#']])), end =' ')
 
-event_manager.add_timer_event(15000, on_event_timer_callback_t_z_G_f_O)
+event_manager.add_timer_event(10000, on_event_timer_callback_t_z_G_f_O)
 
 def on_event_condition_callback_g_Q_v_r_A():
   global cmd, temp, humi, soil, light, pump, led

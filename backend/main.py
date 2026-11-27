@@ -323,7 +323,7 @@ def get_latest_telemetry(zone_id: int):
             elif val < thresh["warning_min"] or val > thresh["warning_max"]:
                 status_label = "WARNING"
 
-        unit = "°C" if m == "TEMP" else "%" if m in ["HUMI", "SOIL"] else "Lux"
+        unit = "°C" if m == "TEMP" else "%"
         metrics_res[m] = {"value": val, "unit": unit, "status": status_label, "updated_at": rec_at}
 
     conn.close()

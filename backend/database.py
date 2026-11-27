@@ -244,7 +244,7 @@ def seed_data(conn: sqlite3.Connection):
         (zone_ids[0], "TEMP", 18.0, 32.0, 15.0, 38.0, json.dumps([{"trigger": "ABOVE_DANGER_MAX", "action": "ALERT"}])),
         (zone_ids[0], "HUMI", 50.0, 85.0, 40.0, 95.0, None),
         (zone_ids[0], "SOIL", 45.0, 75.0, 30.0, 85.0, json.dumps([{"trigger": "BELOW_DANGER_MIN", "action": "ON", "target_metric": "PUMP"}])),
-        (zone_ids[0], "LIGHT", 1000.0, 8000.0, 500.0, 10000.0, None),
+        (zone_ids[0], "LIGHT", 25.0, 100.0, 10.0, 100.0, None),
     ]
     for zid, metric, wmin, wmax, dmin, dmax, auto_act in thresholds:
         cursor.execute("""

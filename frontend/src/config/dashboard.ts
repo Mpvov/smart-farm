@@ -44,7 +44,7 @@ export const METRIC_META: Record<
   LIGHT: {
     title: 'Cường độ ánh sáng',
     shortLabel: 'Ánh sáng',
-    unit: 'Lux',
+    unit: '%',
     Icon: Sun,
     color: 'text-yellow-300',
   },
