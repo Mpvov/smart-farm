@@ -49,11 +49,12 @@ class FakeBroker:
 def test_uart_stream_decoder_handles_fragments_noise_and_outliers():
     dec = UartStreamDecoder()
     assert dec.feed("junk!1:TE") == []
-    pkts = dec.feed("MP:28.5#!1:SOIL:999#!1:HUMI:65#!1:PUMP:ON#")
-    assert len(pkts) == 3  # SOIL:999 rejected as outlier
+    pkts = dec.feed("MP:28.5#!1:SOIL:999#!1:HUMI:65#!1:LIGHT:80#!1:PUMP:ON#")
+    assert len(pkts) == 4  # SOIL:999 rejected as outlier
     assert (pkts[0].key, pkts[0].value) == ("TEMP", 28.5)
     assert (pkts[1].key, pkts[1].value) == ("HUMI", 65.0)
-    assert (pkts[2].key, pkts[2].value) == ("PUMP", "ON")
+    assert (pkts[2].key, pkts[2].value) == ("LIGHT", 80.0)
+    assert (pkts[3].key, pkts[3].value) == ("PUMP", "ON")
 
 
 def test_anti_echo_loop_physical_toggle_does_not_retrigger_uart(tmp_path):

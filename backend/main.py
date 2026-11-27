@@ -26,7 +26,10 @@ init_db()
 async def lifespan(app: FastAPI):
     init_db()
     await simulator.start()
-    mqtt_bridge.start()
+    mqtt_bridge.start(
+        loop=asyncio.get_running_loop(),
+        on_telemetry=simulator.broadcast,
+    )
     yield
     mqtt_bridge.stop()
     await simulator.stop()

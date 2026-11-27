@@ -34,7 +34,8 @@ class PySerialTransport:
         return data.decode("utf-8", errors="ignore")
 
     def write_frame(self, frame: str) -> None:
-        self._ser.write((frame + "\n").encode("utf-8"))
+        # Yolo:Bit OhStem reads exact frame without trailing newline (cmd == '!1:PUMP:ON#')
+        self._ser.write(frame.encode("utf-8"))
         self._ser.flush()
 
     def close(self) -> None:

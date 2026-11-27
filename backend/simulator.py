@@ -51,8 +51,16 @@ class TelemetrySimulator:
         cursor = conn.cursor()
         now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
-        # Query all sensors
-        cursor.execute("SELECT id, hardware_uid, metrics_json, zone_id, is_simulated FROM devices WHERE type = 'SENSOR' AND status = 'ONLINE'")
+        # Skip real hardware sensors (is_simulated = 0) when MQTT bridge is active
+        from backend.mqtt_bridge import mqtt_bridge
+        if mqtt_bridge.is_enabled:
+            cursor.execute(
+                "SELECT id, hardware_uid, metrics_json, zone_id, is_simulated FROM devices WHERE type = 'SENSOR' AND status = 'ONLINE' AND is_simulated = 1"
+            )
+        else:
+            cursor.execute(
+                "SELECT id, hardware_uid, metrics_json, zone_id, is_simulated FROM devices WHERE type = 'SENSOR' AND status = 'ONLINE'"
+            )
         sensors = cursor.fetchall()
 
         for s in sensors:

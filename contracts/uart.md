@@ -25,10 +25,11 @@ Mọi gói tin UART bắt đầu bằng ký tự `!` và kết thúc bằng ký 
   * `TEMP`: Nhiệt độ không khí (°C)
   * `HUMI`: Độ ẩm không khí (%)
   * `SOIL`: Độ ẩm đất (%)
+  * `LIGHT`: Cường độ ánh sáng (% hoặc Lux)
   * `PUMP`: Relay máy bơm nước
   * `LED`: Đèn cảnh báo / chiếu sáng
 * `<VALUE>`: Giá trị tương ứng:
-  * Số thực hoặc số nguyên cho cảm biến (ví dụ: `28`, `65.5`, `42`).
+  * Số thực hoặc số nguyên cho cảm biến (ví dụ: `28`, `65.5`, `42`, `80`).
   * Trạng thái cho cơ cấu chấp hành: `ON` hoặc `OFF`.
 
 ---
@@ -39,8 +40,9 @@ Mọi gói tin UART bắt đầu bằng ký tự `!` và kết thúc bằng ký 
 * Nhiệt độ: `!1:TEMP:28#`
 * Độ ẩm không khí: `!1:HUMI:65#`
 * Độ ẩm đất: `!1:SOIL:42#`
+* Ánh sáng: `!1:LIGHT:80#`
 
-### 3.2. Lệnh điều khiển (Gateway -> Microcontroller)
+### 3.2. Lệnh điều khiển & Phản hồi trạng thái (Gateway <-> Microcontroller)
 * Bật bơm: `!1:PUMP:ON#`
 * Tắt bơm: `!1:PUMP:OFF#`
 * Bật đèn: `!1:LED:ON#`

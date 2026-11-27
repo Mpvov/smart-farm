@@ -14,6 +14,7 @@ TELEMETRY_FEEDS = {
     "TEMP": "smartfarm-temp",
     "HUMI": "smartfarm-humi",
     "SOIL": "smartfarm-soil",
+    "LIGHT": "smartfarm-light",
 }
 ACTUATOR_FEEDS = {
     "PUMP": "smartfarm-pump",

@@ -8,10 +8,11 @@ SENSOR_RANGES: dict[str, Tuple[float, float]] = {
     "TEMP": (-10.0, 60.0),
     "HUMI": (0.0, 100.0),
     "SOIL": (0.0, 100.0),
+    "LIGHT": (0.0, 100000.0),
 }
 ACTUATOR_KEYS = {"PUMP", "LED"}
 
-_SENSOR_RE = re.compile(r"^!(\d+):(TEMP|HUMI|SOIL):(-?[0-9]+(?:\.[0-9]+)?)#$")
+_SENSOR_RE = re.compile(r"^!(\d+):(TEMP|HUMI|SOIL|LIGHT):(-?[0-9]+(?:\.[0-9]+)?)#$")
 _ACTUATOR_RE = re.compile(r"^!(\d+):(PUMP|LED):(ON|OFF)#$")
 
 

@@ -181,6 +181,17 @@ class SmartFarmGateway:
         self._running = False
 
 
+def find_yolobit_port() -> str:
+    """Auto-detect Yolo:Bit USB-UART COM port when SERIAL_PORT=AUTO."""
+    import serial.tools.list_ports
+
+    for port in serial.tools.list_ports.comports():
+        desc = f"{port.device} {port.description}"
+        if any(kw in desc for kw in ("CH340", "USB-SERIAL", "USB Serial", "Silicon Labs", "CP210")):
+            return port.device
+    raise RuntimeError("Không tìm thấy cổng COM của Yolo:Bit. Hãy cắm cáp USB hoặc đặt SERIAL_PORT=COMx trong .env")
+
+
 def build_gateway_from_env() -> SmartFarmGateway:
     load_dotenv()
     username = os.getenv("AIO_USERNAME", "").strip()
@@ -188,15 +199,16 @@ def build_gateway_from_env() -> SmartFarmGateway:
     if not username or not aio_key:
         raise RuntimeError("Missing AIO_USERNAME or AIO_KEY in .env")
 
-    port = os.getenv("SERIAL_PORT", "MOCK").strip()
+    port = os.getenv("SERIAL_PORT", "AUTO").strip()
     baudrate = int(os.getenv("SERIAL_BAUDRATE", "115200"))
     interval = float(os.getenv("TELEMETRY_INTERVAL_SEC", "15"))
 
-    transport: SerialTransport = (
-        MockSerialTransport()
-        if port.upper() == "MOCK"
-        else PySerialTransport(port=port, baudrate=baudrate)
-    )
+    if port.upper() == "MOCK":
+        transport: SerialTransport = MockSerialTransport()
+    else:
+        resolved_port = find_yolobit_port() if (not port or port.upper() == "AUTO") else port
+        LOG.info("Using serial port %s (%d bps)", resolved_port, baudrate)
+        transport = PySerialTransport(port=resolved_port, baudrate=baudrate)
 
     queue_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gateway_offline.db")
     offline_queue = OfflineTelemetryQueue(db_path=queue_path)

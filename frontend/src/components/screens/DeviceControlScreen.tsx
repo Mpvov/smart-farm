@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useFarmStore } from '../../store/useFarmStore';
 import { apiFetch } from '../../lib/api';
 import { ActuatorItem } from '../../types';
@@ -9,23 +9,33 @@ export const DeviceControlScreen: React.FC = () => {
   const { activeZoneId } = useFarmStore();
   const [actuators, setActuators] = useState<ActuatorItem[]>([]);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const loadingIdRef = useRef<number | null>(null);
 
-  const fetchActuators = async () => {
+  const fetchActuators = useCallback(async (silent = false) => {
     if (!activeZoneId) return;
     try {
       const res = await apiFetch<{ data: ActuatorItem[] }>(`/zones/${activeZoneId}/actuators`);
       setActuators(res.data);
     } catch (err: any) {
-      toast.error(err.message || 'Lỗi tải danh sách thiết bị');
+      if (!silent) {
+        toast.error(err.message || 'Lỗi tải danh sách thiết bị');
+      }
     }
-  };
+  }, [activeZoneId]);
 
   useEffect(() => {
-    fetchActuators();
-  }, [activeZoneId]);
+    fetchActuators(false);
+    const timer = window.setInterval(() => {
+      if (loadingIdRef.current === null) {
+        fetchActuators(true);
+      }
+    }, 2000);
+    return () => window.clearInterval(timer);
+  }, [fetchActuators]);
 
   const toggleDevice = async (device: ActuatorItem) => {
     const nextAction = device.state === 'ON' ? 'OFF' : 'ON';
+    loadingIdRef.current = device.device_id;
     setLoadingId(device.device_id);
     try {
       await apiFetch(`/devices/${device.device_id}/control`, {
@@ -33,10 +43,11 @@ export const DeviceControlScreen: React.FC = () => {
         body: JSON.stringify({ action: nextAction }),
       });
       toast.success(`Đã chuyển ${device.name} sang trạng thái ${nextAction}`);
-      await fetchActuators();
+      await fetchActuators(false);
     } catch (err: any) {
       toast.error(err.message || 'Không thể điều khiển thiết bị');
     } finally {
+      loadingIdRef.current = null;
       setLoadingId(null);
     }
   };

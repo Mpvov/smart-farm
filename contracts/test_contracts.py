@@ -13,10 +13,10 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_DIR = os.path.join(BASE_DIR, "samples")
 
-UART_SENSOR_REGEX = re.compile(r"^!(\d+):(TEMP|HUMI|SOIL):([0-9.]+)#$")
+UART_SENSOR_REGEX = re.compile(r"^!(\d+):(TEMP|HUMI|SOIL|LIGHT):([0-9.]+)#$")
 UART_ACTUATOR_REGEX = re.compile(r"^!(\d+):(PUMP|LED):(ON|OFF)#$")
 
-VALID_FEEDS_TELEMETRY = {"smartfarm-temp", "smartfarm-humi", "smartfarm-soil"}
+VALID_FEEDS_TELEMETRY = {"smartfarm-temp", "smartfarm-humi", "smartfarm-soil", "smartfarm-light"}
 VALID_FEEDS_COMMAND = {"smartfarm-pump", "smartfarm-led"}
 
 

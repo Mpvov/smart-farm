@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import datetime
 import json
 import logging
@@ -8,7 +9,7 @@ import ssl
 import threading
 import time
 import uuid
-from typing import Dict, Optional, Tuple
+from typing import Any, Callable, Coroutine, Dict, Optional, Tuple
 
 from dotenv import load_dotenv
 import paho.mqtt.client as mqtt
@@ -21,6 +22,7 @@ TELEMETRY_FEEDS = {
     "smartfarm-temp": "TEMP",
     "smartfarm-humi": "HUMI",
     "smartfarm-soil": "SOIL",
+    "smartfarm-light": "LIGHT",
 }
 ACTUATOR_FEEDS = {
     "smartfarm-pump": "PUMP",
@@ -39,6 +41,8 @@ class BackendMqttBridge:
         self._lock = threading.Lock()
         self._username: str = ""
         self._enabled: bool = False
+        self._loop: Optional[asyncio.AbstractEventLoop] = None
+        self._on_telemetry: Optional[Callable[[Dict[str, Any]], Coroutine[Any, Any, None]]] = None
         # Tracks commands published by this backend: metric -> (action, monotonic_ts)
         self._last_published: Dict[str, Tuple[str, float]] = {}
 
@@ -50,9 +54,15 @@ class BackendMqttBridge:
     def is_connected(self) -> bool:
         return self._connected.is_set()
 
-    def start(self) -> None:
+    def start(
+        self,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        on_telemetry: Optional[Callable[[Dict[str, Any]], Coroutine[Any, Any, None]]] = None,
+    ) -> None:
         if os.getenv("PYTEST_CURRENT_TEST"):
             return
+        self._loop = loop
+        self._on_telemetry = on_telemetry
         load_dotenv()
         enabled_raw = os.getenv("MQTT_ENABLED", "false").strip().lower()
         if enabled_raw not in {"1", "true", "yes", "on"}:
@@ -99,6 +109,8 @@ class BackendMqttBridge:
             self._client = None
         self._connected.clear()
         self._enabled = False
+        self._loop = None
+        self._on_telemetry = None
 
     def _feed_topic(self, feed_key: str) -> str:
         return f"{self._username}/feeds/{feed_key}"
@@ -140,7 +152,8 @@ class BackendMqttBridge:
         cursor = conn.cursor()
         cursor.execute(
             """
-            SELECT d.id, d.name, d.zone_id, d.metrics_json, z.name AS zone_name, f.name AS farm_name
+            SELECT d.id, d.name, d.zone_id, d.metrics_json,
+                   z.name AS zone_name, z.farm_id AS farm_id, f.name AS farm_name
             FROM devices d
             LEFT JOIN zones z ON d.zone_id = z.id
             LEFT JOIN farms f ON z.farm_id = f.id
@@ -154,6 +167,47 @@ class BackendMqttBridge:
             if metric in metrics:
                 return row
         return None
+
+    def _evaluate_threshold_alert(
+        self, conn, farm_id: Optional[int], zone_id: int, device_id: int, metric: str, value: float, now_iso: str
+    ) -> None:
+        """FR-BE-02: Create an alert when real sensor telemetry breaches warning/danger bounds."""
+        if not farm_id:
+            return
+        thresh = conn.execute(
+            "SELECT warning_min, warning_max, danger_min, danger_max FROM thresholds WHERE zone_id = ? AND metric = ?",
+            (zone_id, metric),
+        ).fetchone()
+        if not thresh:
+            return
+
+        severity = None
+        if value < thresh["danger_min"] or value > thresh["danger_max"]:
+            severity = "CRITICAL"
+        elif value < thresh["warning_min"] or value > thresh["warning_max"]:
+            severity = "WARNING"
+        if not severity:
+            return
+
+        existing = conn.execute(
+            """
+            SELECT id FROM alerts
+            WHERE zone_id = ? AND metric = ? AND severity = ? AND status = 'UNACKNOWLEDGED'
+            LIMIT 1
+            """,
+            (zone_id, metric, severity),
+        ).fetchone()
+        if existing:
+            return
+
+        msg = f"Chỉ số {metric} vượt ngưỡng ({value}) tại Zone {zone_id}"
+        conn.execute(
+            """
+            INSERT INTO alerts (farm_id, zone_id, device_id, metric, severity, message, status, note, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, 'UNACKNOWLEDGED', NULL, ?)
+            """,
+            (farm_id, zone_id, device_id, metric, severity, msg, now_iso),
+        )
 
     def ingest_telemetry(self, metric: str, raw_payload: str) -> bool:
         try:
@@ -173,11 +227,28 @@ class BackendMqttBridge:
                 (dev["zone_id"], dev["id"], metric, value, now_iso),
             )
             conn.execute("UPDATE devices SET status = 'ONLINE' WHERE id = ?", (dev["id"],))
+            self._evaluate_threshold_alert(conn, dev["farm_id"], dev["zone_id"], dev["id"], metric, value, now_iso)
             conn.commit()
             LOG.info("[MQTT -> DB] Telemetry %s=%s (zone=%s)", metric, value, dev["zone_id"])
-            return True
         finally:
             conn.close()
+
+        if self._loop is not None and self._on_telemetry is not None:
+            packet = {
+                "event": "telemetry",
+                "data": {
+                    "zone_id": dev["zone_id"],
+                    "device_id": dev["id"],
+                    "metric": metric,
+                    "value": value,
+                    "timestamp": now_iso,
+                },
+            }
+            try:
+                asyncio.run_coroutine_threadsafe(self._on_telemetry(packet), self._loop)
+            except Exception as exc:
+                LOG.debug("SSE broadcast skipped: %s", exc)
+        return True
 
     def ingest_actuator_state(
         self, metric: str, raw_payload: str, now: Optional[float] = None

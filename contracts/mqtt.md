@@ -25,6 +25,7 @@ Quy chuẩn giao tiếp MQTT giữa IoT Gateway (Python), Adafruit IO Broker và
 | `smartfarm-temp` | Input | Nhiệt độ môi trường | Float / Int | `-10.0` đến `60.0` (°C) |
 | `smartfarm-humi` | Input | Độ ẩm không khí | Float / Int | `0.0` đến `100.0` (%) |
 | `smartfarm-soil` | Input | Độ ẩm đất | Float / Int | `0.0` đến `100.0` (%) |
+| `smartfarm-light` | Input | Cường độ ánh sáng | Float / Int | `0.0` đến `100.0` (%) hoặc `Lux` |
 | `smartfarm-pump` | Output | Điều khiển máy bơm | String ("0"/"1") | `"1"` (Bật), `"0"` (Tắt) |
 | `smartfarm-led` | Output | Điều khiển đèn cảnh báo | String ("0"/"1") | `"1"` (Bật), `"0"` (Tắt) |
 
@@ -34,7 +35,7 @@ Quy chuẩn giao tiếp MQTT giữa IoT Gateway (Python), Adafruit IO Broker và
 
 1. **Gateway gửi dữ liệu cảm biến (Publish):**
    * Khi nhận gói tin `!1:TEMP:28#` từ UART $\rightarrow$ Publish giá trị `"28"` lên `<username>/feeds/smartfarm-temp`.
-   * Tần suất gửi cảm biến: Định kỳ mỗi 10 giây/lần.
+   * Tần suất gửi cảm biến: Định kỳ mỗi 15 giây/lần (đảm bảo $\le 30$ điểm/phút trên Adafruit IO Free).
 2. **Gateway nhận lệnh điều khiển (Subscribe):**
    * Subscribe vào feeds: `<username>/feeds/smartfarm-pump` và `<username>/feeds/smartfarm-led`.
    * Khi nhận `"1"` từ feed `smartfarm-pump` $\rightarrow$ Gửi gói UART `!1:PUMP:ON#` xuống mạch vi điều khiển.
