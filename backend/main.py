@@ -17,6 +17,7 @@ from pydantic import BaseModel
 
 from backend.database import get_db, hash_password, init_db, log_audit
 from backend.simulator import simulator
+from backend.mqtt_bridge import mqtt_bridge
 
 
 init_db()
@@ -25,7 +26,9 @@ init_db()
 async def lifespan(app: FastAPI):
     init_db()
     await simulator.start()
+    mqtt_bridge.start()
     yield
+    mqtt_bridge.stop()
     await simulator.stop()
 
 
@@ -412,7 +415,10 @@ def control_device(device_id: int, req: ControlRequest):
 
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, zone_id FROM devices WHERE id = ?", (device_id,))
+    cursor.execute(
+        "SELECT id, name, zone_id, metrics_json, is_simulated FROM devices WHERE id = ?",
+        (device_id,),
+    )
     dev = cursor.fetchone()
     if not dev:
         conn.close()
@@ -424,6 +430,11 @@ def control_device(device_id: int, req: ControlRequest):
         (req.action, now_iso, device_id),
     )
     conn.commit()
+
+    if not dev["is_simulated"]:
+        metrics = json.loads(dev["metrics_json"])
+        if metrics:
+            mqtt_bridge.publish_actuator_command(metrics[0], req.action)
 
     log_audit(
         1,
